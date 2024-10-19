@@ -13,18 +13,29 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
 namespace HealthcareSystem
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
         public MainPage()
         {
             this.InitializeComponent();
+            LoadUserInfo();
+        }
+
+        private void LoadUserInfo()
+        {
+            UserInfo.Text = "Logged in as: Nurse Jane Doe (jane.doe)";
+        }
+
+        private void ManagePatients_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(PatientManagementPage));
+        }
+
+        private void AdminFunctions_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(AdminPage));
         }
     }
 }
