@@ -1,20 +1,9 @@
 ﻿using DBAccess.DAL;
 using DBAccess.Model;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace HealthcareSystem
 {
@@ -31,7 +20,7 @@ namespace HealthcareSystem
             UserInfo.Text = "Logged in as: Nurse Jane Doe (jane.doe)";
 
             Debug.WriteLine("Initializing Database Connection");
-            var dal = new EmployeeDal();
+            var dal = new MailingAddressDal();
             var demo = new SqlInjectionDemo();
             // List<Employee> employees = dal.GetEmployeesFromDataSet();
 

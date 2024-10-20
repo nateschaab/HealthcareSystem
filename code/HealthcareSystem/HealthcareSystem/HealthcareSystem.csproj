@@ -134,7 +134,8 @@
     </Compile>
     <Compile Include="DAL\Connection.cs" />
     <Compile Include="DAL\DataHelper.cs" />
-    <Compile Include="DAL\EmployeeDal.cs" />
+    <Compile Include="DAL\MailingAddressDal.cs" />
+    <Compile Include="DAL\PatientDAL.cs" />
     <Compile Include="DAL\Program.cs" />
     <Compile Include="DAL\SQLInjectionDemo.cs" />
     <Compile Include="LoginPage.xaml.cs">
@@ -143,7 +144,10 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\Account.cs" />
     <Compile Include="Model\MailingAddress.cs" />
+    <Compile Include="Model\Patient.cs" />
+    <Compile Include="Model\Person.cs" />
     <Compile Include="PatientManagementPage.xaml.cs">
       <DependentUpon>PatientManagementPage.xaml</DependentUpon>
     </Compile>

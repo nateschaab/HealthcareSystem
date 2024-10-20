@@ -9,17 +9,22 @@ namespace DBAccess.Model
 /// </summary>
    public class MailingAddress
     {
-        public string City { get; }
-        public string State { get;  }
-        public string Zip { get;  }
+        public string StreetAddress { get; set; }
+        public string Zip { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Country { get; set; }
 
-        public MailingAddress(string city, string state, string zip)
+        public MailingAddress( string streetAddress, string zip, string city, string state, string country)
         {
+            this.StreetAddress = streetAddress ?? throw new ArgumentNullException(nameof(streetAddress), $"{nameof(streetAddress)} cannot be null");
+            Debug.WriteLine("State: " + State);
             this.City = city ?? throw new ArgumentNullException(nameof(city), $"{nameof(city)} cannot be null");
             Debug.WriteLine("City: " + City);
             this.State = state ?? throw new ArgumentNullException(nameof(state), $"{nameof(state)} cannot be null");
             Debug.WriteLine("State: " + State);
-
+            this.Country = country ?? throw new ArgumentNullException(nameof(country), $"{nameof(country)} cannot be null");
+            Debug.WriteLine("State: " + State);
 
             if (zip.Length < 5)
             {

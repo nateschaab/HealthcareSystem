@@ -15,10 +15,10 @@ namespace DBAccess.DAL
             builder.Password = "ZNHDMCh/nV6p}tneR.6H";        // MySQL password
             builder.Port = 3306;                    // MySQL port (default: 3306)
             builder.SslMode = MySqlSslMode.None;
+            builder.AllowUserVariables = true;
 
             // Get the constructed connection string
             return builder.ToString();
-
         }
     }
 }
