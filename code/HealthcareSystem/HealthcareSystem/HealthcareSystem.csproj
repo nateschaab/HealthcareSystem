@@ -143,7 +143,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\Employee.cs" />
+    <Compile Include="Model\MailingAddress.cs" />
     <Compile Include="PatientManagementPage.xaml.cs">
       <DependentUpon>PatientManagementPage.xaml</DependentUpon>
     </Compile>
