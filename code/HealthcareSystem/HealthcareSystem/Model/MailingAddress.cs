@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reflection.PortableExecutable;
 
 namespace DBAccess.Model
 {
@@ -13,8 +15,10 @@ namespace DBAccess.Model
 
         public MailingAddress(string city, string state, string zip)
         {
-            this.City = City ?? throw new ArgumentNullException(nameof(city), $"{nameof(city)} cannot be null");
+            this.City = city ?? throw new ArgumentNullException(nameof(city), $"{nameof(city)} cannot be null");
+            Debug.WriteLine("City: " + City);
             this.State = state ?? throw new ArgumentNullException(nameof(state), $"{nameof(state)} cannot be null");
+            Debug.WriteLine("State: " + State);
 
 
             if (zip.Length < 5)
@@ -23,6 +27,7 @@ namespace DBAccess.Model
             }
 
             this.Zip = zip;
+            Debug.WriteLine("Zip: " + Zip);
         }
     }
 }

@@ -51,29 +51,29 @@ namespace HealthcareSystem
                 return;
             }*/
             Debug.WriteLine("Getting Mailing Addresses");
-            var employees = dal.GetMailingAddressesFromReader();
+            var addresses = dal.GetMailingAddressesFromReader();
 
             Debug.WriteLine("All the employees using the connected model:");
-            PrintEmployees(employees);
+            PrintMailingAddresses(addresses);
             }
 
-        private static void PrintEmployees(List<MailingAddress> employees)
+        private static void PrintMailingAddresses(List<MailingAddress> addresses)
         {
             Debug.WriteLine("====================================");
-            foreach (var employee in employees)
+            foreach (var address in addresses)
             {
-                Debug.WriteLine(employee.State + "\t\t" + employee.City + "\t\t" + employee.Zip);
+                Debug.WriteLine(address.State + "\t\t" + address.City + "\t\t" + address.Zip);
             }
         }
 
         private void ManagePatients_Click(object sender, RoutedEventArgs e)
         {
-        Frame.Navigate(typeof(PatientManagementPage));
+            Frame.Navigate(typeof(PatientManagementPage));
         }
 
         private void AdminFunctions_Click(object sender, RoutedEventArgs e)
         {
-        Frame.Navigate(typeof(AdminPage));
+            Frame.Navigate(typeof(AdminPage));
         }
     }
 }
