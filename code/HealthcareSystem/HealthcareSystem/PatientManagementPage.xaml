@@ -6,12 +6,16 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Margin="20">
             <TextBlock Text="Patient Management" FontSize="24" />
-            <TextBox x:Name="PatientNameTextBox" PlaceholderText="Patient Name" Margin="0,10,0,0"/>
-            <ComboBox x:Name="GenderComboBox" Margin="0,10,0,0">
-                <ComboBoxItem Content="Male" />
-                <ComboBoxItem Content="Female" />
-                <ComboBoxItem Content="Other" />
+            <TextBox x:Name="PatientSSNTextBox" PlaceholderText="Patient SSN" Margin="0,10,0,0"/>
+            <TextBox x:Name="PatientFirstNameTextBox" PlaceholderText="Patient First Name" Margin="0,10,0,0"/>
+            <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Patient Last Name" Margin="0,10,0,0"/>
+            <DatePicker x:Name="DOBDatePicker" Margin="0,10,0,0"/>
+            <ComboBox x:Name="GenderComboBox" Text="Gender" Margin="0,10,0,0">
+                <ComboBoxItem Content="Male"/>
+                <ComboBoxItem Content="Female"/>
+                <ComboBoxItem Content="Other"/>
             </ComboBox>
+            <TextBox x:Name="StreetAddressTextBox" PlaceholderText="Street Address" Margin="0,10,0,0"/>
             <TextBox x:Name="ZipCodeTextBox" PlaceholderText="Zip Code" Margin="0,10,0,0" />
             <TextBox x:Name="PhoneNumberTextBox" PlaceholderText="Phone Number" Margin="0,10,0,0" />
             <Button Content="Register Patient" Click="RegisterPatient_Click" Margin="0,20,0,0"/>
