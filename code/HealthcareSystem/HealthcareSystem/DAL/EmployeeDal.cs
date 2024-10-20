@@ -25,7 +25,7 @@ namespace DBAccess.DAL
             var query = "select fname, bdate, dno from employee where dno = @dno;";
 
             var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@dno", MySqlDbType.Int32).Value = dno;
+            command.Parameters.Add("@dno", (DbType)MySqlDbType.Int32).Value = dno;
 
             var reader = command.ExecuteReader();
             var firstnameOrdinal = reader.GetOrdinal("fname");
@@ -51,13 +51,13 @@ namespace DBAccess.DAL
         public List<Employee> GetEmployeesFromReader()
         {
             var employeeList = new List<Employee>();
-            var connection = new MySqlConnection(Connection.ConnectionString());
+            using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
             var query = "select fname, bdate, dno from employee;";
 
-            var command = new MySqlCommand(query, connection);
-            var reader = command.ExecuteReader();
+            using var command = new MySqlCommand(query, connection);
+            using var reader = command.ExecuteReader();
             var firstnameOrdinal = reader.GetOrdinal("fname");
             var birthdateOrdinal = reader.GetOrdinal("bdate");
             var departmentNumberOrdinal = reader.GetOrdinal("dno");
@@ -90,12 +90,12 @@ namespace DBAccess.DAL
         /// <returns>total count of employees of the DB</returns>
         public int GetEmployeeCount()
         {
-            var connection = new MySqlConnection(Connection.ConnectionString());
+            using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
             var query = "select count(*) from employee;";
 
-            var command = new MySqlCommand(query, connection);
+            using var command = new MySqlCommand(query, connection);
             var count = Convert.ToInt32(command.ExecuteScalar());
             
             return count;
@@ -110,11 +110,11 @@ namespace DBAccess.DAL
         {
             var employeeList = new List<Employee>();
 
-            var connection = new MySqlConnection(Connection.ConnectionString());
+            using var connection = new MySqlConnection(Connection.ConnectionString());
 
             var query = "select fname, bdate, dno from employee;";
 
-            var adapter = new MySqlDataAdapter(query, connection);
+            using var adapter = new MySqlDataAdapter(query, connection);
 
             var table = new DataTable();
             adapter.Fill(table);
@@ -126,16 +126,16 @@ namespace DBAccess.DAL
         public List<Employee> GetEmployeesBy(char gender, double salary)
         {
             var employeeList = new List<Employee>();
-            var connection = new MySqlConnection(Connection.ConnectionString());
+            using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
             var query = "select fname, bdate, dno from employee where salary > @salary AND sex = @gender";
 
-            var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@gender", MySqlDbType.VarChar).Value = gender;
-            command.Parameters.Add("@salary", MySqlDbType.Double).Value = salary;
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.Add("@gender", (DbType)MySqlDbType.VarChar).Value = gender;
+            command.Parameters.Add("@salary", (DbType)MySqlDbType.Double).Value = salary;
 
-            var reader = command.ExecuteReader();
+            using var reader = command.ExecuteReader();
             var firstnameOrdinal = reader.GetOrdinal("fname");
             var birthdateOrdinal = reader.GetOrdinal("bdate");
             var departmentNumberOrdinal = reader.GetOrdinal("dno");

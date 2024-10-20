@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using MySql.Data.MySqlClient;
 
 namespace DBAccess.DAL
@@ -13,7 +14,7 @@ namespace DBAccess.DAL
         /// <returns>true if it's valid login, false, otherwise</returns>
         public bool IsLoginValid_SqlInjectionDemo(string username, string password)
         {
-            var connection = new MySqlConnection(Connection.ConnectionString());
+            using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
             var badquery = "select count(*) from login where username ='" + username +
                            "' and password ='" + password + "';";
@@ -55,10 +56,10 @@ namespace DBAccess.DAL
             //cmd.Parameters.AddWithValue("@username", username);
             //cmd.Parameters.AddWithValue("@password", password);
 
-            command.Parameters.Add("@username", MySqlDbType.VarChar);
+            command.Parameters.Add("@username", (DbType)MySqlDbType.VarChar);
             command.Parameters["@username"].Value = username;
 
-            command.Parameters.Add("@password", MySqlDbType.VarChar);
+            command.Parameters.Add("@password", (DbType)MySqlDbType.VarChar);
             command.Parameters["@password"].Value = password;
 
             var count = Convert.ToInt32(command.ExecuteScalar());
