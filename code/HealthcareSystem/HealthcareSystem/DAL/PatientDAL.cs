@@ -25,37 +25,105 @@ namespace DBAccess.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = "select city, state, zip from mailing_address;";
+
+            // Updated query to retrieve all necessary fields
+            var query = @"
+        SELECT 
+            p.patient_id, 
+            p.pid, 
+            p.phone_number,
+            per.ssn,
+            per.fname, 
+            per.lname, 
+            per.dob, 
+            per.gender, 
+            ma.street_address, 
+            ma.zip, 
+            ma.city, 
+            ma.state, 
+            ma.country
+        FROM 
+            patient p
+        JOIN 
+            person per ON p.pid = per.pid
+        JOIN 
+            mailing_address ma ON per.street_address = ma.street_address AND per.zip = ma.zip;";
 
             using var command = new MySqlCommand(query, connection);
             using var reader = command.ExecuteReader();
-            var cityOrdinal = reader.GetOrdinal("city");
-            Debug.WriteLine("City Ordinal: " + cityOrdinal);
-            var stateOrdinal = reader.GetOrdinal("state");
-            Debug.WriteLine("State Ordinal: " + stateOrdinal);
+
+            // Get ordinal positions for all necessary fields
+            var ssnOrdinal = reader.GetOrdinal("ssn");
+            var firstNameOrdinal = reader.GetOrdinal("fname");
+            var lastNameOrdinal = reader.GetOrdinal("lname");
+            var genderOrdinal = reader.GetOrdinal("gender");
+            var dobOrdinal = reader.GetOrdinal("dob");
+            var patientIdOrdinal = reader.GetOrdinal("patient_id");
+            var pidOrdinal = reader.GetOrdinal("pid");
+            var phoneNumberOrdinal = reader.GetOrdinal("phone_number");
+            var streetAddressOrdinal = reader.GetOrdinal("street_address");
             var zipOrdinal = reader.GetOrdinal("zip");
-            Debug.WriteLine("Zip Ordinal: " + zipOrdinal);
+            var cityOrdinal = reader.GetOrdinal("city");
+            var stateOrdinal = reader.GetOrdinal("state");
+            var countryOrdinal = reader.GetOrdinal("country");
 
             while (reader.Read())
             {
-                patientList.Add(CreatePatient(reader, cityOrdinal, stateOrdinal, zipOrdinal));
-
+                patientList.Add(CreatePatient(
+                    reader,
+                    ssnOrdinal,
+                    patientIdOrdinal,
+                    pidOrdinal,
+                    phoneNumberOrdinal,
+                    firstNameOrdinal,
+                    lastNameOrdinal,
+                    dobOrdinal,
+                    genderOrdinal,
+                    streetAddressOrdinal,
+                    zipOrdinal,
+                    cityOrdinal,
+                    stateOrdinal,
+                    countryOrdinal
+                ));
             }
 
             return patientList;
         }
 
-        private static Patient CreatePatient(MySqlDataReader reader, int cityOrdinal, int stateOrdinal, int zipOrdinal)
+        private static Patient CreatePatient(
+    MySqlDataReader reader,
+    int ssnOrdinal,
+    int patientIdOrdinal,
+    int pidOrdinal,
+    int phoneNumberOrdinal,
+    int firstNameOrdinal,
+    int lastNameOrdinal,
+    int dobOrdinal,
+    int genderOrdinal,
+    int streetAddressOrdinal,
+    int zipOrdinal,
+    int cityOrdinal,
+    int stateOrdinal,
+    int countryOrdinal)
         {
-            //TODO
-            /*return new Patient
+            return new Patient
             (
-                reader.GetString(cityOrdinal), //reader.GetString(firstnameOrdinal),
-                reader.GetString(stateOrdinal), //reader.IsDBNull(birthdateOrdinal) ? (DateTime?)null : reader.GetDateTime(birthdateOrdinal)
-                reader.GetString(zipOrdinal)
-            );*/
-            return null;
+                reader.GetInt32(patientIdOrdinal),            // patient_id is an integer
+                reader.GetInt32(pidOrdinal),                        // pid is an integer
+                reader.GetString(phoneNumberOrdinal),
+                reader.GetString(ssnOrdinal),
+                reader.GetString(genderOrdinal),
+                reader.GetString(firstNameOrdinal),           // first name is a string
+                reader.GetString(lastNameOrdinal),
+                reader.GetDateTime(dobOrdinal),
+                reader.GetString(streetAddressOrdinal),
+                reader.GetString(zipOrdinal),                   // zip is a string
+                reader.GetString(cityOrdinal),                     // city is a string
+                reader.GetString(stateOrdinal),                   // state is a string
+                reader.GetString(countryOrdinal)    // phone_number is a string            // last name is a              // dob is a    // street_address is a               // country is a string
+            );
         }
+
 
         /// <summary>
         /// Demo getting Scalar value (e.g. a single value) from the DB.
@@ -205,5 +273,69 @@ namespace DBAccess.DAL
             }
         }
 
+        public void UpdatePatientInDatabase(Patient patient)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+
+            try
+            {
+                connection.Open();
+
+                // Debugging: Output the connection state and information
+                Debug.WriteLine($"Connection Opened: {connection.State == System.Data.ConnectionState.Open}");
+
+                var query = @"
+        -- Update the person table using the pid from the patient object
+        UPDATE Person 
+        SET fname = @fname, lname = @lname, dob = @dob, street_address = @street_address, zip = @zip
+        WHERE pid = @pid;
+
+        -- Update the patient table using the patient_id (primary key in patient table)
+        UPDATE Patient
+        SET phone_number = @phoneNumber
+        WHERE patient_id = @patientId;
+        ";
+
+                using var command = new MySqlCommand(query, connection);
+
+                // Debugging: Output the parameter values before execution
+                Debug.WriteLine($"FirstName: {patient.FirstName}");
+                Debug.WriteLine($"LastName: {patient.LastName}");
+                Debug.WriteLine($"Date of Birth: {patient.DateOfBirth}");
+                Debug.WriteLine($"Street Address: {patient.MailAddress.StreetAddress}");
+                Debug.WriteLine($"Zip Code: {patient.MailAddress.Zip}");
+                Debug.WriteLine($"Person ID (pid): {patient.PersonId}");
+                Debug.WriteLine($"Phone Number: {patient.PhoneNumber}");
+                Debug.WriteLine($"Patient ID: {patient.PatientId}");
+
+                // Set parameters for the person table update
+                command.Parameters.AddWithValue("@fname", patient.FirstName);
+                command.Parameters.AddWithValue("@lname", patient.LastName);
+                command.Parameters.AddWithValue("@dob", patient.DateOfBirth);
+                command.Parameters.AddWithValue("@street_address", patient.MailAddress.StreetAddress);
+                command.Parameters.AddWithValue("@zip", patient.MailAddress.Zip);
+                command.Parameters.AddWithValue("@pid", patient.PersonId);  // Correctly set the pid for the person table
+
+                // Set parameters for the patient table update
+                command.Parameters.AddWithValue("@phoneNumber", patient.PhoneNumber);
+                command.Parameters.AddWithValue("@patientId", patient.PatientId);  // Correctly set the patient_id for the patient table
+
+                // Debugging: Output the command text
+                Debug.WriteLine("Executing SQL Query:");
+                Debug.WriteLine(command.CommandText);
+
+                // Execute the query
+                var rowsAffected = command.ExecuteNonQuery();
+
+                // Debugging: Output the result of the query execution
+                Debug.WriteLine($"Rows affected: {rowsAffected}");
+                Debug.WriteLine("Patient updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error updating patient: {ex.Message}");
+            }
+        }
     }
 }
+
