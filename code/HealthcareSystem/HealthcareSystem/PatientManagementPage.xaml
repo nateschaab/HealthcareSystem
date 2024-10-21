@@ -125,8 +125,21 @@
             <!-- Register and Edit Buttons -->
             <Button Content="Register Patient" Click="RegisterPatient_Click" Margin="0,20,0,0"/>
             <Button Content="Edit Patient" Click="EditPatient_Click" Margin="0,20,0,0"/>
-            <Button Content="Back" Click="BackButton_Click" Margin="0,20,0,0" HorizontalAlignment="Left"/>
 
+            <Button Content="Back" Click="BackButton_Click" Margin="0,20,0,0" HorizontalAlignment="Left"/>
+            <!-- ListView to display the patients -->
+            <ListView x:Name="PatientListView" 
+                      SelectionChanged="PatientListView_SelectionChanged"
+                      Height="200">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding FirstName}" />
+                            <TextBlock Text="{Binding LastName}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackPanel>
     </Grid>
 </Page>
