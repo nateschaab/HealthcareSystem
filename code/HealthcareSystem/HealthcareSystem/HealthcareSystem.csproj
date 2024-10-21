@@ -146,6 +146,7 @@
     </Compile>
     <Compile Include="Model\Account.cs" />
     <Compile Include="Model\MailingAddress.cs" />
+    <Compile Include="Model\Nurse.cs" />
     <Compile Include="Model\Patient.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="PatientManagementPage.xaml.cs">

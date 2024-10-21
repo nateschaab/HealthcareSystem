@@ -260,5 +260,11 @@ namespace HealthcareSystem
             // Example code (to be replaced with actual SQL update)
             Debug.WriteLine($"Patient {patient.FirstName} {patient.LastName} updated in the database.");
         }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(MainPage));
+        }
+
     }
 }

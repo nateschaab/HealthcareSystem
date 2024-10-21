@@ -25,7 +25,7 @@ namespace HealthcareSystem
             if (IsLoginValid(username, password))
             {
                 Debug.WriteLine("Login successful. Navigating to MainPage.");
-                Frame.Navigate(typeof(MainPage));
+                Frame.Navigate(typeof(MainPage), username);
             }
             else
             {
