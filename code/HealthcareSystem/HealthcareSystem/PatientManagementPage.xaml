@@ -125,6 +125,8 @@
             <!-- Register and Edit Buttons -->
             <Button Content="Register Patient" Click="RegisterPatient_Click" Margin="0,20,0,0"/>
             <Button Content="Edit Patient" Click="EditPatient_Click" Margin="0,20,0,0"/>
+            <Button Content="Back" Click="BackButton_Click" Margin="0,20,0,0" HorizontalAlignment="Left"/>
+
         </StackPanel>
     </Grid>
 </Page>
