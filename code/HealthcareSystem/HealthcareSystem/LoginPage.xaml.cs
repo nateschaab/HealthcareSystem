@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -23,9 +24,8 @@ namespace HealthcareSystem
 
             if (IsLoginValid(username, password))
             {
-                Console.WriteLine("Login successful. Navigating to MainPage.");
+                Debug.WriteLine("Login successful. Navigating to MainPage.");
                 Frame.Navigate(typeof(MainPage));
-
             }
             else
             {
@@ -35,12 +35,12 @@ namespace HealthcareSystem
 
         public bool IsLoginValid(string username, string password)
         {
-            var connection = new MySqlConnection(Connection.ConnectionString());
+            using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
 
             var goodQuery = "select count(*) from account where username = @username and password =@password;";
 
-            MySqlCommand command = new MySqlCommand(goodQuery, connection);
+            using var command = new MySqlCommand(goodQuery, connection);
 
             command.Parameters.Add("@username", (DbType)MySqlDbType.VarChar);
             command.Parameters["@username"].Value = username;

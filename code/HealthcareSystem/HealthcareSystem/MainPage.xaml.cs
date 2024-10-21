@@ -40,11 +40,7 @@ namespace HealthcareSystem
                 return;
             }*/
             Debug.WriteLine("Getting Mailing Addresses");
-            var addresses = dal.GetMailingAddressesFromReader();
-
-            Debug.WriteLine("All the employees using the connected model:");
-            PrintMailingAddresses(addresses);
-            }
+        }
 
         private static void PrintMailingAddresses(List<MailingAddress> addresses)
         {
