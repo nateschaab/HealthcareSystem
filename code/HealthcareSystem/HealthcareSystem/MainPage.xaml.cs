@@ -1,20 +1,9 @@
 ﻿using DBAccess.DAL;
 using DBAccess.Model;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace HealthcareSystem
 {
@@ -30,7 +19,8 @@ namespace HealthcareSystem
         {
             UserInfo.Text = "Logged in as: Nurse Jane Doe (jane.doe)";
 
-            var dal = new EmployeeDal();
+            Debug.WriteLine("Initializing Database Connection");
+            var dal = new MailingAddressDal();
             var demo = new SqlInjectionDemo();
             // List<Employee> employees = dal.GetEmployeesFromDataSet();
 
@@ -43,48 +33,25 @@ namespace HealthcareSystem
             // demo mitigating SQL Injection attack
             // if (!demo.IsLoginValid("' or '1' = '1' ; -- ", "1234"))
             // demo valid user name and password
-            /**
-            if (!demo.IsLoginValid("user1", "1234"))
+
+            /*if (!demo.IsLoginValid("user1", "1234"))
             {
                 Console.WriteLine("login failed");
                 return;
-            }
-            **/
-            var employees = dal.GetEmployeesFromReader();
+            }*/
+            Debug.WriteLine("Getting Mailing Addresses");
+            var addresses = dal.GetMailingAddressesFromReader();
 
             Debug.WriteLine("All the employees using the connected model:");
-            PrintEmployees(employees);
+            PrintMailingAddresses(addresses);
+            }
 
-            employees = dal.GetEmployeesFromDataSet();
-            Debug.WriteLine("All the employees using the disconnected model:");
-            PrintEmployees(employees);
-
-            PrintEmployeeCount(dal.GetEmployeeCount());
-
-            employees = dal.GetEmployeesOfDepartment(5);
-
-            Debug.WriteLine("The employees of Department 5");
-            PrintEmployees(employees);
-
-            Debug.WriteLine("All the employees by gender and salary:");
-            employees = dal.GetEmployeesBy('M', 30000);
-            PrintEmployees(employees);
-
-
-
-        }
-        private static void PrintEmployeeCount(int count)
+        private static void PrintMailingAddresses(List<MailingAddress> addresses)
         {
             Debug.WriteLine("====================================");
-            Debug.WriteLine("total number of employees is:" + count);
-        }
-
-        private static void PrintEmployees(List<Employee> employees)
-        {
-            Debug.WriteLine("====================================");
-            foreach (var employee in employees)
+            foreach (var address in addresses)
             {
-                Debug.WriteLine(employee.FirstName + "\t\t" + employee.BirthDate + "\t\t" + employee.DepartmentNumber);
+                Debug.WriteLine(address.State + "\t\t" + address.City + "\t\t" + address.Zip);
             }
         }
 

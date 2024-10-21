@@ -6,14 +6,123 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Margin="20">
             <TextBlock Text="Patient Management" FontSize="24" />
-            <TextBox x:Name="PatientNameTextBox" PlaceholderText="Patient Name" Margin="0,10,0,0"/>
-            <ComboBox x:Name="GenderComboBox" Margin="0,10,0,0">
-                <ComboBoxItem Content="Male" />
-                <ComboBoxItem Content="Female" />
-                <ComboBoxItem Content="Other" />
+
+            <!-- SSN Field -->
+            <TextBox x:Name="PatientSSNTextBox" PlaceholderText="Patient SSN" Margin="0,10,0,0"/>
+            <TextBlock x:Name="SSNErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid SSN" />
+
+            <!-- First Name Field -->
+            <TextBox x:Name="PatientFirstNameTextBox" PlaceholderText="Patient First Name" Margin="0,10,0,0"/>
+
+            <!-- Last Name Field -->
+            <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Patient Last Name" Margin="0,10,0,0"/>
+
+            <!-- DOB Field -->
+            <DatePicker x:Name="DOBDatePicker" Margin="0,10,0,0"/>
+
+            <!-- Gender Field -->
+            <ComboBox x:Name="GenderComboBox" PlaceholderText="Select Gender" Margin="0,10,0,0">
+                <ComboBoxItem Content="M"/>
+                <!-- Male -->
+                <ComboBoxItem Content="F"/>
+                <!-- Female -->
+                <ComboBoxItem Content="O"/>
+                <!-- Other -->
             </ComboBox>
-            <TextBox x:Name="ZipCodeTextBox" PlaceholderText="Zip Code" Margin="0,10,0,0" />
-            <TextBox x:Name="PhoneNumberTextBox" PlaceholderText="Phone Number" Margin="0,10,0,0" />
+            <TextBlock x:Name="GenderErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Gender is required" />
+
+            <!-- Address Field -->
+            <TextBox x:Name="StreetAddressTextBox" PlaceholderText="Street Address" Margin="0,10,0,0"/>
+            <TextBlock x:Name="StreetAddressErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Street Address" />
+            <TextBox x:Name="ZipCodeTextBox" PlaceholderText="Zip Code" Margin="0,10,0,0"/>
+            <TextBlock x:Name="ZipCodeErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Zip Code" />
+
+            <TextBox x:Name="CityTextBox" PlaceholderText="City" Margin="0,10,0,0"/>
+
+            <ComboBox x:Name="StateComboBox" PlaceholderText="Select State" Margin="0,10,0,0">
+                <ComboBoxItem Content="Alabama"/>
+                <ComboBoxItem Content="Alaska"/>
+                <ComboBoxItem Content="Arizona"/>
+                <ComboBoxItem Content="Arkansas"/>
+                <ComboBoxItem Content="California"/>
+                <ComboBoxItem Content="Colorado"/>
+                <ComboBoxItem Content="Connecticut"/>
+                <ComboBoxItem Content="Delaware"/>
+                <ComboBoxItem Content="Florida"/>
+                <ComboBoxItem Content="Georgia"/>
+                <ComboBoxItem Content="Hawaii"/>
+                <ComboBoxItem Content="Idaho"/>
+                <ComboBoxItem Content="Illinois"/>
+                <ComboBoxItem Content="Indiana"/>
+                <ComboBoxItem Content="Iowa"/>
+                <ComboBoxItem Content="Kansas"/>
+                <ComboBoxItem Content="Kentucky"/>
+                <ComboBoxItem Content="Louisiana"/>
+                <ComboBoxItem Content="Maine"/>
+                <ComboBoxItem Content="Maryland"/>
+                <ComboBoxItem Content="Massachusetts"/>
+                <ComboBoxItem Content="Michigan"/>
+                <ComboBoxItem Content="Minnesota"/>
+                <ComboBoxItem Content="Mississippi"/>
+                <ComboBoxItem Content="Missouri"/>
+                <ComboBoxItem Content="Montana"/>
+                <ComboBoxItem Content="Nebraska"/>
+                <ComboBoxItem Content="Nevada"/>
+                <ComboBoxItem Content="New Hampshire"/>
+                <ComboBoxItem Content="New Jersey"/>
+                <ComboBoxItem Content="New Mexico"/>
+                <ComboBoxItem Content="New York"/>
+                <ComboBoxItem Content="North Carolina"/>
+                <ComboBoxItem Content="North Dakota"/>
+                <ComboBoxItem Content="Ohio"/>
+                <ComboBoxItem Content="Oklahoma"/>
+                <ComboBoxItem Content="Oregon"/>
+                <ComboBoxItem Content="Pennsylvania"/>
+                <ComboBoxItem Content="Rhode Island"/>
+                <ComboBoxItem Content="South Carolina"/>
+                <ComboBoxItem Content="South Dakota"/>
+                <ComboBoxItem Content="Tennessee"/>
+                <ComboBoxItem Content="Texas"/>
+                <ComboBoxItem Content="Utah"/>
+                <ComboBoxItem Content="Vermont"/>
+                <ComboBoxItem Content="Virginia"/>
+                <ComboBoxItem Content="Washington"/>
+                <ComboBoxItem Content="West Virginia"/>
+                <ComboBoxItem Content="Wisconsin"/>
+                <ComboBoxItem Content="Wyoming"/>
+            </ComboBox>
+            <TextBlock x:Name="StateErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="State is required" />
+
+            <ComboBox x:Name="CountryComboBox" PlaceholderText="Select Country" Margin="0,10,0,0">
+                <ComboBoxItem Content="United States"/>
+                <ComboBoxItem Content="Canada"/>
+                <ComboBoxItem Content="United Kingdom"/>
+                <ComboBoxItem Content="Australia"/>
+                <ComboBoxItem Content="India"/>
+                <ComboBoxItem Content="China"/>
+                <ComboBoxItem Content="Japan"/>
+                <ComboBoxItem Content="Germany"/>
+                <ComboBoxItem Content="France"/>
+                <ComboBoxItem Content="Italy"/>
+                <ComboBoxItem Content="Spain"/>
+                <ComboBoxItem Content="Brazil"/>
+                <ComboBoxItem Content="Russia"/>
+                <ComboBoxItem Content="Mexico"/>
+                <ComboBoxItem Content="South Africa"/>
+                <ComboBoxItem Content="Nigeria"/>
+                <ComboBoxItem Content="Kenya"/>
+                <ComboBoxItem Content="Egypt"/>
+                <ComboBoxItem Content="South Korea"/>
+                <ComboBoxItem Content="Argentina"/>
+            </ComboBox>
+            <TextBlock x:Name="CountryErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Country is required" />
+
+
+            <!-- Phone Number Field -->
+            <TextBox x:Name="PhoneNumberTextBox" PlaceholderText="Phone Number" Margin="0,10,0,0"/>
+            <TextBlock x:Name="PhoneErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Phone Number" />
+
+            <!-- Register and Edit Buttons -->
             <Button Content="Register Patient" Click="RegisterPatient_Click" Margin="0,20,0,0"/>
             <Button Content="Edit Patient" Click="EditPatient_Click" Margin="0,20,0,0"/>
         </StackPanel>

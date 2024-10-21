@@ -10,7 +10,7 @@ using System.Net;
 
 namespace DBAccess.DAL
 {
-    public class EmployeeDal
+    public class MailingAddressDal
     {
         /// <summary>
         /// Get all the employees of the given department
@@ -23,19 +23,21 @@ namespace DBAccess.DAL
             var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = "select city, state, zip from mailing_address where ssn = @ssn;";
+            var query = "select street_address, city, state, zip , country from mailing_address where ssn = @ssn;";
 
             var command = new MySqlCommand(query, connection);
             command.Parameters.Add("@ssn", (DbType)MySqlDbType.String).Value = ssn;
 
             var reader = command.ExecuteReader();
-            var firstnameOrdinal = reader.GetOrdinal("city");
-            var birthdateOrdinal = reader.GetOrdinal("state");
-            var departmentNumberOrdinal = reader.GetOrdinal("zip");
+            var streetAddressOrdinal = reader.GetOrdinal("street_address");
+            var cityOrdinal = reader.GetOrdinal("city");
+            var stateOrdinal = reader.GetOrdinal("state");
+            var zipOrdinal = reader.GetOrdinal("zip");
+            var countryOrdinal = reader.GetOrdinal("country");
 
             while (reader.Read())
             {
-                employeeList.Add(CreateMailingAddress(reader, firstnameOrdinal, birthdateOrdinal, departmentNumberOrdinal));
+                employeeList.Add(CreateMailingAddress(reader, streetAddressOrdinal, cityOrdinal, stateOrdinal, countryOrdinal, zipOrdinal));
             }
 
             return employeeList;
@@ -55,33 +57,40 @@ namespace DBAccess.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = "select city, state, zip from mailing_address;";
+            var query = "select street_address, city, state, country, zip from mailing_address;";
 
             using var command = new MySqlCommand(query, connection);
             using var reader = command.ExecuteReader();
+            var streetAddressOrdinal = reader.GetOrdinal("street_address");
+            Debug.WriteLine("Street Address Ordinal: " + streetAddressOrdinal);
             var cityOrdinal = reader.GetOrdinal("city");
             Debug.WriteLine("City Ordinal: " + cityOrdinal);
             var stateOrdinal = reader.GetOrdinal("state");
             Debug.WriteLine("State Ordinal: " + stateOrdinal);
+            var countryOrdinal = reader.GetOrdinal("country");
+            Debug.WriteLine("Zip Ordinal: " + countryOrdinal);
             var zipOrdinal = reader.GetOrdinal("zip");
             Debug.WriteLine("Zip Ordinal: " + zipOrdinal);
 
+
             while (reader.Read())
             {
-                employeeList.Add(CreateMailingAddress(reader, cityOrdinal, stateOrdinal, zipOrdinal));
+                employeeList.Add(CreateMailingAddress(reader, streetAddressOrdinal, cityOrdinal, stateOrdinal, countryOrdinal, zipOrdinal));
 
             }
             
             return employeeList;
         }
 
-        private static MailingAddress CreateMailingAddress(MySqlDataReader reader, int cityOrdinal, int stateOrdinal, int zipOrdinal)
+        private static MailingAddress CreateMailingAddress(MySqlDataReader reader, int streetAddressOrdinal, int cityOrdinal, int stateOrdinal, int countryOrdinal, int zipOrdinal)
         {
             return new MailingAddress
             (
+                reader.GetString(streetAddressOrdinal),
                 reader.GetString(cityOrdinal), //reader.GetString(firstnameOrdinal),
                 reader.GetString(stateOrdinal), //reader.IsDBNull(birthdateOrdinal) ? (DateTime?)null : reader.GetDateTime(birthdateOrdinal)
-                reader.GetString(zipOrdinal)
+                reader.GetString(zipOrdinal),
+                reader.GetString(countryOrdinal)
             );
         }
 
@@ -145,7 +154,7 @@ namespace DBAccess.DAL
 
             while (reader.Read())
             {
-                employeeList.Add(CreateMailingAddress(reader, firstnameOrdinal, birthdateOrdinal, departmentNumberOrdinal));
+                //employeeList.Add(CreateMailingAddress(reader, firstnameOrdinal, birthdateOrdinal, departmentNumberOrdinal));
             }
 
             return employeeList;
