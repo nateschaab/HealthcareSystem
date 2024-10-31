@@ -91,36 +91,36 @@ namespace DBAccess.DAL
         }
 
         private static Patient CreatePatient(
-    MySqlDataReader reader,
-    int ssnOrdinal,
-    int patientIdOrdinal,
-    int pidOrdinal,
-    int phoneNumberOrdinal,
-    int firstNameOrdinal,
-    int lastNameOrdinal,
-    int dobOrdinal,
-    int genderOrdinal,
-    int streetAddressOrdinal,
-    int zipOrdinal,
-    int cityOrdinal,
-    int stateOrdinal,
-    int countryOrdinal)
+            MySqlDataReader reader,
+            int ssnOrdinal,
+            int patientIdOrdinal,
+            int pidOrdinal,
+            int phoneNumberOrdinal,
+            int firstNameOrdinal,
+            int lastNameOrdinal,
+            int dobOrdinal,
+            int genderOrdinal,
+            int streetAddressOrdinal,
+            int zipOrdinal,
+            int cityOrdinal,
+            int stateOrdinal,
+            int countryOrdinal)
         {
             return new Patient
             (
-                reader.GetInt32(patientIdOrdinal),            // patient_id is an integer
-                reader.GetInt32(pidOrdinal),                        // pid is an integer
+                reader.GetInt32(patientIdOrdinal),           
+                reader.GetInt32(pidOrdinal),                     
                 reader.GetString(phoneNumberOrdinal),
                 reader.GetString(ssnOrdinal),
                 reader.GetString(genderOrdinal),
-                reader.GetString(firstNameOrdinal),           // first name is a string
+                reader.GetString(firstNameOrdinal),          
                 reader.GetString(lastNameOrdinal),
                 reader.GetDateTime(dobOrdinal),
                 reader.GetString(streetAddressOrdinal),
-                reader.GetString(zipOrdinal),                   // zip is a string
-                reader.GetString(cityOrdinal),                     // city is a string
-                reader.GetString(stateOrdinal),                   // state is a string
-                reader.GetString(countryOrdinal)    // phone_number is a string            // last name is a              // dob is a    // street_address is a               // country is a string
+                reader.GetString(zipOrdinal),                  
+                reader.GetString(cityOrdinal),                  
+                reader.GetString(stateOrdinal),                 
+                reader.GetString(countryOrdinal)
             );
         }
 
@@ -285,16 +285,18 @@ namespace DBAccess.DAL
                 Debug.WriteLine($"Connection Opened: {connection.State == System.Data.ConnectionState.Open}");
 
                 var query = @"
-        -- Update the person table using the pid from the patient object
-        UPDATE Person 
-        SET fname = @fname, lname = @lname, dob = @dob, street_address = @street_address, zip = @zip
-        WHERE pid = @pid;
+                    UPDATE person 
+                    SET fname = @fname, lname = @lname, dob = @dob, street_address = @street_address, zip = @zip
+                    WHERE pid = @pid;
 
-        -- Update the patient table using the patient_id (primary key in patient table)
-        UPDATE Patient
-        SET phone_number = @phoneNumber
-        WHERE patient_id = @patientId;
-        ";
+                    UPDATE Patient
+                    SET phone_number = @phoneNumber
+                    WHERE patient_id = @patientId;
+
+                    UPDATE mailing_address
+                    SET city = @city, state = @state, country = @country
+                    WHERE street_address = @street_address AND zip = @zip;
+                    ";
 
                 using var command = new MySqlCommand(query, connection);
 
