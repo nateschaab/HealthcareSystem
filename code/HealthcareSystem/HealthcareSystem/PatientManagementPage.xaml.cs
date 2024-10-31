@@ -160,63 +160,64 @@ namespace HealthcareSystem
                 dal.RegisterPatient( patientInfo );
                 // Example output (logging or further action)
                 System.Diagnostics.Debug.WriteLine("Patient Registered: " + patientInfo);
+                this.LoadPatients();
             }
         }
 
         // Edit patient in the database
         private void EditPatient_Click(object sender, RoutedEventArgs e)
         {
-            if (PatientListView.SelectedItem is Patient selectedPatient)
+            if (this.PatientListView.SelectedItem is Patient selectedPatient)
             {
                 // Clear previous error messages
-                SSNErrorTextBlock.Visibility = Visibility.Collapsed;
-                GenderErrorTextBlock.Visibility = Visibility.Collapsed;
-                ZipCodeErrorTextBlock.Visibility = Visibility.Collapsed;
-                PhoneErrorTextBlock.Visibility = Visibility.Collapsed;
-                StateErrorTextBlock.Visibility = Visibility.Collapsed;
+                this.SSNErrorTextBlock.Visibility = Visibility.Collapsed;
+                this.GenderErrorTextBlock.Visibility = Visibility.Collapsed;
+                this.ZipCodeErrorTextBlock.Visibility = Visibility.Collapsed;
+                this.PhoneErrorTextBlock.Visibility = Visibility.Collapsed;
+                this.StateErrorTextBlock.Visibility = Visibility.Collapsed;
 
                 // Validate each field
                 bool isValid = true;
 
                 // Validate SSN (example: 9 digits)
-                if (!Regex.IsMatch(PatientSSNTextBox.Text, @"^\d{9}$"))
+                if (!Regex.IsMatch(this.PatientSSNTextBox.Text, @"^\d{9}$"))
                 {
-                    SSNErrorTextBlock.Visibility = Visibility.Visible;
+                    this.SSNErrorTextBlock.Visibility = Visibility.Visible;
                     isValid = false;
                 }
 
                 // Validate Gender selection
-                if (GenderComboBox.SelectedItem == null)
+                if (this.GenderComboBox.SelectedItem == null)
                 {
-                    GenderErrorTextBlock.Visibility = Visibility.Visible;
+                    this.GenderErrorTextBlock.Visibility = Visibility.Visible;
                     isValid = false;
                 }
 
                 // Validate Zip Code (example: US 5-digit code)
                 if (!Regex.IsMatch(ZipCodeTextBox.Text, @"^\d{5}$"))
                 {
-                    ZipCodeErrorTextBlock.Visibility = Visibility.Visible;
+                    this.ZipCodeErrorTextBlock.Visibility = Visibility.Visible;
                     isValid = false;
                 }
 
                 // Validate Phone Number (example: US 10-digit number)
-                if (!Regex.IsMatch(PhoneNumberTextBox.Text, @"^\d{10}$"))
+                if (!Regex.IsMatch(this.PhoneNumberTextBox.Text, @"^\d{10}$"))
                 {
-                    PhoneErrorTextBlock.Visibility = Visibility.Visible;
+                    this.PhoneErrorTextBlock.Visibility = Visibility.Visible;
                     isValid = false;
                 }
 
                 // Validate State selection
-                if (StateComboBox.SelectedItem == null)
+                if (this.StateComboBox.SelectedItem == null)
                 {
-                    StateErrorTextBlock.Visibility = Visibility.Visible;
+                    this.StateErrorTextBlock.Visibility = Visibility.Visible;
                     isValid = false;
                 }
 
                 // Validate State selection
-                if (CountryComboBox.SelectedItem == null)
+                if (this.CountryComboBox.SelectedItem == null)
                 {
-                    CountryErrorTextBlock.Visibility = Visibility.Visible;
+                    this.CountryErrorTextBlock.Visibility = Visibility.Visible;
                     isValid = false;
                 }
 
@@ -228,17 +229,17 @@ namespace HealthcareSystem
                     // Use PatientSSNTextBox.Text, GenderComboBox.SelectedItem, etc.
                     var patientId = selectedPatient.PatientId;
                     var personId = selectedPatient.PersonId;
-                    var phoneNumber = PhoneNumberTextBox.Text;
-                    var ssn = PatientSSNTextBox.Text;
-                    var gender = (GenderComboBox.SelectedItem as ComboBoxItem).Content.ToString();
-                    var firstName = PatientFirstNameTextBox.Text;
-                    var lastName = PatientLastNameTextBox.Text;
-                    var dob = DOBDatePicker.Date.DateTime;
-                    var address = StreetAddressTextBox.Text;
-                    var zipcode = ZipCodeTextBox.Text;
-                    var city = CityTextBox.Text;
-                    var country = (CountryComboBox.SelectedItem as ComboBoxItem).Content.ToString();
-                    var state = (StateComboBox.SelectedItem as ComboBoxItem).Content.ToString();
+                    var phoneNumber = this.PhoneNumberTextBox.Text;
+                    var ssn = this.PatientSSNTextBox.Text;
+                    var gender = (this.GenderComboBox.SelectedItem as ComboBoxItem).Content.ToString();
+                    var firstName = this.PatientFirstNameTextBox.Text;
+                    var lastName = this.PatientLastNameTextBox.Text;
+                    var dob = this.DOBDatePicker.Date.DateTime;
+                    var address = this.StreetAddressTextBox.Text;
+                    var zipcode = this.ZipCodeTextBox.Text;
+                    var city = this.CityTextBox.Text;
+                    var country = (this.CountryComboBox.SelectedItem as ComboBoxItem).Content.ToString();
+                    var state = (this.StateComboBox.SelectedItem as ComboBoxItem).Content.ToString();
 
                     var patientInfo = new Patient
                     (
