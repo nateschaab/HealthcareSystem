@@ -1,63 +1,108 @@
 using MySql.Data.MySqlClient;
 using System;
-using System.Diagnostics;
 
 namespace DBAccess.DAL
 {
     public class AppointmentDAL
     {
-        public bool CreateAppointment(int doctorId, int patientId, DateTime dateTime, string reason)
+        public bool CreateAppointment(int doctorId, int patientId, DateTime appointmentDateTime, string reason)
         {
-            using var connection = new MySqlConnection(Connection.ConnectionString());
+            // Check for double booking before attempting to create an appointment
+            if (IsDoubleBooking(doctorId, patientId, appointmentDateTime))
+            {
+                Console.WriteLine("Double booking detected. Appointment creation aborted.");
+                return false;
+            }
 
             try
             {
+                using var connection = new MySqlConnection(Connection.ConnectionString());
                 connection.Open();
-                using var transaction = connection.BeginTransaction(); // Begin transaction
 
-                // Step 1: Check if the doctor already has an appointment at the specified time
-                var checkQuery = @"
-                    SELECT COUNT(*) FROM appointment 
-                    WHERE doctor_id = @doctorId AND datetime = @dateTime 
-                    FOR UPDATE;"; // Add FOR UPDATE to lock the row during the transaction
+                int appointmentId = GenerateAppointmentId();
+                int visitId = GenerateVisitId();
 
-                using var checkCommand = new MySqlCommand(checkQuery, connection, transaction);
-                checkCommand.Parameters.AddWithValue("@doctorId", doctorId);
-                checkCommand.Parameters.AddWithValue("@dateTime", dateTime);
+                using var transaction = connection.BeginTransaction();
 
-                var isTimeSlotOccupied = Convert.ToInt32(checkCommand.ExecuteScalar()) > 0;
+                string appointmentQuery = @"
+                    INSERT INTO appointment (appt_id, doctor_id, patient_id, datetime, appt_reason, visit_id)
+                    VALUES (@appt_id, @doctor_id, @patient_id, @datetime, @appt_reason, @visit_id);";
 
-                // Debugging output to confirm the check result
-                Debug.WriteLine("Is time slot occupied: " + isTimeSlotOccupied);
+                using var appointmentCommand = new MySqlCommand(appointmentQuery, connection, transaction);
+                appointmentCommand.Parameters.AddWithValue("@appt_id", appointmentId);
+                appointmentCommand.Parameters.AddWithValue("@doctor_id", doctorId);
+                appointmentCommand.Parameters.AddWithValue("@patient_id", patientId);
+                appointmentCommand.Parameters.AddWithValue("@datetime", appointmentDateTime);
+                appointmentCommand.Parameters.AddWithValue("@appt_reason", reason);
+                appointmentCommand.Parameters.AddWithValue("@visit_id", visitId);
 
-                if (isTimeSlotOccupied)
+                int appointmentRowsAffected = appointmentCommand.ExecuteNonQuery();
+
+                string visitQuery = @"
+                    INSERT INTO visit (visit_id, appt_id, datetime)
+                    VALUES (@visit_id, @appt_id, @datetime);";
+
+                using var visitCommand = new MySqlCommand(visitQuery, connection, transaction);
+                visitCommand.Parameters.AddWithValue("@visit_id", visitId);
+                visitCommand.Parameters.AddWithValue("@appt_id", appointmentId);
+                visitCommand.Parameters.AddWithValue("@datetime", appointmentDateTime);
+
+                int visitRowsAffected = visitCommand.ExecuteNonQuery();
+
+                if (appointmentRowsAffected > 0 && visitRowsAffected > 0)
                 {
-                    transaction.Rollback();  // Rollback if time slot is occupied
+                    transaction.Commit();
+                    return true;
+                }
+                else
+                {
+                    transaction.Rollback();
                     return false;
                 }
-
-                // Step 2: Insert the new appointment if no conflict found
-                var insertQuery = @"
-                    INSERT INTO appointment (doctor_id, patient_id, datetime, appt_reason) 
-                    VALUES (@doctorId, @patientId, @dateTime, @reason);";
-
-                using var insertCommand = new MySqlCommand(insertQuery, connection, transaction);
-                insertCommand.Parameters.AddWithValue("@doctorId", doctorId);
-                insertCommand.Parameters.AddWithValue("@patientId", patientId);
-                insertCommand.Parameters.AddWithValue("@dateTime", dateTime);
-                insertCommand.Parameters.AddWithValue("@reason", reason);
-
-                insertCommand.ExecuteNonQuery();
-
-                transaction.Commit(); // Commit transaction if all steps succeed
-                Debug.WriteLine("Appointment created successfully.");
-                return true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error creating appointment: {ex.Message}");
+                Console.WriteLine($"Error in CreateAppointment: {ex.Message}");
                 return false;
             }
+        }
+
+        private bool IsDoubleBooking(int doctorId, int patientId, DateTime appointmentDateTime)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            // Define the time window (20 minutes before and after the requested time)
+            DateTime startTime = appointmentDateTime.AddMinutes(-20);
+            DateTime endTime = appointmentDateTime.AddMinutes(20);
+
+            string query = @"
+                SELECT COUNT(*) FROM appointment 
+                WHERE (doctor_id = @doctor_id OR patient_id = @patient_id)
+                AND datetime BETWEEN @start_time AND @end_time;";
+
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@doctor_id", doctorId);
+            command.Parameters.AddWithValue("@patient_id", patientId);
+            command.Parameters.AddWithValue("@start_time", startTime);
+            command.Parameters.AddWithValue("@end_time", endTime);
+
+            int count = Convert.ToInt32(command.ExecuteScalar());
+
+            // Return true if any existing appointment falls within the 20-minute window
+            return count > 0;
+        }
+
+        private int GenerateAppointmentId()
+        {
+            Random random = new Random();
+            return random.Next(100000, 999999);
+        }
+
+        private int GenerateVisitId()
+        {
+            Random random = new Random();
+            return random.Next(100000, 999999);
         }
     }
 }

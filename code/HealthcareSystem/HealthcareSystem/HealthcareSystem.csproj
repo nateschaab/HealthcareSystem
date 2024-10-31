@@ -138,6 +138,7 @@
     <Compile Include="DAL\AppointmentDAL.cs" />
     <Compile Include="DAL\Connection.cs" />
     <Compile Include="DAL\DataHelper.cs" />
+    <Compile Include="DAL\DoctorDAL.cs" />
     <Compile Include="DAL\LoginDAL.cs" />
     <Compile Include="DAL\MailingAddressDal.cs" />
     <Compile Include="DAL\PatientDAL.cs" />
