@@ -24,50 +24,17 @@ namespace HealthcareSystem
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
-            if (e.Parameter != null)
-            {
-                LoggedInUsername = e.Parameter.ToString();
-                LoadUserInfo(LoggedInUsername);
-            }
+            LoadUserInfo();
         }
 
-        private void LoadUserInfo(string username)
+        private void LoadUserInfo()
         {
-            try
-            {
-                Debug.WriteLine($"Received username: {username}");
+            string firstName = SessionManager.Instance.FirstName;
+            string lastName = SessionManager.Instance.LastName;
+            string username = SessionManager.Instance.Username;
 
-                UserInfo.Text = $"Logged in as: {username}";
-
-                using var connection = new MySqlConnection(Connection.ConnectionString());
-                connection.Open();
-                Debug.WriteLine("Database connection opened successfully.");
-
-                string query = "SELECT username FROM account WHERE username = @username";
-
-                using var command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@username", username);
-
-                using var reader = command.ExecuteReader();
-                if (reader.Read())
-                {
-                    string retrievedUsername = reader["username"].ToString();
-                    Debug.WriteLine($"Database returned username: {retrievedUsername}");
-
-                    UserInfo.Text = $"Logged in as: {retrievedUsername}";
-                }
-                else
-                {
-                    Debug.WriteLine("No rows returned from the database.");
-                    UserInfo.Text = "User not found in the database.";
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"An error occurred: {ex.Message}");
-                UserInfo.Text = "An error occurred while loading user info.";
-            }
+            UserInfo.Text = $"Logged in as: {firstName} {lastName} (Username: {username})";
+            Debug.WriteLine($"User Info Loaded: {firstName} {lastName} (Username: {username})");
         }
 
         private void ManagePatients_Click(object sender, RoutedEventArgs e)
@@ -78,6 +45,17 @@ namespace HealthcareSystem
         private void AdminFunctions_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(AdminPage));
+        }
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Clear user information in SessionManager
+            SessionManager.Instance.Username = null;
+            SessionManager.Instance.FirstName = null;
+            SessionManager.Instance.LastName = null;
+
+            // Navigate back to the LoginPage
+            Frame.Navigate(typeof(LoginPage));
         }
     }
 }

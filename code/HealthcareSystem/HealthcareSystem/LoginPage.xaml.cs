@@ -12,9 +12,12 @@ namespace HealthcareSystem
 {
     public sealed partial class LoginPage : Page
     {
+        private readonly LoginDAL _loginDAL;
+
         public LoginPage()
         {
             this.InitializeComponent();
+            _loginDAL = new LoginDAL();
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
@@ -22,10 +25,17 @@ namespace HealthcareSystem
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;
 
-            if (IsLoginValid(username, password))
+            var (isValid, firstName, lastName) = _loginDAL.ValidateLoginAndGetName(username, password);
+
+            if (isValid)
             {
                 Debug.WriteLine("Login successful. Navigating to MainPage.");
-                Frame.Navigate(typeof(MainPage), username);
+
+                SessionManager.Instance.Username = username;
+                SessionManager.Instance.FirstName = firstName;
+                SessionManager.Instance.LastName = lastName;
+
+                Frame.Navigate(typeof(MainPage));
             }
             else
             {
@@ -33,24 +43,5 @@ namespace HealthcareSystem
             }
         }
 
-        public bool IsLoginValid(string username, string password)
-        {
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-            connection.Open();
-
-            var goodQuery = "select count(*) from account where username = @username and password =@password;";
-
-            using var command = new MySqlCommand(goodQuery, connection);
-
-            command.Parameters.Add("@username", (DbType)MySqlDbType.VarChar);
-            command.Parameters["@username"].Value = username;
-
-            command.Parameters.Add("@password", (DbType)MySqlDbType.VarChar);
-            command.Parameters["@password"].Value = password;
-
-            var count = Convert.ToInt32(command.ExecuteScalar());
-
-            return count == 1;
-        }
     }
 }

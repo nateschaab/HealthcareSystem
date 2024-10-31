@@ -134,9 +134,11 @@
     </Compile>
     <Compile Include="DAL\Connection.cs" />
     <Compile Include="DAL\DataHelper.cs" />
+    <Compile Include="DAL\LoginDAL.cs" />
     <Compile Include="DAL\MailingAddressDal.cs" />
     <Compile Include="DAL\PatientDAL.cs" />
     <Compile Include="DAL\Program.cs" />
+    <Compile Include="DAL\SessionManager.cs" />
     <Compile Include="DAL\SQLInjectionDemo.cs" />
     <Compile Include="LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
