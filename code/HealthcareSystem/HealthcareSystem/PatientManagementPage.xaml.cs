@@ -160,6 +160,7 @@ namespace HealthcareSystem
                 dal.RegisterPatient( patientInfo );
                 // Example output (logging or further action)
                 System.Diagnostics.Debug.WriteLine("Patient Registered: " + patientInfo);
+                this.LoadPatients();
             }
         }
 
