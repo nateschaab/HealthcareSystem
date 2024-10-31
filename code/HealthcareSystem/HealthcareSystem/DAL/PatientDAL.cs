@@ -28,31 +28,30 @@ namespace DBAccess.DAL
 
             // Updated query to retrieve all necessary fields
             var query = @"
-        SELECT 
-            p.patient_id, 
-            p.pid, 
-            p.phone_number,
-            per.ssn,
-            per.fname, 
-            per.lname, 
-            per.dob, 
-            per.gender, 
-            ma.street_address, 
-            ma.zip, 
-            ma.city, 
-            ma.state, 
-            ma.country
-        FROM 
-            patient p
-        JOIN 
-            person per ON p.pid = per.pid
-        JOIN 
-            mailing_address ma ON per.street_address = ma.street_address AND per.zip = ma.zip;";
+                SELECT 
+                    p.patient_id, 
+                    p.pid, 
+                    p.phone_number,
+                    per.ssn,
+                    per.fname, 
+                    per.lname, 
+                    per.dob, 
+                    per.gender, 
+                    ma.street_address, 
+                    ma.zip, 
+                    ma.city, 
+                    ma.state, 
+                    ma.country
+                FROM 
+                    patient p
+                JOIN 
+                    person per ON p.pid = per.pid
+                JOIN 
+                    mailing_address ma ON per.street_address = ma.street_address AND per.zip = ma.zip;";
 
             using var command = new MySqlCommand(query, connection);
             using var reader = command.ExecuteReader();
 
-            // Get ordinal positions for all necessary fields
             var ssnOrdinal = reader.GetOrdinal("ssn");
             var firstNameOrdinal = reader.GetOrdinal("fname");
             var lastNameOrdinal = reader.GetOrdinal("lname");
@@ -131,80 +130,117 @@ namespace DBAccess.DAL
             try
             {
                 connection.Open();
-                using var transaction = connection.BeginTransaction(); // Start transaction
+                using var transaction = connection.BeginTransaction();
 
-                // Step 1: Check if the mailing address already exists in the mailing_address table
-                var checkAddressQuery = @"
-            SELECT COUNT(*) FROM mailing_address 
-            WHERE street_address = @street_address AND zip = @zip;";
+                // Debugging: Output the connection state and information
+                Debug.WriteLine($"Connection Opened: {connection.State == System.Data.ConnectionState.Open}");
 
-                using var checkAddressCommand = new MySqlCommand(checkAddressQuery, connection, transaction);
-                checkAddressCommand.Parameters.AddWithValue("@street_address", patient.MailAddress.StreetAddress);
-                checkAddressCommand.Parameters.AddWithValue("@zip", patient.MailAddress.Zip);
+                // Step 1: Insert mailing address without the PID
+                var insertAddressQuery = @"
+                    INSERT INTO mailing_address (street_address, zip, city, state, country)
+                    VALUES (@street_address, @zip, @city, @state, @country);
+                ";
 
-                var addressExists = Convert.ToInt32(checkAddressCommand.ExecuteScalar()) > 0;
-
-                // Step 2: If address does not exist, insert into mailing_address
-                if (!addressExists)
+                using (var insertAddressCommand = new MySqlCommand(insertAddressQuery, connection, transaction))
                 {
-                    var insertAddressQuery = @"
-                INSERT INTO mailing_address (street_address, zip, city, state, country) 
-                VALUES (@street_address, @zip, @city, @state, @country);";
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@city", MySqlDbType.VarChar) { Value = patient.MailAddress.City });
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@state", MySqlDbType.VarChar) { Value = patient.MailAddress.State });
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@country", MySqlDbType.VarChar) { Value = patient.MailAddress.Country });
 
-                    using var insertAddressCommand = new MySqlCommand(insertAddressQuery, connection, transaction);
-                    insertAddressCommand.Parameters.AddWithValue("@street_address", patient.MailAddress.StreetAddress);
-                    insertAddressCommand.Parameters.AddWithValue("@zip", patient.MailAddress.Zip);
-                    insertAddressCommand.Parameters.AddWithValue("@city", patient.MailAddress.City);
-                    insertAddressCommand.Parameters.AddWithValue("@state", patient.MailAddress.State);
-                    insertAddressCommand.Parameters.AddWithValue("@country", patient.MailAddress.Country);
+
+                    // Debugging: Output the parameter values being added
+                    Debug.WriteLine("Inserting Mailing Address without PID with the following values:");
+                    Debug.WriteLine($"Street Address: {patient.MailAddress.StreetAddress}");
+                    Debug.WriteLine($"Zip: {patient.MailAddress.Zip}");
+                    Debug.WriteLine($"City: {patient.MailAddress.City}");
+                    Debug.WriteLine($"State: {patient.MailAddress.State}");
+                    Debug.WriteLine($"Country: {patient.MailAddress.Country}");
 
                     insertAddressCommand.ExecuteNonQuery();
+                    Debug.WriteLine("Mailing address inserted successfully.");
                 }
 
-                // Step 3: Insert into Person table and get the generated pid
-                var personQuery = @"
-            INSERT INTO Person (ssn, gender, fname, lname, dob, street_address, zip) 
-            VALUES (@ssn, @gender, @fname, @lname, @dob, @street_address, @zip);
-            SELECT LAST_INSERT_ID();";  // Fetch the generated pid after insertion
+                // Step 2: Insert person details and get the generated PID
+                var insertPersonQuery = @"
+                    INSERT INTO person (ssn, fname, lname, gender, dob, street_address, zip)
+                    VALUES (@ssn, @fname, @lname, @gender, @dob, @street_address, @zip);
+                    SELECT LAST_INSERT_ID();
+                ";
 
-                using var personCommand = new MySqlCommand(personQuery, connection, transaction);
+                using (var insertPersonCommand = new MySqlCommand(insertPersonQuery, connection, transaction))
+                {
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@ssn", MySqlDbType.String) { Value = patient.SSN });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@fname", MySqlDbType.VarChar) { Value = patient.FirstName });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@lname", MySqlDbType.VarChar) { Value = patient.LastName });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@gender", MySqlDbType.String) { Value = patient.Gender });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@dob", MySqlDbType.Date) { Value = patient.DateOfBirth });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
 
-                personCommand.Parameters.AddWithValue("@ssn", patient.SSN);
-                personCommand.Parameters.AddWithValue("@gender", patient.Gender);
-                personCommand.Parameters.AddWithValue("@fname", patient.FirstName);
-                personCommand.Parameters.AddWithValue("@lname", patient.LastName);
-                personCommand.Parameters.AddWithValue("@dob", patient.DateOfBirth);
-                personCommand.Parameters.AddWithValue("@street_address", patient.MailAddress.StreetAddress);
-                personCommand.Parameters.AddWithValue("@zip", patient.MailAddress.Zip);
 
-                // Execute and retrieve the generated pid (personId)
-                var personId = Convert.ToInt32(personCommand.ExecuteScalar());
+                    // Retrieve the newly generated person ID (pid)
+                    patient.PersonId = Convert.ToInt32(insertPersonCommand.ExecuteScalar());
+                    Debug.WriteLine($"Generated Person ID (pid): {patient.PersonId}");
+                }
 
-                // Log the generated personId to ensure it's being retrieved correctly
-                Debug.WriteLine("Generated Person ID (pid): " + personId);
+                // Step 3: Update mailing address with the generated PID
+                var updateAddressQuery = @"
+                    UPDATE mailing_address
+                    SET pid = @pid
+                    WHERE street_address = @street_address AND zip = @zip;
+                ";
 
-                // Step 4: Insert into Patient table using the generated pid
-                var patientQuery = @"
-            INSERT INTO Patient (pid, phone_number) 
-            VALUES (@pid, @phoneNumber);";
+                using (var updateAddressCommand = new MySqlCommand(updateAddressQuery, connection, transaction))
+                {
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32) { Value = patient.PersonId });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
 
-                using var patientCommand = new MySqlCommand(patientQuery, connection, transaction);
-                patientCommand.Parameters.AddWithValue("@pid", personId);  // Use the pid from the Person table
-                patientCommand.Parameters.AddWithValue("@phoneNumber", patient.PhoneNumber);
 
-                // Execute the insert into Patient table
-                patientCommand.ExecuteNonQuery();
+                    // Debugging: Output the parameter values being added
+                    Debug.WriteLine("Updating Mailing Address with the following values:");
+                    Debug.WriteLine($"pid: {patient.PersonId}");
+                    Debug.WriteLine($"Street Address: {patient.MailAddress.StreetAddress}");
+                    Debug.WriteLine($"Zip: {patient.MailAddress.Zip}");
 
-                // Commit the transaction
+                    updateAddressCommand.ExecuteNonQuery();
+                    Debug.WriteLine("Mailing address updated with PID successfully.");
+                }
+
+                // Step 4: Insert patient details
+                var insertPatientQuery = @"
+                    INSERT INTO patient (pid, phone_number)
+                    VALUES (@pid, @phoneNumber);
+                ";
+
+                using (var insertPatientCommand = new MySqlCommand(insertPatientQuery, connection, transaction))
+                {
+                    insertPatientCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32) { Value = patient.PersonId });
+                    insertPatientCommand.Parameters.Add(new MySqlParameter("@phoneNumber", MySqlDbType.VarChar) { Value = patient.PhoneNumber });
+
+
+                    // Debugging: Output the parameter values being added
+                    Debug.WriteLine("Inserting Patient Details with the following values:");
+                    Debug.WriteLine($"pid: {patient.PersonId}");
+                    Debug.WriteLine($"Phone Number: {patient.PhoneNumber}");
+
+                    insertPatientCommand.ExecuteNonQuery();
+                    Debug.WriteLine("Patient details inserted successfully.");
+                }
+
+                // Commit transaction
                 transaction.Commit();
-
-                Debug.WriteLine("Patient registered successfully with PID: " + personId);
+                Debug.WriteLine("Patient registered successfully.");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error registering patient: " + ex.Message);
+                Debug.WriteLine($"Error registering patient: {ex.Message}");
             }
         }
+
 
         public void UpdatePatientInDatabase(Patient patient)
         {
@@ -213,57 +249,118 @@ namespace DBAccess.DAL
             try
             {
                 connection.Open();
+                using var transaction = connection.BeginTransaction();
 
-                // Debugging: Output the connection state and information
+                // Disable foreign key checks to avoid circular dependency issues during the update
+                var disableFKChecks = "SET FOREIGN_KEY_CHECKS=0;";
+                using (var disableCommand = new MySqlCommand(disableFKChecks, connection, transaction))
+                {
+                    disableCommand.ExecuteNonQuery();
+                }
+
                 Debug.WriteLine($"Connection Opened: {connection.State == System.Data.ConnectionState.Open}");
 
-                var query = @"
-                    UPDATE person 
-                    SET fname = @fname, lname = @lname, dob = @dob, street_address = @street_address, zip = @zip
+                // Step 1: Update mailing address first to ensure no foreign key violations
+                var updateAddressQuery = @"
+                    UPDATE mailing_address
+                    SET street_address = @new_street_address,
+                        zip = @new_zip,
+                        city = @city,
+                        state = @state,
+                        country = @country
                     WHERE pid = @pid;
+                ";
 
-                    UPDATE Patient
+                using (var updateAddressCommand = new MySqlCommand(updateAddressQuery, connection, transaction))
+                {
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32) { Value = patient.PersonId });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@new_street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@new_zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@city", MySqlDbType.VarChar) { Value = patient.MailAddress.City });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@state", MySqlDbType.VarChar) { Value = patient.MailAddress.State });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@country", MySqlDbType.VarChar) { Value = patient.MailAddress.Country });
+
+
+                    Debug.WriteLine("Updating Mailing Address with the following values:");
+                    Debug.WriteLine($"pid: {patient.PersonId}");
+                    Debug.WriteLine($"Street Address: {patient.MailAddress.StreetAddress}");
+                    Debug.WriteLine($"Zip: {patient.MailAddress.Zip}");
+                    Debug.WriteLine($"City: {patient.MailAddress.City}");
+                    Debug.WriteLine($"State: {patient.MailAddress.State}");
+                    Debug.WriteLine($"Country: {patient.MailAddress.Country}");
+
+                    var addressRowsAffected = updateAddressCommand.ExecuteNonQuery();
+                    Debug.WriteLine($"Mailing address rows affected: {addressRowsAffected}");
+                }
+
+                // Step 2: Update person details to match the changes in mailing_address
+                var updatePersonQuery = @"
+                    UPDATE person 
+                    SET ssn = @ssn,
+                        fname = @fname,
+                        lname = @lname,
+                        gender = @gender,
+                        dob = @dob,
+                        street_address = @new_street_address,
+                        zip = @new_zip
+                    WHERE pid = @pid;
+                ";
+
+                using (var updatePersonCommand = new MySqlCommand(updatePersonQuery, connection, transaction))
+                {
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32) { Value = patient.PersonId });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@ssn", MySqlDbType.String) { Value = patient.SSN });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@fname", MySqlDbType.VarChar) { Value = patient.FirstName });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@lname", MySqlDbType.VarChar) { Value = patient.LastName });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@gender", MySqlDbType.String) { Value = patient.Gender });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@dob", MySqlDbType.Date) { Value = patient.DateOfBirth });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@new_street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@new_zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
+
+
+                    Debug.WriteLine("Updating Person Details with the following values:");
+                    Debug.WriteLine($"pid: {patient.PersonId}");
+                    Debug.WriteLine($"SSN: {patient.SSN}");
+                    Debug.WriteLine($"First Name: {patient.FirstName}");
+                    Debug.WriteLine($"Last Name: {patient.LastName}");
+                    Debug.WriteLine($"Gender: {patient.Gender}");
+                    Debug.WriteLine($"Date of Birth: {patient.DateOfBirth}");
+                    Debug.WriteLine($"Street Address: {patient.MailAddress.StreetAddress}");
+                    Debug.WriteLine($"Zip: {patient.MailAddress.Zip}");
+
+                    var personRowsAffected = updatePersonCommand.ExecuteNonQuery();
+                    Debug.WriteLine($"Person rows affected: {personRowsAffected}");
+                }
+
+                // Step 3: Update patient details
+                var updatePatientQuery = @"
+                    UPDATE patient
                     SET phone_number = @phoneNumber
                     WHERE patient_id = @patientId;
+                ";
 
-                    UPDATE mailing_address
-                    SET city = @city, state = @state, country = @country
-                    WHERE street_address = @street_address AND zip = @zip;
-                    ";
+                using (var updatePatientCommand = new MySqlCommand(updatePatientQuery, connection, transaction))
+                {
+                    updatePatientCommand.Parameters.Add(new MySqlParameter("@patientId", MySqlDbType.Int32) { Value = patient.PatientId });
+                    updatePatientCommand.Parameters.Add(new MySqlParameter("@phoneNumber", MySqlDbType.VarChar) { Value = patient.PhoneNumber });
 
-                using var command = new MySqlCommand(query, connection);
+                    Debug.WriteLine("Updating Patient Details with the following values:");
+                    Debug.WriteLine($"Patient ID: {patient.PatientId}");
+                    Debug.WriteLine($"Phone Number: {patient.PhoneNumber}");
 
-                // Debugging: Output the parameter values before execution
-                Debug.WriteLine($"FirstName: {patient.FirstName}");
-                Debug.WriteLine($"LastName: {patient.LastName}");
-                Debug.WriteLine($"Date of Birth: {patient.DateOfBirth}");
-                Debug.WriteLine($"Street Address: {patient.MailAddress.StreetAddress}");
-                Debug.WriteLine($"Zip Code: {patient.MailAddress.Zip}");
-                Debug.WriteLine($"Person ID (pid): {patient.PersonId}");
-                Debug.WriteLine($"Phone Number: {patient.PhoneNumber}");
-                Debug.WriteLine($"Patient ID: {patient.PatientId}");
+                    var patientRowsAffected = updatePatientCommand.ExecuteNonQuery();
+                    Debug.WriteLine($"Patient rows affected: {patientRowsAffected}");
+                }
 
-                // Set parameters for the person table update
-                command.Parameters.AddWithValue("@fname", patient.FirstName);
-                command.Parameters.AddWithValue("@lname", patient.LastName);
-                command.Parameters.AddWithValue("@dob", patient.DateOfBirth);
-                command.Parameters.AddWithValue("@street_address", patient.MailAddress.StreetAddress);
-                command.Parameters.AddWithValue("@zip", patient.MailAddress.Zip);
-                command.Parameters.AddWithValue("@pid", patient.PersonId);  // Correctly set the pid for the person table
+                // Re-enable foreign key checks after completing the update
+                var enableFKChecks = "SET FOREIGN_KEY_CHECKS=1;";
+                using (var enableCommand = new MySqlCommand(enableFKChecks, connection, transaction))
+                {
+                    enableCommand.ExecuteNonQuery();
+                }
 
-                // Set parameters for the patient table update
-                command.Parameters.AddWithValue("@phoneNumber", patient.PhoneNumber);
-                command.Parameters.AddWithValue("@patientId", patient.PatientId);  // Correctly set the patient_id for the patient table
-
-                // Debugging: Output the command text
-                Debug.WriteLine("Executing SQL Query:");
-                Debug.WriteLine(command.CommandText);
-
-                // Execute the query
-                var rowsAffected = command.ExecuteNonQuery();
-
-                // Debugging: Output the result of the query execution
-                Debug.WriteLine($"Rows affected: {rowsAffected}");
+                // Commit transaction
+                transaction.Commit();
                 Debug.WriteLine("Patient updated successfully.");
             }
             catch (Exception ex)
