@@ -28,31 +28,30 @@ namespace DBAccess.DAL
 
             // Updated query to retrieve all necessary fields
             var query = @"
-        SELECT 
-            p.patient_id, 
-            p.pid, 
-            p.phone_number,
-            per.ssn,
-            per.fname, 
-            per.lname, 
-            per.dob, 
-            per.gender, 
-            ma.street_address, 
-            ma.zip, 
-            ma.city, 
-            ma.state, 
-            ma.country
-        FROM 
-            patient p
-        JOIN 
-            person per ON p.pid = per.pid
-        JOIN 
-            mailing_address ma ON per.street_address = ma.street_address AND per.zip = ma.zip;";
+                SELECT 
+                    p.patient_id, 
+                    p.pid, 
+                    p.phone_number,
+                    per.ssn,
+                    per.fname, 
+                    per.lname, 
+                    per.dob, 
+                    per.gender, 
+                    ma.street_address, 
+                    ma.zip, 
+                    ma.city, 
+                    ma.state, 
+                    ma.country
+                FROM 
+                    patient p
+                JOIN 
+                    person per ON p.pid = per.pid
+                JOIN 
+                    mailing_address ma ON per.street_address = ma.street_address AND per.zip = ma.zip;";
 
             using var command = new MySqlCommand(query, connection);
             using var reader = command.ExecuteReader();
 
-            // Get ordinal positions for all necessary fields
             var ssnOrdinal = reader.GetOrdinal("ssn");
             var firstNameOrdinal = reader.GetOrdinal("fname");
             var lastNameOrdinal = reader.GetOrdinal("lname");
@@ -138,9 +137,9 @@ namespace DBAccess.DAL
 
                 // Step 1: Insert mailing address without the PID
                 var insertAddressQuery = @"
-            INSERT INTO mailing_address (street_address, zip, city, state, country)
-            VALUES (@street_address, @zip, @city, @state, @country);
-        ";
+                    INSERT INTO mailing_address (street_address, zip, city, state, country)
+                    VALUES (@street_address, @zip, @city, @state, @country);
+                ";
 
                 using (var insertAddressCommand = new MySqlCommand(insertAddressQuery, connection, transaction))
                 {
@@ -164,10 +163,10 @@ namespace DBAccess.DAL
 
                 // Step 2: Insert person details and get the generated PID
                 var insertPersonQuery = @"
-            INSERT INTO person (ssn, fname, lname, gender, dob, street_address, zip)
-            VALUES (@ssn, @fname, @lname, @gender, @dob, @street_address, @zip);
-            SELECT LAST_INSERT_ID();
-        ";
+                    INSERT INTO person (ssn, fname, lname, gender, dob, street_address, zip)
+                    VALUES (@ssn, @fname, @lname, @gender, @dob, @street_address, @zip);
+                    SELECT LAST_INSERT_ID();
+                ";
 
                 using (var insertPersonCommand = new MySqlCommand(insertPersonQuery, connection, transaction))
                 {
@@ -186,10 +185,10 @@ namespace DBAccess.DAL
 
                 // Step 3: Update mailing address with the generated PID
                 var updateAddressQuery = @"
-            UPDATE mailing_address
-            SET pid = @pid
-            WHERE street_address = @street_address AND zip = @zip;
-        ";
+                    UPDATE mailing_address
+                    SET pid = @pid
+                    WHERE street_address = @street_address AND zip = @zip;
+                ";
 
                 using (var updateAddressCommand = new MySqlCommand(updateAddressQuery, connection, transaction))
                 {
@@ -209,9 +208,9 @@ namespace DBAccess.DAL
 
                 // Step 4: Insert patient details
                 var insertPatientQuery = @"
-            INSERT INTO patient (pid, phone_number)
-            VALUES (@pid, @phoneNumber);
-        ";
+                    INSERT INTO patient (pid, phone_number)
+                    VALUES (@pid, @phoneNumber);
+                ";
 
                 using (var insertPatientCommand = new MySqlCommand(insertPatientQuery, connection, transaction))
                 {
@@ -258,14 +257,14 @@ namespace DBAccess.DAL
 
                 // Step 1: Update mailing address first to ensure no foreign key violations
                 var updateAddressQuery = @"
-            UPDATE mailing_address
-            SET street_address = @new_street_address,
-                zip = @new_zip,
-                city = @city,
-                state = @state,
-                country = @country
-            WHERE pid = @pid;
-        ";
+                    UPDATE mailing_address
+                    SET street_address = @new_street_address,
+                        zip = @new_zip,
+                        city = @city,
+                        state = @state,
+                        country = @country
+                    WHERE pid = @pid;
+                ";
 
                 using (var updateAddressCommand = new MySqlCommand(updateAddressQuery, connection, transaction))
                 {
@@ -290,16 +289,16 @@ namespace DBAccess.DAL
 
                 // Step 2: Update person details to match the changes in mailing_address
                 var updatePersonQuery = @"
-            UPDATE person 
-            SET ssn = @ssn,
-                fname = @fname,
-                lname = @lname,
-                gender = @gender,
-                dob = @dob,
-                street_address = @new_street_address,
-                zip = @new_zip
-            WHERE pid = @pid;
-        ";
+                    UPDATE person 
+                    SET ssn = @ssn,
+                        fname = @fname,
+                        lname = @lname,
+                        gender = @gender,
+                        dob = @dob,
+                        street_address = @new_street_address,
+                        zip = @new_zip
+                    WHERE pid = @pid;
+                ";
 
                 using (var updatePersonCommand = new MySqlCommand(updatePersonQuery, connection, transaction))
                 {
@@ -328,10 +327,10 @@ namespace DBAccess.DAL
 
                 // Step 3: Update patient details
                 var updatePatientQuery = @"
-            UPDATE patient
-            SET phone_number = @phoneNumber
-            WHERE patient_id = @patientId;
-        ";
+                    UPDATE patient
+                    SET phone_number = @phoneNumber
+                    WHERE patient_id = @patientId;
+                ";
 
                 using (var updatePatientCommand = new MySqlCommand(updatePatientQuery, connection, transaction))
                 {
