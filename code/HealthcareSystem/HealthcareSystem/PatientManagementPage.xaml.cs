@@ -161,6 +161,15 @@ namespace HealthcareSystem
                 // Example output (logging or further action)
                 System.Diagnostics.Debug.WriteLine("Patient Registered: " + patientInfo);
                 this.LoadPatients();
+
+                foreach (var patient in patients)
+                {
+                    if (patient.PersonId == patientInfo.PersonId)
+                    {
+                        PatientListView.SelectedItem = patient;
+                        break;
+                    }
+                }
             }
         }
 
