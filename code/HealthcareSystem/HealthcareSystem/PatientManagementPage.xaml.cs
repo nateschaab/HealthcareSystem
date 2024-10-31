@@ -162,11 +162,11 @@ namespace HealthcareSystem
                 System.Diagnostics.Debug.WriteLine("Patient Registered: " + patientInfo);
                 this.LoadPatients();
 
-                foreach (var patient in patients)
+                foreach (var patient in this.patients)
                 {
                     if (patient.PersonId == patientInfo.PersonId)
                     {
-                        PatientListView.SelectedItem = patient;
+                        this.PatientListView.SelectedItem = patient;
                         break;
                     }
                 }
