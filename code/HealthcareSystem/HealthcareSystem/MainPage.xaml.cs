@@ -57,5 +57,10 @@ namespace HealthcareSystem
             // Navigate back to the LoginPage
             Frame.Navigate(typeof(LoginPage));
         }
+
+        private void CreateAppointment_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(AppointmentPage));
+        }
     }
 }

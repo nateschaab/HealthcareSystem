@@ -124,73 +124,6 @@ namespace DBAccess.DAL
             );
         }
 
-
-        /// <summary>
-        /// Demo getting Scalar value (e.g. a single value) from the DB.
-        /// Just use the ExecuteScalar() of the Command class.
-        /// 
-        /// </summary>
-        /// <returns>total count of employees of the DB</returns>
-        public int GetPatientCount()
-        {
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-
-            connection.Open();
-            var query = "select count(*) from patient;";
-
-            using var command = new MySqlCommand(query, connection);
-            var count = Convert.ToInt32(command.ExecuteScalar());
-
-            return count;
-        }
-
-        /// <summary>
-        /// Demo the disconnected model
-        /// </summary>
-        /// <returns> list of all employees</returns>
-        public List<Patient> GetPatientsFromDataSet()
-        {
-            var patientList = new List<Patient>();
-
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-
-            var query = "select city, state, zip from mailing_address;";
-
-            using var adapter = new MySqlDataAdapter(query, connection);
-
-            var table = new DataTable();
-            adapter.Fill(table);
-
-            return patientList;
-
-        }
-
-        public List<MailingAddress> GetPatientBy(char gender, double salary)
-        {
-            var employeeList = new List<MailingAddress>();
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-
-            connection.Open();
-            var query = "select city, state, zip from mailing_address where salary > @salary AND sex = @gender";
-
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@gender", (DbType)MySqlDbType.VarChar).Value = gender;
-            command.Parameters.Add("@salary", (DbType)MySqlDbType.Double).Value = salary;
-
-            using var reader = command.ExecuteReader();
-            var firstnameOrdinal = reader.GetOrdinal("fname");
-            var birthdateOrdinal = reader.GetOrdinal("bdate");
-            var departmentNumberOrdinal = reader.GetOrdinal("dno");
-
-            while (reader.Read())
-            {
-                //TODO
-                //employeeList.Add(CreatePatient(reader, firstnameOrdinal, birthdateOrdinal, departmentNumberOrdinal));
-            }
-
-            return employeeList;
-        }
-
         public void RegisterPatient(Patient patient)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
@@ -338,6 +271,34 @@ namespace DBAccess.DAL
                 Debug.WriteLine($"Error updating patient: {ex.Message}");
             }
         }
+
+        /*
+        public List<MailingAddress> GetPatientBy(char gender, double salary)
+        {
+            var employeeList = new List<MailingAddress>();
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+
+            connection.Open();
+            var query = "select city, state, zip from mailing_address where salary > @salary AND sex = @gender";
+
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.Add("@gender", (DbType)MySqlDbType.VarChar).Value = gender;
+            command.Parameters.Add("@salary", (DbType)MySqlDbType.Double).Value = salary;
+
+            using var reader = command.ExecuteReader();
+            var firstnameOrdinal = reader.GetOrdinal("fname");
+            var birthdateOrdinal = reader.GetOrdinal("bdate");
+            var departmentNumberOrdinal = reader.GetOrdinal("dno");
+
+            while (reader.Read())
+            {
+                //TODO
+                //employeeList.Add(CreatePatient(reader, firstnameOrdinal, birthdateOrdinal, departmentNumberOrdinal));
+            }
+
+            return employeeList;
+        }
+        */
     }
 }
 

@@ -1,0 +1,30 @@
+<Page
+    x:Class="HealthcareSystem.AppointmentPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel Margin="20">
+            <TextBlock Text="Create Appointment" FontSize="24" />
+
+            <!-- Doctor ID Field -->
+            <TextBox x:Name="DoctorIdTextBox" PlaceholderText="Doctor ID" Margin="0,10,0,0"/>
+
+            <!-- Patient ID Field -->
+            <TextBox x:Name="PatientIdTextBox" PlaceholderText="Patient ID" Margin="0,10,0,0"/>
+
+            <!-- Date and Time Picker -->
+            <DatePicker x:Name="AppointmentDatePicker" Header="Select Date" Margin="0,10,0,0"/>
+            <TimePicker x:Name="AppointmentTimePicker" Header="Select Time" Margin="0,10,0,0"/>
+
+            <!-- Appointment Reason -->
+            <TextBox x:Name="ReasonTextBox" PlaceholderText="Reason for Appointment" Margin="0,10,0,0"/>
+
+            <!-- Create Appointment Button -->
+            <Button Content="Create Appointment" Click="CreateAppointment_Click" Margin="0,20,0,0"/>
+
+            <!-- Error Message -->
+            <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Collapsed" />
+        </StackPanel>
+    </Grid>
+</Page>

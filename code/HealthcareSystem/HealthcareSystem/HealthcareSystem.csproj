@@ -132,6 +132,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AppointmentPage.xaml.cs">
+      <DependentUpon>AppointmentPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\AppointmentDAL.cs" />
     <Compile Include="DAL\Connection.cs" />
     <Compile Include="DAL\DataHelper.cs" />
     <Compile Include="DAL\LoginDAL.cs" />
@@ -179,6 +183,10 @@
     <Page Include="AdminPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AppointmentPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="LoginPage.xaml">
       <SubType>Designer</SubType>

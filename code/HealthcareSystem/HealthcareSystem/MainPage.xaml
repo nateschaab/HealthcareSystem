@@ -13,6 +13,8 @@
         <Button Content="Manage Patients" Click="ManagePatients_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,50,0,0"/>
         <Button Content="Admin Functions" Click="AdminFunctions_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,50,10,0"/>
         <Button Content="Log Out" Click="LogoutButton_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,10,10,0"/>
+        <Button Content="Create Appointment" Click="CreateAppointment_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,100,0,0"/>
+
 
     </Grid>
 </Page>
