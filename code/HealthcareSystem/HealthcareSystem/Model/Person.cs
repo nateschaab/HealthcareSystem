@@ -18,7 +18,7 @@ namespace HealthcareSystem.Model
 
         public Person (string ssn, string gender, string fname, string lname, DateTime dob, string streetAddress, string zip, string city, string state, string country)
         {
-            this.MailAddress = new MailingAddress(streetAddress, zip, city, country, state);
+            this.MailAddress = new MailingAddress(streetAddress, zip, city, state, country);
             this.SSN = ssn;
             this.Gender = gender;
             this.FirstName = fname;

@@ -25,10 +25,31 @@ namespace HealthcareSystem
     {
         private List<Patient> patients;
 
+        List<String> genderItems;
+
+        List<String> stateItems;
+
+        List<String> countryItems;
+
         public PatientManagementPage()
         {
             this.InitializeComponent();
             LoadPatients();
+
+            genderItems = GenderComboBox.Items
+                            .Cast<ComboBoxItem>()
+                            .Select(item => item.Content.ToString())
+                            .ToList();
+
+            stateItems = StateComboBox.Items
+                            .Cast<ComboBoxItem>()
+                            .Select(item => item.Content.ToString())
+                            .ToList();
+
+            countryItems = CountryComboBox.Items
+                            .Cast<ComboBoxItem>()
+                            .Select(item => item.Content.ToString())
+                            .ToList();
         }
 
         // Load all patients from the database and populate the ListView
@@ -65,20 +86,14 @@ namespace HealthcareSystem
                 PhoneNumberTextBox.Text = selectedPatient.PhoneNumber;
 
                 // Set ComboBox value for Gender
-                GenderComboBox.SelectedItem = GenderComboBox.Items
-                    .OfType<ComboBoxItem>()
-                    .FirstOrDefault(item => string.Equals((item.Content as string)?.Trim(), selectedPatient.Gender?.Trim(), StringComparison.OrdinalIgnoreCase));
+                GenderComboBox.SelectedIndex = genderItems.FindIndex(a => a.Equals(selectedPatient.Gender));
 
                 // Check if MailAddress is not null before setting State and Country
                 if (selectedPatient.MailAddress != null)
                 {
-                    StateComboBox.SelectedItem = StateComboBox.Items
-                        .OfType<ComboBoxItem>()
-                        .FirstOrDefault(item => string.Equals((item.Content as string)?.Trim(), selectedPatient.MailAddress.State?.Trim(), StringComparison.OrdinalIgnoreCase));
+                    StateComboBox.SelectedIndex = stateItems.FindIndex(a => a.Equals(selectedPatient.MailAddress.State));
 
-                    CountryComboBox.SelectedItem = CountryComboBox.Items
-                        .OfType<ComboBoxItem>()
-                        .FirstOrDefault(item => string.Equals((item.Content as string)?.Trim(), selectedPatient.MailAddress.Country?.Trim(), StringComparison.OrdinalIgnoreCase));
+                    CountryComboBox.SelectedIndex = countryItems.FindIndex(a => a.Equals(selectedPatient.MailAddress.Country));
                 }
             }
         }
