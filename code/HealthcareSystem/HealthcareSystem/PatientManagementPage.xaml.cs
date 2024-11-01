@@ -59,23 +59,27 @@ namespace HealthcareSystem
                 PatientFirstNameTextBox.Text = selectedPatient.FirstName;
                 PatientLastNameTextBox.Text = selectedPatient.LastName;
                 DOBDatePicker.Date = selectedPatient.DateOfBirth;
-                //GenderComboBox.SelectedValue = selectedPatient.Gender;
-                StreetAddressTextBox.Text = selectedPatient.MailAddress.StreetAddress;
-                ZipCodeTextBox.Text = selectedPatient.MailAddress.Zip;
-                CityTextBox.Text = selectedPatient.MailAddress.City;
-                //StateComboBox.SelectedValue = selectedPatient.MailAddress.State;
-                //CountryComboBox.SelectedValue = selectedPatient.MailAddress.Country;
+                StreetAddressTextBox.Text = selectedPatient.MailAddress?.StreetAddress ?? string.Empty;
+                ZipCodeTextBox.Text = selectedPatient.MailAddress?.Zip ?? string.Empty;
+                CityTextBox.Text = selectedPatient.MailAddress?.City ?? string.Empty;
                 PhoneNumberTextBox.Text = selectedPatient.PhoneNumber;
 
-                // Set ComboBox value by directly matching the content of ComboBoxItem
+                // Set ComboBox value for Gender
                 GenderComboBox.SelectedItem = GenderComboBox.Items
-                    .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.Gender);
+                    .OfType<ComboBoxItem>()
+                    .FirstOrDefault(item => string.Equals((item.Content as string)?.Trim(), selectedPatient.Gender?.Trim(), StringComparison.OrdinalIgnoreCase));
 
-                StateComboBox.SelectedItem = StateComboBox.Items
-                    .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.MailAddress.State);
+                // Check if MailAddress is not null before setting State and Country
+                if (selectedPatient.MailAddress != null)
+                {
+                    StateComboBox.SelectedItem = StateComboBox.Items
+                        .OfType<ComboBoxItem>()
+                        .FirstOrDefault(item => string.Equals((item.Content as string)?.Trim(), selectedPatient.MailAddress.State?.Trim(), StringComparison.OrdinalIgnoreCase));
 
-                CountryComboBox.SelectedItem = CountryComboBox.Items
-                    .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.MailAddress.Country);
+                    CountryComboBox.SelectedItem = CountryComboBox.Items
+                        .OfType<ComboBoxItem>()
+                        .FirstOrDefault(item => string.Equals((item.Content as string)?.Trim(), selectedPatient.MailAddress.Country?.Trim(), StringComparison.OrdinalIgnoreCase));
+                }
             }
         }
 
@@ -87,6 +91,12 @@ namespace HealthcareSystem
             ZipCodeErrorTextBlock.Visibility = Visibility.Collapsed;
             PhoneErrorTextBlock.Visibility = Visibility.Collapsed;
             StateErrorTextBlock.Visibility = Visibility.Collapsed;
+            CountryErrorTextBlock.Visibility = Visibility.Collapsed;
+            StreetAddressErrorTextBlock.Visibility = Visibility.Collapsed;
+            CityErrorTextBlock.Visibility = Visibility.Collapsed;
+            DOBErrorTextBlock.Visibility = Visibility.Collapsed;
+            FirstNameErrorTextBlock.Visibility = Visibility.Collapsed;
+            LastNameErrorTextBlock.Visibility = Visibility.Collapsed;
 
             // Validate each field
             bool isValid = true;
@@ -98,10 +108,45 @@ namespace HealthcareSystem
                 isValid = false;
             }
 
+            // Validate First Name
+            if (string.IsNullOrWhiteSpace(PatientFirstNameTextBox.Text))
+            {
+                FirstNameErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            // Validate Last Name
+            if (string.IsNullOrWhiteSpace(PatientLastNameTextBox.Text))
+            {
+                LastNameErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            // Validate Date of Birth selection
+            if (DOBDatePicker.SelectedDate == null)
+            {
+                DOBErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
             // Validate Gender selection
             if (GenderComboBox.SelectedItem == null)
             {
                 GenderErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            // Validate Street Address
+            if (string.IsNullOrWhiteSpace(StreetAddressTextBox.Text))
+            {
+                StreetAddressErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            // Validate City
+            if (string.IsNullOrWhiteSpace(CityTextBox.Text))
+            {
+                CityErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
 
@@ -112,13 +157,6 @@ namespace HealthcareSystem
                 isValid = false;
             }
 
-            // Validate Phone Number (example: US 10-digit number)
-            if (!Regex.IsMatch(PhoneNumberTextBox.Text, @"^\d{10}$"))
-            {
-                PhoneErrorTextBlock.Visibility = Visibility.Visible;
-                isValid = false;
-            }
-
             // Validate State selection
             if (StateComboBox.SelectedItem == null)
             {
@@ -126,10 +164,17 @@ namespace HealthcareSystem
                 isValid = false;
             }
 
-            // Validate State selection
+            // Validate Country selection
             if (CountryComboBox.SelectedItem == null)
             {
                 CountryErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            // Validate Phone Number (example: US 10-digit number)
+            if (!Regex.IsMatch(PhoneNumberTextBox.Text, @"^\d{10}$"))
+            {
+                PhoneErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
 
@@ -157,7 +202,7 @@ namespace HealthcareSystem
                 );
 
                 var dal = new PatientDal();
-                dal.RegisterPatient( patientInfo );
+                dal.RegisterPatient(patientInfo);
                 // Example output (logging or further action)
                 System.Diagnostics.Debug.WriteLine("Patient Registered: " + patientInfo);
                 this.LoadPatients();
@@ -172,6 +217,7 @@ namespace HealthcareSystem
                 }
             }
         }
+
 
         // Edit patient in the database
         private void EditPatient_Click(object sender, RoutedEventArgs e)
