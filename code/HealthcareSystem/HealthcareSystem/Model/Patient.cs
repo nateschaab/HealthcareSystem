@@ -19,7 +19,8 @@ namespace HealthcareSystem.Model
             this.PhoneNumber = phoneNumber;
         }
 
-        public Patient(int patientId, int pid, string phoneNumber, string ssn, string gender, string fname, string lname, DateTime dob, string streetAddress, string zip, string city, string state, string country) : this(ssn, gender, fname, lname, dob, streetAddress, zip, city, state, country)
+        public Patient(int patientId, int pid, string phoneNumber, string ssn, string gender, string fname, string lname, DateTime dob, string streetAddress, string zip, string city, string state, string country) : 
+            this(ssn, gender, fname, lname, dob, streetAddress, zip, city, state, country)
         {
             this.PatientId = patientId;
             this.PersonId = pid;

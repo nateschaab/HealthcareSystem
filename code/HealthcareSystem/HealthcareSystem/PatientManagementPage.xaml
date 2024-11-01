@@ -36,6 +36,10 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="300" />
                     <!-- ListView row -->
                 </Grid.RowDefinitions>
@@ -46,32 +50,34 @@
 
                 <!-- First Name Field -->
                 <TextBox x:Name="PatientFirstNameTextBox" PlaceholderText="Patient First Name" Margin="0,10,0,0" Grid.Row="2"/>
+                <TextBlock x:Name="FirstNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="First Name Is Required" Grid.Row="3"/>
 
                 <!-- Last Name Field -->
-                <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Patient Last Name" Margin="0,10,0,0" Grid.Row="3"/>
-
+                <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Patient Last Name" Margin="0,10,0,0" Grid.Row="4"/>
+                <TextBlock x:Name="LastNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Last Name Is Required" Grid.Row="5"/>
                 <!-- DOB Field -->
-                <DatePicker x:Name="DOBDatePicker" Margin="0,10,0,0" Grid.Row="4"/>
+                <DatePicker x:Name="DOBDatePicker" Margin="0,10,0,0" Grid.Row="6"/>
+                <TextBlock x:Name="DOBErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Date Is Required" Grid.Row="7"/>
 
                 <!-- Gender Field -->
-                <ComboBox x:Name="GenderComboBox" PlaceholderText="Select Gender" Margin="0,10,0,0" Grid.Row="5">
+                <ComboBox x:Name="GenderComboBox" PlaceholderText="Select Gender" Margin="0,10,0,0" Grid.Row="8">
                     <ComboBoxItem Content="M"/>
                     <ComboBoxItem Content="F"/>
                     <ComboBoxItem Content="O"/>
                 </ComboBox>
-                <TextBlock x:Name="GenderErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Gender is required" Grid.Row="6"/>
+                <TextBlock x:Name="GenderErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Gender is required" Grid.Row="9"/>
 
                 <!-- Address Fields -->
-                <TextBox x:Name="StreetAddressTextBox" PlaceholderText="Street Address" Margin="0,10,0,0" Grid.Row="7"/>
-                <TextBlock x:Name="StreetAddressErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Street Address" Grid.Row="8"/>
+                <TextBox x:Name="StreetAddressTextBox" PlaceholderText="Street Address" Margin="0,10,0,0" Grid.Row="10"/>
+                <TextBlock x:Name="StreetAddressErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Street Address" Grid.Row="11"/>
 
-                <TextBox x:Name="ZipCodeTextBox" PlaceholderText="Zip Code" Margin="0,10,0,0" Grid.Row="9"/>
-                <TextBlock x:Name="ZipCodeErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Zip Code" Grid.Row="10"/>
+                <TextBox x:Name="ZipCodeTextBox" PlaceholderText="Zip Code" Margin="0,10,0,0" Grid.Row="12"/>
+                <TextBlock x:Name="ZipCodeErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Zip Code" Grid.Row="13"/>
 
-                <TextBox x:Name="CityTextBox" PlaceholderText="City" Margin="0,10,0,0" Grid.Row="11"/>
-
+                <TextBox x:Name="CityTextBox" PlaceholderText="City" Margin="0,10,0,0" Grid.Row="14"/>
+                <TextBlock x:Name="CityErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="City Is Required" Grid.Row="15"/>
                 <!-- State ComboBox -->
-                <ComboBox x:Name="StateComboBox" PlaceholderText="Select State" Margin="0,10,0,0" Grid.Row="12">
+                <ComboBox x:Name="StateComboBox" PlaceholderText="Select State" Margin="0,10,0,0" Grid.Row="16">
                     <ComboBoxItem Content="Alabama"/>
                     <ComboBoxItem Content="Alaska"/>
                     <ComboBoxItem Content="Arizona"/>
@@ -123,10 +129,10 @@
                     <ComboBoxItem Content="Wisconsin"/>
                     <ComboBoxItem Content="Wyoming"/>
                 </ComboBox>
-                <TextBlock x:Name="StateErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="State is required" Grid.Row="13"/>
+                <TextBlock x:Name="StateErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="State is required" Grid.Row="17"/>
 
                 <!-- Country ComboBox -->
-                <ComboBox x:Name="CountryComboBox" PlaceholderText="Select Country" Margin="0,10,0,0" Grid.Row="14">
+                <ComboBox x:Name="CountryComboBox" PlaceholderText="Select Country" Margin="0,10,0,0" Grid.Row="18">
                     <ComboBoxItem Content="United States"/>
                     <ComboBoxItem Content="Canada"/>
                     <ComboBoxItem Content="United Kingdom"/>
@@ -148,17 +154,17 @@
                     <ComboBoxItem Content="South Korea"/>
                     <ComboBoxItem Content="Argentina"/>
                 </ComboBox>
-                <TextBlock x:Name="CountryErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Country is required" Grid.Row="15"/>
+                <TextBlock x:Name="CountryErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Country is required" Grid.Row="19"/>
 
                 <!-- Phone Number Field -->
-                <TextBox x:Name="PhoneNumberTextBox" PlaceholderText="Phone Number" Margin="0,10,0,0" Grid.Row="16"/>
-                <TextBlock x:Name="PhoneErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Phone Number" Grid.Row="17"/>
+                <TextBox x:Name="PhoneNumberTextBox" PlaceholderText="Phone Number" Margin="0,10,0,0" Grid.Row="20"/>
+                <TextBlock x:Name="PhoneErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Phone Number" Grid.Row="21"/>
 
-                <Button Grid.Row="18" Content="Register Patient" Click="RegisterPatient_Click" Margin="0,20,10,0"/>
-                <Button Grid.Row="18" Content="Edit Patient" Click="EditPatient_Click" Margin="150,20,10,0"/>
+                <Button Grid.Row="22" Content="Register Patient" Click="RegisterPatient_Click" Margin="0,20,10,0"/>
+                <Button Grid.Row="22" Content="Edit Patient" Click="EditPatient_Click" Margin="150,20,10,0"/>
 
                 <!-- ListView for displaying the patients -->
-                <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Grid.Row="19" Margin="0,20,0,0"
+                <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Grid.Row="23" Margin="0,20,0,0"
                           ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.ItemTemplate>
                         <DataTemplate>
