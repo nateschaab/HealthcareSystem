@@ -370,7 +370,7 @@ namespace DBAccess.DAL
         }
 
 
-        public List<Patient> SearchPatient(string firstName, string lastName, DateTime? dob)
+        public List<Patient> SearchPatient(string firstName, string lastName, DateTime dob)
         {
             var patientList = new List<Patient>();
             using var connection = new MySqlConnection(Connection.ConnectionString());
@@ -412,13 +412,17 @@ namespace DBAccess.DAL
                 query += " AND per.lname = @lastName";
             }
 
-            // Check if dob has been set and is not the default date (12/31/1600), only comparing the date part
             DateTime defaultDob = new DateTime(1600, 12, 31);
-            if (dob.HasValue && dob.Value.Date != defaultDob)
+            if (dob.Date != defaultDob)
             {
                 query += " AND per.dob = @dob";
             }
 
+            // Log the query and parameter values
+            Debug.WriteLine("Executing query: " + query);
+            Debug.WriteLine($"Parameter firstName: {firstName}");
+            Debug.WriteLine($"Parameter lastName: {lastName}");
+            Debug.WriteLine($"Parameter dob: {dob.Date}");
 
             using var command = new MySqlCommand(query, connection);
 
@@ -433,9 +437,9 @@ namespace DBAccess.DAL
                 command.Parameters.Add(new MySqlParameter("@lastName", MySqlDbType.VarChar) { Value = lastName });
             }
 
-            if (dob.HasValue && dob.Value != defaultDob)
+            if (dob.Date != defaultDob)
             {
-                command.Parameters.Add(new MySqlParameter("@dob", MySqlDbType.Date) { Value = dob.Value });
+                command.Parameters.Add(new MySqlParameter("@dob", MySqlDbType.Date) { Value = dob.Date });
             }
 
             using var reader = command.ExecuteReader();
