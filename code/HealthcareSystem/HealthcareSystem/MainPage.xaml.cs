@@ -67,5 +67,10 @@ namespace HealthcareSystem
         {
             Frame.Navigate(typeof(AppointmentPage));
         }
+
+        private void RoutineCheckupButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(RoutineCheckupPage));
+        }
     }
 }
