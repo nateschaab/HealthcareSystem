@@ -1,0 +1,59 @@
+﻿<Page
+    x:Class="HealthcareSystem.SearchPatientPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header Text -->
+        <TextBlock Text="Search Patient" FontSize="24" Grid.Row="0" Margin="0,0,0,20" />
+
+        <!-- Form and ListView container -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="500"/>
+                    <!-- ListView row -->
+                </Grid.RowDefinitions>
+                <!-- First Name Field -->
+                <TextBox x:Name="PatientFirstNameTextBox" PlaceholderText="Patient First Name" Margin="0,10,0,0" Grid.Row="0"/>
+                <TextBlock x:Name="FirstNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="First Name Is Required" Grid.Row="1"/>
+
+                <!-- Last Name Field -->
+                <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Patient Last Name" Margin="0,10,0,0" Grid.Row="2"/>
+                <TextBlock x:Name="LastNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Last Name Is Required" Grid.Row="3"/>
+                <!-- DOB Field -->
+                <DatePicker x:Name="DOBDatePicker" Margin="0,10,0,0" Grid.Row="4"/>
+                <TextBlock x:Name="DOBErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Date Is Required" Grid.Row="5"/>
+
+                <Button Grid.Row="6" Content="Search Patient" Margin="0,20,0,0" VerticalAlignment="Top"/>
+                <Button Grid.Row="6" Content="Edit Patient" Click="EditPatients_Click" Margin="148,20,0,0" VerticalAlignment="Top"/>
+
+                <!-- ListView for displaying the patients -->
+                <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Grid.Row="7" Margin="0,20,0,0"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding FirstName}" />
+                                <TextBlock Text="{Binding LastName}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>
