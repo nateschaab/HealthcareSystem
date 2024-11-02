@@ -13,6 +13,7 @@ using Windows.Networking;
 using Windows.Services.Maps;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,6 +24,8 @@ namespace HealthcareSystem
     /// </summary>
     public sealed partial class PatientManagementPage : Page
     {
+        private Patient patient;
+
         private List<Patient> patients;
 
         List<String> genderItems;
@@ -52,6 +55,24 @@ namespace HealthcareSystem
                             .ToList();
         }
 
+        public PatientManagementPage(Patient selectedPatient)
+        {
+            this.InitializeComponent();
+            this.patient = selectedPatient;
+            // You can now use this.patient within this page
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            if (e.Parameter is Patient selectedPatient)
+            {
+                this.patient = selectedPatient;
+                this.PopulatePatientFields(patient);
+            }
+        }
+
         // Load all patients from the database and populate the ListView
         private void LoadPatients()
         {
@@ -75,26 +96,31 @@ namespace HealthcareSystem
         {
             if (PatientListView.SelectedItem is Patient selectedPatient)
             {
-                // Load the selected patient's data into the input fields
-                PatientSSNTextBox.Text = selectedPatient.SSN;
-                PatientFirstNameTextBox.Text = selectedPatient.FirstName;
-                PatientLastNameTextBox.Text = selectedPatient.LastName;
-                DOBDatePicker.Date = selectedPatient.DateOfBirth;
-                StreetAddressTextBox.Text = selectedPatient.MailAddress?.StreetAddress ?? string.Empty;
-                ZipCodeTextBox.Text = selectedPatient.MailAddress?.Zip ?? string.Empty;
-                CityTextBox.Text = selectedPatient.MailAddress?.City ?? string.Empty;
-                PhoneNumberTextBox.Text = selectedPatient.PhoneNumber;
+                PopulatePatientFields(selectedPatient);
+            }
+        }
 
-                // Set ComboBox value for Gender
-                GenderComboBox.SelectedIndex = genderItems.FindIndex(a => a.Equals(selectedPatient.Gender));
+        private void PopulatePatientFields(Patient selectedPatient)
+        {
+            // Load the selected patient's data into the input fields
+            PatientSSNTextBox.Text = selectedPatient.SSN;
+            PatientFirstNameTextBox.Text = selectedPatient.FirstName;
+            PatientLastNameTextBox.Text = selectedPatient.LastName;
+            DOBDatePicker.Date = selectedPatient.DateOfBirth;
+            StreetAddressTextBox.Text = selectedPatient.MailAddress?.StreetAddress ?? string.Empty;
+            ZipCodeTextBox.Text = selectedPatient.MailAddress?.Zip ?? string.Empty;
+            CityTextBox.Text = selectedPatient.MailAddress?.City ?? string.Empty;
+            PhoneNumberTextBox.Text = selectedPatient.PhoneNumber;
 
-                // Check if MailAddress is not null before setting State and Country
-                if (selectedPatient.MailAddress != null)
-                {
-                    StateComboBox.SelectedIndex = stateItems.FindIndex(a => a.Equals(selectedPatient.MailAddress.State));
+            // Set ComboBox value for Gender
+            GenderComboBox.SelectedIndex = genderItems.FindIndex(a => a.Equals(selectedPatient.Gender));
 
-                    CountryComboBox.SelectedIndex = countryItems.FindIndex(a => a.Equals(selectedPatient.MailAddress.Country));
-                }
+            // Check if MailAddress is not null before setting State and Country
+            if (selectedPatient.MailAddress != null)
+            {
+                StateComboBox.SelectedIndex = stateItems.FindIndex(a => a.Equals(selectedPatient.MailAddress.State));
+
+                CountryComboBox.SelectedIndex = countryItems.FindIndex(a => a.Equals(selectedPatient.MailAddress.Country));
             }
         }
 

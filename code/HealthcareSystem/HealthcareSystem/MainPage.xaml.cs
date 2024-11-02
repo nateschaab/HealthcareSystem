@@ -42,6 +42,11 @@ namespace HealthcareSystem
             Frame.Navigate(typeof(PatientManagementPage));
         }
 
+        private void SearchPatients_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(SearchPatientPage));
+        }
+
         private void AdminFunctions_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(AdminPage));

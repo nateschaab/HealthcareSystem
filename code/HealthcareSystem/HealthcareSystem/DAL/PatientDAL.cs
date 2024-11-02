@@ -369,7 +369,7 @@ namespace DBAccess.DAL
             }
         }
 
-        /*
+        
         public List<MailingAddress> GetPatientBy(char gender, double salary)
         {
             var employeeList = new List<MailingAddress>();
@@ -395,7 +395,7 @@ namespace DBAccess.DAL
 
             return employeeList;
         }
-        */
+        
     }
 }
 
