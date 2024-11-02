@@ -1,14 +1,17 @@
 using DBAccess.DAL;
+using HealthcareSystem.Model;
 using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 
 namespace HealthcareSystem
 {
     public sealed partial class AppointmentPage : Page
     {
+        private Patient patient;
         private readonly DoctorDAL _doctorDAL = new DoctorDAL();
         private readonly PatientDal _patientDAL = new PatientDal();
         private readonly AppointmentDAL _appointmentDAL = new AppointmentDAL();
@@ -32,6 +35,25 @@ namespace HealthcareSystem
                 patientInfoList.Add(patientInfo);
             }
             PatientComboBox.ItemsSource = patientInfoList;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            if (e.Parameter is Patient selectedPatient)
+            {
+                this.patient = selectedPatient;
+                this.PopulatePatientFields(patient);
+            }
+        }
+
+        private void PopulatePatientFields(Patient patient)
+        {
+            this.DoctorComboBox.SelectedIndex = 0;
+            this.PatientComboBox.SelectedIndex = 0;
+            //this.AppointmentDatePicker.Date = patient.DateOfBirth;
+            this.ReasonTextBox.Text = string.Empty;
         }
 
         private void CreateAppointment_Click(object sender, RoutedEventArgs e)

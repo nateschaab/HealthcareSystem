@@ -39,7 +39,18 @@ namespace HealthcareSystem
             }
             else
             {
-                // Handle the case where no patient is selected, if needed
+                Debug.WriteLine("No patient selected.");
+            }
+        }
+
+        private void EditAppointment_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.patient != null)
+            {
+                Frame.Navigate(typeof(AppointmentPage), this.patient);
+            }
+            else
+            {
                 Debug.WriteLine("No patient selected.");
             }
         }
