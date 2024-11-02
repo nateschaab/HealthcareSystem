@@ -51,5 +51,17 @@ namespace HealthcareSystem
                 this.patient = selectedPatient;
             }
         }
+
+        private void SearchPatientsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var Dal = new PatientDal();
+
+            var patients = Dal.SearchPatient(
+                PatientFirstNameTextBox.Text,
+                PatientLastNameTextBox.Text,
+                DOBDatePicker.Date.DateTime);
+
+            PatientListView.ItemsSource = patients;
+        }
     }
 }

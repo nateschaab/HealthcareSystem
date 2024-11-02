@@ -369,33 +369,115 @@ namespace DBAccess.DAL
             }
         }
 
-        
-        public List<MailingAddress> GetPatientBy(char gender, double salary)
+
+        public List<Patient> SearchPatient(string firstName, string lastName, DateTime? dob)
         {
-            var employeeList = new List<MailingAddress>();
+            var patientList = new List<Patient>();
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
             connection.Open();
-            var query = "select city, state, zip from mailing_address where salary > @salary AND sex = @gender";
+
+            // Base query
+            var query = @"
+        SELECT 
+            p.patient_id, 
+            p.pid, 
+            p.phone_number,
+            per.ssn,
+            per.fname, 
+            per.lname, 
+            per.dob, 
+            per.gender, 
+            ma.street_address, 
+            ma.zip, 
+            ma.city, 
+            ma.state, 
+            ma.country
+        FROM 
+            patient p
+        JOIN 
+            person per ON p.pid = per.pid
+        JOIN 
+            mailing_address ma ON per.street_address = ma.street_address AND per.zip = ma.zip
+        WHERE 1=1";
+
+            // Add conditions based on input values
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                query += " AND per.fname = @firstName";
+            }
+
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                query += " AND per.lname = @lastName";
+            }
+
+            // Check if dob has been set and is not the default date (12/31/1600), only comparing the date part
+            DateTime defaultDob = new DateTime(1600, 12, 31);
+            if (dob.HasValue && dob.Value.Date != defaultDob)
+            {
+                query += " AND per.dob = @dob";
+            }
+
 
             using var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@gender", (DbType)MySqlDbType.VarChar).Value = gender;
-            command.Parameters.Add("@salary", (DbType)MySqlDbType.Double).Value = salary;
+
+            // Bind parameters
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                command.Parameters.Add(new MySqlParameter("@firstName", MySqlDbType.VarChar) { Value = firstName });
+            }
+
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                command.Parameters.Add(new MySqlParameter("@lastName", MySqlDbType.VarChar) { Value = lastName });
+            }
+
+            if (dob.HasValue && dob.Value != defaultDob)
+            {
+                command.Parameters.Add(new MySqlParameter("@dob", MySqlDbType.Date) { Value = dob.Value });
+            }
 
             using var reader = command.ExecuteReader();
-            var firstnameOrdinal = reader.GetOrdinal("fname");
-            var birthdateOrdinal = reader.GetOrdinal("bdate");
-            var departmentNumberOrdinal = reader.GetOrdinal("dno");
+
+            // Retrieve ordinals to optimize reader
+            var ssnOrdinal = reader.GetOrdinal("ssn");
+            var firstNameOrdinal = reader.GetOrdinal("fname");
+            var lastNameOrdinal = reader.GetOrdinal("lname");
+            var genderOrdinal = reader.GetOrdinal("gender");
+            var dobOrdinal = reader.GetOrdinal("dob");
+            var patientIdOrdinal = reader.GetOrdinal("patient_id");
+            var pidOrdinal = reader.GetOrdinal("pid");
+            var phoneNumberOrdinal = reader.GetOrdinal("phone_number");
+            var streetAddressOrdinal = reader.GetOrdinal("street_address");
+            var zipOrdinal = reader.GetOrdinal("zip");
+            var cityOrdinal = reader.GetOrdinal("city");
+            var stateOrdinal = reader.GetOrdinal("state");
+            var countryOrdinal = reader.GetOrdinal("country");
 
             while (reader.Read())
             {
-                //TODO
-                //employeeList.Add(CreatePatient(reader, firstnameOrdinal, birthdateOrdinal, departmentNumberOrdinal));
+                patientList.Add(CreatePatient(
+                    reader,
+                    ssnOrdinal,
+                    patientIdOrdinal,
+                    pidOrdinal,
+                    phoneNumberOrdinal,
+                    firstNameOrdinal,
+                    lastNameOrdinal,
+                    dobOrdinal,
+                    genderOrdinal,
+                    streetAddressOrdinal,
+                    zipOrdinal,
+                    cityOrdinal,
+                    stateOrdinal,
+                    countryOrdinal
+                ));
             }
 
-            return employeeList;
+            return patientList;
         }
-        
+
     }
 }
 
