@@ -32,7 +32,7 @@ namespace HealthcareSystem
             var patientInfoList = new List<string>();
             foreach (var patient in patients)
             {
-                string patientInfo = $"{patient.PatientId}: {patient.FirstName} {patient.LastName}";
+                string patientInfo = $"{patient.PatientId}";
                 patientInfoList.Add(patientInfo);
             }
             PatientComboBox.ItemsSource = patientInfoList;
@@ -59,15 +59,15 @@ namespace HealthcareSystem
 
         private void PopulateAppFields(Appointment app)
         {
-            DoctorComboBox.SelectedItem = DoctorComboBox.Items
-                .FirstOrDefault(item => item.ToString() == app.DoctorId.ToString());
+            var doctorInfo = $"{app.DoctorId}";
+            DoctorComboBox.SelectedItem = doctorInfo;
 
-
-            PatientComboBox.SelectedItem = PatientComboBox.Items
-                .FirstOrDefault(item => int.TryParse(item.ToString(), out int value) && value == app.PatientId);
-
+            var patientId = $"{app.PatientId}";
+            PatientComboBox.SelectedItem = patientId;
 
             this.AppointmentDatePicker.Date = app.Date;
+
+            this.AppointmentTimePicker.Time = app.Date.TimeOfDay;
 
             this.ReasonTextBox.Text = app.Reason;
         }
