@@ -16,9 +16,9 @@ namespace HealthcareSystem.Model
         public DateTime DateOfBirth { get; set; }
         public MailingAddress MailAddress { get; set; }
 
-        public Person (string ssn, string gender, string fname, string lname, DateTime dob, string streetAddress, string zip, string city, string state, string country)
+        public Person (string ssn, string gender, string fname, string lname, DateTime dob, MailingAddress address)
         {
-            this.MailAddress = new MailingAddress(streetAddress, zip, city, state, country);
+            this.MailAddress = address;
             this.SSN = ssn;
             this.Gender = gender;
             this.FirstName = fname;

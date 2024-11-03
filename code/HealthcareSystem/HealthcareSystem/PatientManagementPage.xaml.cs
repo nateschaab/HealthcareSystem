@@ -1,4 +1,5 @@
 ﻿using DBAccess.DAL;
+using DBAccess.Model;
 using HealthcareSystem.Model;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
@@ -38,21 +40,6 @@ namespace HealthcareSystem
         {
             this.InitializeComponent();
             LoadPatients();
-
-            genderItems = GenderComboBox.Items
-                            .Cast<ComboBoxItem>()
-                            .Select(item => item.Content.ToString())
-                            .ToList();
-
-            stateItems = StateComboBox.Items
-                            .Cast<ComboBoxItem>()
-                            .Select(item => item.Content.ToString())
-                            .ToList();
-
-            countryItems = CountryComboBox.Items
-                            .Cast<ComboBoxItem>()
-                            .Select(item => item.Content.ToString())
-                            .ToList();
         }
 
         public PatientManagementPage(Patient selectedPatient)
@@ -113,14 +100,17 @@ namespace HealthcareSystem
             PhoneNumberTextBox.Text = selectedPatient.PhoneNumber;
 
             // Set ComboBox value for Gender
-            GenderComboBox.SelectedIndex = genderItems.FindIndex(a => a.Equals(selectedPatient.Gender));
+            GenderComboBox.SelectedItem = GenderComboBox.Items
+            .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.Gender);
 
             // Check if MailAddress is not null before setting State and Country
             if (selectedPatient.MailAddress != null)
             {
-                StateComboBox.SelectedIndex = stateItems.FindIndex(a => a.Equals(selectedPatient.MailAddress.State));
+                StateComboBox.SelectedItem = StateComboBox.Items
+                    .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.MailAddress.State);
 
-                CountryComboBox.SelectedIndex = countryItems.FindIndex(a => a.Equals(selectedPatient.MailAddress.Country));
+                CountryComboBox.SelectedItem = CountryComboBox.Items
+                    .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.MailAddress.Country);
             }
         }
 
@@ -237,9 +227,14 @@ namespace HealthcareSystem
                 var state = (StateComboBox.SelectedItem as ComboBoxItem).Content.ToString();
                 var phoneNumber = PhoneNumberTextBox.Text;
 
+                var mailingAddress = new MailingAddress
+                    (
+                        address, zipcode, city, country, state
+                    );
+
                 var patientInfo = new Patient
                 (
-                    ssn, gender, firstName, lastName, dob, address, zipcode, city, country, state, phoneNumber
+                    ssn, gender, firstName, lastName, dob, mailingAddress, phoneNumber
                 );
 
                 var dal = new PatientDal();
@@ -337,9 +332,14 @@ namespace HealthcareSystem
                     var country = (this.CountryComboBox.SelectedItem as ComboBoxItem).Content.ToString();
                     var state = (this.StateComboBox.SelectedItem as ComboBoxItem).Content.ToString();
 
+                    var mailingAddress = new MailingAddress
+                        (
+                            address, zipcode, city, country, state
+                        );
+
                     var patientInfo = new Patient
                     (
-                        patientId, personId, phoneNumber, ssn, gender, firstName, lastName, dob, address, zipcode, city, country, state
+                        patientId, personId, phoneNumber, ssn, gender, firstName, lastName, dob, mailingAddress
                     );
 
                     var dal = new PatientDal();

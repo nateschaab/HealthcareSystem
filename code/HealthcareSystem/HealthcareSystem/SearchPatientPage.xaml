@@ -46,11 +46,15 @@
                           ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel>
-                                <TextBlock Text="{Binding FirstName}" />
-                                <TextBlock Text="{Binding LastName}" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock>
+                                    <Run Text="{Binding FirstName}" />
+                                    <Run Text=" " />
+                                    <Run Text="{Binding LastName}" />
+                                </TextBlock>
                             </StackPanel>
                         </DataTemplate>
+
                     </ListView.ItemTemplate>
                 </ListView>
                 <Button Grid.Row="6" Content="Edit Appointment" Click="EditAppointment_Click" Margin="290,20,0,0" VerticalAlignment="Top"/>
