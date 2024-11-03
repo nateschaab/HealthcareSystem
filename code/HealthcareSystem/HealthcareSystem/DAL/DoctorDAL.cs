@@ -18,7 +18,7 @@ namespace DBAccess.DAL
 
             while (reader.Read())
             {
-                string doctorInfo = $"{reader["doctor_id"]}: {reader["fname"]} {reader["lname"]}";
+                string doctorInfo = $"{reader["doctor_id"]}";
                 doctors.Add(doctorInfo);
             }
 
