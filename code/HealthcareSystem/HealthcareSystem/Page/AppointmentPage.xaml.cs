@@ -82,8 +82,8 @@ namespace HealthcareSystem
                 string selectedPatient = PatientComboBox.SelectedItem as string;
                 if (selectedDoctor == null || selectedPatient == null)
                 {
-                    ErrorTextBlock.Text = "Please select both a doctor and a patient.";
-                    ErrorTextBlock.Visibility = Visibility.Visible;
+                    CreateErrorTextBlock.Text = "Please select both a doctor and a patient.";
+                    CreateErrorTextBlock.Visibility = Visibility.Visible;
                     return;
                 }
 
@@ -100,21 +100,21 @@ namespace HealthcareSystem
 
                 if (success)
                 {
-                    ErrorTextBlock.Text = "Appointment created successfully!";
-                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Green);
+                    CreateErrorTextBlock.Text = "Appointment created successfully!";
+                    CreateErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Green);
                 }
                 else
                 {
-                    ErrorTextBlock.Text = "Failed to create appointment. Check for double booking or try again.";
-                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                    CreateErrorTextBlock.Text = "Failed to create appointment. Check for double booking or try again.";
+                    CreateErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
                 }
-                ErrorTextBlock.Visibility = Visibility.Visible;
+                CreateErrorTextBlock.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
-                ErrorTextBlock.Text = $"Error: {ex.Message}";
-                ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
-                ErrorTextBlock.Visibility = Visibility.Visible;
+                CreateErrorTextBlock.Text = $"Error: {ex.Message}";
+                CreateErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                CreateErrorTextBlock.Visibility = Visibility.Visible;
             }
         }
 
@@ -126,54 +126,50 @@ namespace HealthcareSystem
                 string selectedPatient = PatientComboBox.SelectedItem as string;
                 if (selectedDoctor == null || selectedPatient == null)
                 {
-                    ErrorTextBlock.Text = "Please select both a doctor and a patient.";
-                    ErrorTextBlock.Visibility = Visibility.Visible;
+                    EditErrorTextBlock.Text = "Please select both a doctor and a patient.";
+                    EditErrorTextBlock.Visibility = Visibility.Visible;
                     return;
                 }
 
-                // Extract IDs from selected values
                 int doctorId = int.Parse(selectedDoctor.Split(':')[0]);
                 int patientId = int.Parse(selectedPatient.Split(':')[0]);
 
-                // Retrieve date and time from DatePicker and TimePicker
                 DateTime date = AppointmentDatePicker.Date.Date;
                 TimeSpan time = AppointmentTimePicker.Time;
-                DateTime appointmentDateTime = date + time;
+                DateTime newAppointmentDateTime = date + time;
 
-                // Check if the appointment date and time have already passed
-                if (appointmentDateTime < DateTime.Now)
+                if (newAppointmentDateTime < DateTime.Now)
                 {
-                    ErrorTextBlock.Text = "Cannot edit an appointment for a past date and time.";
-                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
-                    ErrorTextBlock.Visibility = Visibility.Visible;
+                    EditErrorTextBlock.Text = "Cannot edit an appointment for a past date and time.";
+                    EditErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                    EditErrorTextBlock.Visibility = Visibility.Visible;
                     return;
                 }
 
-                // Get the reason and appointment ID
                 string reason = ReasonTextBox.Text;
-                int appointmentId = this.App.AppointmentId;
+                int appointmentId = App.AppointmentId;
 
-                // Call the EditAppointment method
-                bool success = _appointmentDAL.EditAppointment(appointmentId, doctorId, patientId, appointmentDateTime, reason);
+                bool isDateTimeChanged = newAppointmentDateTime != App.Date;
 
-                // Show success or failure message
+                bool success = _appointmentDAL.EditAppointment(appointmentId, doctorId, patientId, newAppointmentDateTime, reason, isDateTimeChanged);
+
                 if (success)
                 {
-                    ErrorTextBlock.Text = "Appointment updated successfully!";
-                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Green);
+                    EditErrorTextBlock.Text = "Appointment updated successfully!";
+                    EditErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Green);
                 }
                 else
                 {
-                    ErrorTextBlock.Text = "Failed to update appointment. Check for double booking or try again.";
-                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                    EditErrorTextBlock.Text = "Failed to update appointment. Check for double booking or try again.";
+                    EditErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
                 }
-                ErrorTextBlock.Visibility = Visibility.Visible;
+                EditErrorTextBlock.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
-                ErrorTextBlock.Text = $"Error: {ex.Message}";
-                ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
-                ErrorTextBlock.Visibility = Visibility.Visible;
+                EditErrorTextBlock.Text = $"Error: {ex.Message}";
+                EditErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                EditErrorTextBlock.Visibility = Visibility.Visible;
             }
         }
 
