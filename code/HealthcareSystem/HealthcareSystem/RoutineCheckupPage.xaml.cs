@@ -10,17 +10,31 @@ namespace HealthcareSystem
     {
         private readonly AppointmentDAL _appointmentDAL = new AppointmentDAL();
         private readonly VisitDAL _visitDAL = new VisitDAL();
+        private readonly TestTypeDAL _testTypeDAL = new TestTypeDAL();
 
         public RoutineCheckupPage()
         {
             this.InitializeComponent();
             LoadAppointments();
+            LoadTestTypes();
         }
 
         private void LoadAppointments()
         {
             var appointments = _appointmentDAL.GetAllAppointments();
             AppointmentComboBox.ItemsSource = appointments;
+        }
+
+        private void LoadTestTypes()
+        {
+            var testTypes = _testTypeDAL.GetAllTestTypes();
+            LabTestTypeComboBox.ItemsSource = testTypes;
+        }
+
+        private int GenerateRandomLabTestId()
+        {
+            Random random = new Random();
+            return random.Next(100000, 999999);
         }
 
         private void CompleteCheckupButton_Click(object sender, RoutedEventArgs e)
@@ -34,13 +48,25 @@ namespace HealthcareSystem
                     return;
                 }
 
+                if (LabTestTypeComboBox.SelectedItem == null)
+                {
+                    ErrorTextBlock.Text = "Please select a lab test type.";
+                    ErrorTextBlock.Visibility = Visibility.Visible;
+                    return;
+                }
+
                 string selectedAppointment = AppointmentComboBox.SelectedItem as string;
                 int appointmentId = int.Parse(selectedAppointment.Split(':')[0]);
 
-                int systolic = int.Parse(SystolicTextBox.Text);
-                int diastolic = int.Parse(DiastolicTextBox.Text);
-                string bloodPressureReading = $"{systolic}/{diastolic}";
+                if (_visitDAL.CheckIfRoutineCheckupExists(appointmentId))
+                {
+                    ErrorTextBlock.Text = "A routine checkup has already been completed for this appointment.";
+                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                    ErrorTextBlock.Visibility = Visibility.Visible;
+                    return;
+                }
 
+                string bloodPressureReading = $"{int.Parse(SystolicTextBox.Text)}/{int.Parse(DiastolicTextBox.Text)}";
                 decimal bodyTemp = decimal.Parse(BodyTempTextBox.Text);
                 decimal weight = decimal.Parse(WeightTextBox.Text);
                 decimal height = decimal.Parse(HeightTextBox.Text);
@@ -48,11 +74,15 @@ namespace HealthcareSystem
                 string symptoms = SymptomsTextBox.Text;
                 string initialDiagnosis = InitialDiagnosisTextBox.Text;
                 string finalDiagnosis = FinalDiagnosisTextBox.Text;
-                int labTestId = int.Parse(LabTestIdTextBox.Text);
+
+                int labTestId = GenerateRandomLabTestId();
+                string selectedTestType = LabTestTypeComboBox.SelectedItem as string;
+                string testCode = selectedTestType.Split(':')[0];
+                string testTypeName = selectedTestType.Split(':')[1].Trim();
 
                 bool success = _visitDAL.CompleteRoutineCheckup(
                     appointmentId, bloodPressureReading, bodyTemp, weight, height,
-                    pulse, symptoms, initialDiagnosis, finalDiagnosis, labTestId);
+                    pulse, symptoms, initialDiagnosis, finalDiagnosis, labTestId, testCode, testTypeName);
 
                 if (success)
                 {

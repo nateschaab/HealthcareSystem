@@ -145,6 +145,7 @@
     <Compile Include="DAL\Program.cs" />
     <Compile Include="DAL\SessionManager.cs" />
     <Compile Include="DAL\SQLInjectionDemo.cs" />
+    <Compile Include="DAL\TestTypeDAL.cs" />
     <Compile Include="DAL\VisitDAL.cs" />
     <Compile Include="LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
