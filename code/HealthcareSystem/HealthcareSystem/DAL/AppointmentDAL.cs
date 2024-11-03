@@ -246,11 +246,11 @@ namespace DBAccess.DAL
 
                 // Update the appointment record in the database
                 string updateAppointmentQuery = @"
-            UPDATE appointment
-            SET doctor_id = @doctor_id,  
-                datetime = @datetime, 
-                appt_reason = @appt_reason
-            WHERE appt_id = @appt_id;";
+                    UPDATE appointment
+                    SET doctor_id = @doctor_id,  
+                        datetime = @datetime, 
+                        appt_reason = @appt_reason
+                    WHERE appt_id = @appt_id;";
 
                 using var appointmentCommand = new MySqlCommand(updateAppointmentQuery, connection, transaction);
                 appointmentCommand.Parameters.AddWithValue("@doctor_id", doctorId);
@@ -262,9 +262,9 @@ namespace DBAccess.DAL
 
                 // Update the associated visit record with the new date and time
                 string updateVisitQuery = @"
-            UPDATE visit
-            SET datetime = @datetime
-            WHERE appt_id = @appt_id;";
+                    UPDATE visit
+                    SET datetime = @datetime
+                    WHERE appt_id = @appt_id;";
 
                 using var visitCommand = new MySqlCommand(updateVisitQuery, connection, transaction);
                 visitCommand.Parameters.AddWithValue("@datetime", newAppointmentDateTime);
