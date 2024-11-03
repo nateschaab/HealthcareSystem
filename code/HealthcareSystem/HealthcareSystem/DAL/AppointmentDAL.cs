@@ -1,5 +1,6 @@
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 
 namespace DBAccess.DAL
 {
@@ -7,7 +8,6 @@ namespace DBAccess.DAL
     {
         public bool CreateAppointment(int doctorId, int patientId, DateTime appointmentDateTime, string reason)
         {
-            // Check for double booking before attempting to create an appointment
             if (IsDoubleBooking(doctorId, patientId, appointmentDateTime))
             {
                 Console.WriteLine("Double booking detected. Appointment creation aborted.");
@@ -72,7 +72,6 @@ namespace DBAccess.DAL
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
 
-            // Define the time window (20 minutes before and after the requested time)
             DateTime startTime = appointmentDateTime.AddMinutes(-20);
             DateTime endTime = appointmentDateTime.AddMinutes(20);
 
@@ -89,7 +88,6 @@ namespace DBAccess.DAL
 
             int count = Convert.ToInt32(command.ExecuteScalar());
 
-            // Return true if any existing appointment falls within the 20-minute window
             return count > 0;
         }
 
@@ -103,6 +101,28 @@ namespace DBAccess.DAL
         {
             Random random = new Random();
             return random.Next(100000, 999999);
+        }
+
+        public List<string> GetAllAppointments()
+        {
+            var appointments = new List<string>();
+
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            string query = "SELECT appt_id, datetime FROM appointment;";
+            using var command = new MySqlCommand(query, connection);
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int appointmentId = reader.GetInt32(0);
+                string dateTime = reader.GetDateTime(1).ToString("g");
+                string appointmentInfo = $"{appointmentId}: {dateTime}";
+                appointments.Add(appointmentInfo);
+            }
+
+            return appointments;
         }
     }
 }
