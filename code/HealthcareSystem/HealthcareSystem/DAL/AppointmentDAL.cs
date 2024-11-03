@@ -220,5 +220,76 @@ namespace DBAccess.DAL
             return appointmentList;
         }
 
+        public bool EditAppointment(int appointmentId, int doctorId, int patientId, DateTime newAppointmentDateTime, string newReason)
+        {
+            // Check if the appointment date and time are in the future
+            if (newAppointmentDateTime < DateTime.Now)
+            {
+                Console.WriteLine("Cannot edit past appointments.");
+                return false;
+            }
+
+            // Check for double-booking with the new date and time
+            if (IsDoubleBooking(doctorId, patientId, newAppointmentDateTime))
+            {
+                Console.WriteLine("Double booking detected. Appointment update aborted.");
+                return false;
+            }
+
+            try
+            {
+                using var connection = new MySqlConnection(Connection.ConnectionString());
+                connection.Open();
+
+                // Start a transaction for updating appointment and visit records
+                using var transaction = connection.BeginTransaction();
+
+                // Update the appointment record in the database
+                string updateAppointmentQuery = @"
+            UPDATE appointment
+            SET doctor_id = @doctor_id,  
+                datetime = @datetime, 
+                appt_reason = @appt_reason
+            WHERE appt_id = @appt_id;";
+
+                using var appointmentCommand = new MySqlCommand(updateAppointmentQuery, connection, transaction);
+                appointmentCommand.Parameters.AddWithValue("@doctor_id", doctorId);
+                appointmentCommand.Parameters.AddWithValue("@datetime", newAppointmentDateTime);
+                appointmentCommand.Parameters.AddWithValue("@appt_reason", newReason);
+                appointmentCommand.Parameters.AddWithValue("@appt_id", appointmentId);
+
+                int appointmentRowsAffected = appointmentCommand.ExecuteNonQuery();
+
+                // Update the associated visit record with the new date and time
+                string updateVisitQuery = @"
+            UPDATE visit
+            SET datetime = @datetime
+            WHERE appt_id = @appt_id;";
+
+                using var visitCommand = new MySqlCommand(updateVisitQuery, connection, transaction);
+                visitCommand.Parameters.AddWithValue("@datetime", newAppointmentDateTime);
+                visitCommand.Parameters.AddWithValue("@appt_id", appointmentId);
+
+                int visitRowsAffected = visitCommand.ExecuteNonQuery();
+
+                // Commit the transaction if both updates were successful
+                if (appointmentRowsAffected > 0 && visitRowsAffected > 0)
+                {
+                    transaction.Commit();
+                    return true;
+                }
+                else
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in EditAppointment: {ex.Message}");
+                return false;
+            }
+        }
+
     }
 }
