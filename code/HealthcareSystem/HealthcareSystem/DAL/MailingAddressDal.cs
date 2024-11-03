@@ -1,4 +1,5 @@
 ﻿using DBAccess.Model;
+using HealthcareSystem.Model;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -41,10 +42,7 @@ namespace DBAccess.DAL
             }
 
             return employeeList;
-
         }
-
-       
 
         /// <summary>
         /// Retrieve data using the connected model : data reader
@@ -72,24 +70,29 @@ namespace DBAccess.DAL
             var zipOrdinal = reader.GetOrdinal("zip");
             Debug.WriteLine("Zip Ordinal: " + zipOrdinal);
 
-
             while (reader.Read())
             {
                 employeeList.Add(CreateMailingAddress(reader, streetAddressOrdinal, cityOrdinal, stateOrdinal, countryOrdinal, zipOrdinal));
 
             }
-            
+
             return employeeList;
         }
 
-        private static MailingAddress CreateMailingAddress(MySqlDataReader reader, int streetAddressOrdinal, int cityOrdinal, int stateOrdinal, int countryOrdinal, int zipOrdinal)
+        public MailingAddress CreateMailingAddress(
+            MySqlDataReader reader,
+            int streetAddressOrdinal,
+            int zipOrdinal,
+            int cityOrdinal,
+            int stateOrdinal,
+            int countryOrdinal)
         {
             return new MailingAddress
             (
                 reader.GetString(streetAddressOrdinal),
-                reader.GetString(cityOrdinal), //reader.GetString(firstnameOrdinal),
-                reader.GetString(stateOrdinal), //reader.IsDBNull(birthdateOrdinal) ? (DateTime?)null : reader.GetDateTime(birthdateOrdinal)
                 reader.GetString(zipOrdinal),
+                reader.GetString(cityOrdinal),
+                reader.GetString(stateOrdinal),
                 reader.GetString(countryOrdinal)
             );
         }
@@ -109,7 +112,7 @@ namespace DBAccess.DAL
 
             using var command = new MySqlCommand(query, connection);
             var count = Convert.ToInt32(command.ExecuteScalar());
-            
+
             return count;
         }
 
@@ -130,7 +133,7 @@ namespace DBAccess.DAL
 
             var table = new DataTable();
             adapter.Fill(table);
-            
+
             return employeeList;
 
         }

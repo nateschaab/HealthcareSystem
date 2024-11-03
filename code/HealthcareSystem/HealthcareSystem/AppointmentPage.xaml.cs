@@ -2,6 +2,7 @@ using DBAccess.DAL;
 using HealthcareSystem.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -11,7 +12,7 @@ namespace HealthcareSystem
 {
     public sealed partial class AppointmentPage : Page
     {
-        private Patient patient;
+        private List<Appointment> Appointments { get; set; }
         private readonly DoctorDAL _doctorDAL = new DoctorDAL();
         private readonly PatientDal _patientDAL = new PatientDal();
         private readonly AppointmentDAL _appointmentDAL = new AppointmentDAL();
@@ -41,19 +42,34 @@ namespace HealthcareSystem
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter is Patient selectedPatient)
+            if (e.Parameter is List<Appointment> app)
             {
-                this.patient = selectedPatient;
-                this.PopulatePatientFields(patient);
+                this.Appointments = app;
+                this.PatientListView.ItemsSource = app;
             }
         }
 
-        private void PopulatePatientFields(Patient patient)
+        private void PatientListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.DoctorComboBox.SelectedIndex = 0;
-            this.PatientComboBox.SelectedIndex = 0;
-            //this.AppointmentDatePicker.Date = patient.DateOfBirth;
-            this.ReasonTextBox.Text = string.Empty;
+            if (PatientListView.SelectedItem is Appointment app)
+            {
+                PopulateAppFields(app);
+            }
+        }
+
+        private void PopulateAppFields(Appointment app)
+        {
+            DoctorComboBox.SelectedItem = DoctorComboBox.Items
+                .FirstOrDefault(item => item.ToString() == app.DoctorId.ToString());
+
+
+            PatientComboBox.SelectedItem = PatientComboBox.Items
+                .FirstOrDefault(item => int.TryParse(item.ToString(), out int value) && value == app.PatientId);
+
+
+            this.AppointmentDatePicker.Date = app.Date;
+
+            this.ReasonTextBox.Text = app.Reason;
         }
 
         private void CreateAppointment_Click(object sender, RoutedEventArgs e)

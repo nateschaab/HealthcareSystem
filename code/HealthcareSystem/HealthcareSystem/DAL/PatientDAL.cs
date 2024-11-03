@@ -105,6 +105,15 @@ namespace DBAccess.DAL
             int stateOrdinal,
             int countryOrdinal)
         {
+
+            var mailingAddess = new MailingAddress(
+                reader.GetString(streetAddressOrdinal),
+                reader.GetString(zipOrdinal),
+                reader.GetString(cityOrdinal),
+                reader.GetString(stateOrdinal),
+                reader.GetString(countryOrdinal)
+                );
+
             return new Patient
             (
                 reader.GetInt32(patientIdOrdinal),           
@@ -115,11 +124,7 @@ namespace DBAccess.DAL
                 reader.GetString(firstNameOrdinal),          
                 reader.GetString(lastNameOrdinal),
                 reader.GetDateTime(dobOrdinal),
-                reader.GetString(streetAddressOrdinal),
-                reader.GetString(zipOrdinal),                  
-                reader.GetString(cityOrdinal),                  
-                reader.GetString(stateOrdinal),                 
-                reader.GetString(countryOrdinal)
+                mailingAddess
             );
         }
 
@@ -379,27 +384,27 @@ namespace DBAccess.DAL
 
             // Base query
             var query = @"
-        SELECT 
-            p.patient_id, 
-            p.pid, 
-            p.phone_number,
-            per.ssn,
-            per.fname, 
-            per.lname, 
-            per.dob, 
-            per.gender, 
-            ma.street_address, 
-            ma.zip, 
-            ma.city, 
-            ma.state, 
-            ma.country
-        FROM 
-            patient p
-        JOIN 
-            person per ON p.pid = per.pid
-        JOIN 
-            mailing_address ma ON per.street_address = ma.street_address AND per.zip = ma.zip
-        WHERE 1=1";
+                SELECT 
+                    p.patient_id, 
+                    p.pid, 
+                    p.phone_number,
+                    per.ssn,
+                    per.fname, 
+                    per.lname, 
+                    per.dob, 
+                    per.gender, 
+                    ma.street_address, 
+                    ma.zip, 
+                    ma.city, 
+                    ma.state, 
+                    ma.country
+                FROM 
+                    patient p
+                JOIN 
+                    person per ON p.pid = per.pid
+                JOIN 
+                    mailing_address ma ON per.street_address = ma.street_address AND per.zip = ma.zip
+                WHERE 1=1";
 
             // Add conditions based on input values
             if (!string.IsNullOrEmpty(firstName))

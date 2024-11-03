@@ -47,7 +47,10 @@ namespace HealthcareSystem
         {
             if (this.patient != null)
             {
-                Frame.Navigate(typeof(AppointmentPage), this.patient);
+                var dal = new AppointmentDAL();
+                var app = dal.GetPatientAppointments(this.patient);
+
+                Frame.Navigate(typeof(AppointmentPage), app);
             }
             else
             {

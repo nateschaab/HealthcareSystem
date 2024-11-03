@@ -21,6 +21,18 @@
             <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Collapsed" />
             <Button Content="Back" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
+            <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Margin="0,20,0,0"
+            ScrollViewer.VerticalScrollBarVisibility="Auto" Height="328">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>
+                                        <Run Text="{Binding Date}" />
+                            </TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackPanel>
     </Grid>
 </Page>
