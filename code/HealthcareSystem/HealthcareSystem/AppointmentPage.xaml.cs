@@ -12,6 +12,7 @@ namespace HealthcareSystem
 {
     public sealed partial class AppointmentPage : Page
     {
+        private Appointment App { get; set; }
         private List<Appointment> Appointments { get; set; }
         private readonly DoctorDAL _doctorDAL = new DoctorDAL();
         private readonly PatientDal _patientDAL = new PatientDal();
@@ -54,6 +55,7 @@ namespace HealthcareSystem
             if (PatientListView.SelectedItem is Appointment app)
             {
                 PopulateAppFields(app);
+                this.App = app;
             }
         }
 
@@ -104,6 +106,65 @@ namespace HealthcareSystem
                 else
                 {
                     ErrorTextBlock.Text = "Failed to create appointment. Check for double booking or try again.";
+                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                }
+                ErrorTextBlock.Visibility = Visibility.Visible;
+            }
+            catch (Exception ex)
+            {
+                ErrorTextBlock.Text = $"Error: {ex.Message}";
+                ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                ErrorTextBlock.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void EditAppointment_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string selectedDoctor = DoctorComboBox.SelectedItem as string;
+                string selectedPatient = PatientComboBox.SelectedItem as string;
+                if (selectedDoctor == null || selectedPatient == null)
+                {
+                    ErrorTextBlock.Text = "Please select both a doctor and a patient.";
+                    ErrorTextBlock.Visibility = Visibility.Visible;
+                    return;
+                }
+
+                // Extract IDs from selected values
+                int doctorId = int.Parse(selectedDoctor.Split(':')[0]);
+                int patientId = int.Parse(selectedPatient.Split(':')[0]);
+
+                // Retrieve date and time from DatePicker and TimePicker
+                DateTime date = AppointmentDatePicker.Date.Date;
+                TimeSpan time = AppointmentTimePicker.Time;
+                DateTime appointmentDateTime = date + time;
+
+                // Check if the appointment date and time have already passed
+                if (appointmentDateTime < DateTime.Now)
+                {
+                    ErrorTextBlock.Text = "Cannot edit an appointment for a past date and time.";
+                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                    ErrorTextBlock.Visibility = Visibility.Visible;
+                    return;
+                }
+
+                // Get the reason and appointment ID
+                string reason = ReasonTextBox.Text;
+                int appointmentId = this.App.AppointmentId;
+
+                // Call the EditAppointment method
+                bool success = _appointmentDAL.EditAppointment(appointmentId, doctorId, patientId, appointmentDateTime, reason);
+
+                // Show success or failure message
+                if (success)
+                {
+                    ErrorTextBlock.Text = "Appointment updated successfully!";
+                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Green);
+                }
+                else
+                {
+                    ErrorTextBlock.Text = "Failed to update appointment. Check for double booking or try again.";
                     ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
                 }
                 ErrorTextBlock.Visibility = Visibility.Visible;
