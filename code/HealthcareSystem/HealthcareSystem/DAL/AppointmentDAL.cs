@@ -220,7 +220,7 @@ namespace DBAccess.DAL
             return appointmentList;
         }
 
-        public bool EditAppointment(int appointmentId, int doctorId, int patientId, DateTime newAppointmentDateTime, string newReason)
+        public bool EditAppointment(int appointmentId, int doctorId, int patientId, DateTime newAppointmentDateTime, string newReason, bool isDateTimeChanged)
         {
             // Check if the appointment date and time are in the future
             if (newAppointmentDateTime < DateTime.Now)
@@ -230,7 +230,7 @@ namespace DBAccess.DAL
             }
 
             // Check for double-booking with the new date and time
-            if (IsDoubleBooking(doctorId, patientId, newAppointmentDateTime))
+            if (isDateTimeChanged && IsDoubleBooking(doctorId, patientId, newAppointmentDateTime))
             {
                 Console.WriteLine("Double booking detected. Appointment update aborted.");
                 return false;
@@ -273,7 +273,7 @@ namespace DBAccess.DAL
                 int visitRowsAffected = visitCommand.ExecuteNonQuery();
 
                 // Commit the transaction if both updates were successful
-                if (appointmentRowsAffected > 0 && visitRowsAffected > 0)
+                if (appointmentRowsAffected > 0)
                 {
                     transaction.Commit();
                     return true;
