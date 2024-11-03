@@ -18,7 +18,10 @@
 
             <Button Content="Create Appointment" Click="CreateAppointment_Click" Margin="0,20,0,0"/>
 
-            <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Collapsed" />
+            <TextBlock x:Name="CreateErrorTextBlock" Foreground="Red" Visibility="Collapsed" />
+            <Button Content="Edit Appointment" Click="EditAppointment_Click" Margin="0,20,0,0"/>
+            <TextBlock x:Name="EditErrorTextBlock" Foreground="Red" Visibility="Collapsed" />
+
             <Button Content="Back" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
             <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Margin="0,20,0,0"
