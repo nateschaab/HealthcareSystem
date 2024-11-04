@@ -25,6 +25,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="500"/>
+                    <RowDefinition Height="Auto"/>
+
                     <!-- ListView row -->
                 </Grid.RowDefinitions>
                 <!-- First Name Field -->
@@ -40,6 +42,7 @@
 
                 <Button Grid.Row="6" Content="Search Patient" Margin="0,20,0,0" VerticalAlignment="Top" Click="SearchPatientsButton_Click" Width="120"/>
                 <Button Grid.Row="6" Content="Edit Patient" Click="EditPatients_Click" Margin="160,20,0,0" VerticalAlignment="Top"/>
+                <Button Grid.Row="6" Content="Edit Appointment" Click="EditAppointment_Click" Margin="290,20,0,0" VerticalAlignment="Top"/>
 
                 <!-- ListView for displaying the patients -->
                 <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Grid.Row="7" Margin="0,20,0,0"
@@ -57,7 +60,7 @@
 
                     </ListView.ItemTemplate>
                 </ListView>
-                <Button Grid.Row="6" Content="Edit Appointment" Click="EditAppointment_Click" Margin="290,20,0,0" VerticalAlignment="Top"/>
+                <Button Grid.Row="8" Content="Back" Click="BackButton_Click" Margin="0,100,0,0"/>
             </Grid>
         </ScrollViewer>
     </Grid>
