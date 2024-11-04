@@ -10,5 +10,3 @@ Password: 2
 
 Username: testusername
 Password: testpwd
-
-Edit Story is incomplete
