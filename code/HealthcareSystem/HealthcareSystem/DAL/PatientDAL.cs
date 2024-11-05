@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Transactions;
 
 
 namespace DBAccess.DAL
@@ -250,22 +251,26 @@ namespace DBAccess.DAL
         public void UpdatePatientInDatabase(Patient patient)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
+            MySqlTransaction transaction = null; // Declare transaction outside of try block
 
             try
             {
+                Debug.WriteLine("Attempting to open connection to the database...");
                 connection.Open();
-                using var transaction = connection.BeginTransaction();
+                Debug.WriteLine($"Connection opened: {connection.State == System.Data.ConnectionState.Open}");
+
+                transaction = connection.BeginTransaction(); // Initialize transaction here
+                Debug.WriteLine("Transaction started.");
 
                 // Disable foreign key checks to avoid circular dependency issues during the update
                 var disableFKChecks = "SET FOREIGN_KEY_CHECKS=0;";
                 using (var disableCommand = new MySqlCommand(disableFKChecks, connection, transaction))
                 {
                     disableCommand.ExecuteNonQuery();
+                    Debug.WriteLine("Foreign key checks disabled.");
                 }
 
-                Debug.WriteLine($"Connection Opened: {connection.State == System.Data.ConnectionState.Open}");
-
-                // Step 1: Update mailing address first to ensure no foreign key violations
+                // Step 1: Update mailing address
                 var updateAddressQuery = @"
                     UPDATE mailing_address
                     SET street_address = @new_street_address,
@@ -285,20 +290,15 @@ namespace DBAccess.DAL
                     updateAddressCommand.Parameters.Add(new MySqlParameter("@state", MySqlDbType.VarChar) { Value = patient.MailAddress.State });
                     updateAddressCommand.Parameters.Add(new MySqlParameter("@country", MySqlDbType.VarChar) { Value = patient.MailAddress.Country });
 
-
-                    Debug.WriteLine("Updating Mailing Address with the following values:");
-                    Debug.WriteLine($"pid: {patient.PersonId}");
-                    Debug.WriteLine($"Street Address: {patient.MailAddress.StreetAddress}");
-                    Debug.WriteLine($"Zip: {patient.MailAddress.Zip}");
-                    Debug.WriteLine($"City: {patient.MailAddress.City}");
-                    Debug.WriteLine($"State: {patient.MailAddress.State}");
-                    Debug.WriteLine($"Country: {patient.MailAddress.Country}");
+                    Debug.WriteLine("Executing mailing address update with parameters:");
+                    Debug.WriteLine($"pid: {patient.PersonId}, Street Address: {patient.MailAddress.StreetAddress}, Zip: {patient.MailAddress.Zip}");
+                    Debug.WriteLine($"City: {patient.MailAddress.City}, State: {patient.MailAddress.State}, Country: {patient.MailAddress.Country}");
 
                     var addressRowsAffected = updateAddressCommand.ExecuteNonQuery();
-                    Debug.WriteLine($"Mailing address rows affected: {addressRowsAffected}");
+                    Debug.WriteLine($"Mailing address update completed, rows affected: {addressRowsAffected}");
                 }
 
-                // Step 2: Update person details to match the changes in mailing_address
+                // Step 2: Update person details
                 var updatePersonQuery = @"
                     UPDATE person 
                     SET ssn = @ssn,
@@ -322,19 +322,12 @@ namespace DBAccess.DAL
                     updatePersonCommand.Parameters.Add(new MySqlParameter("@new_street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
                     updatePersonCommand.Parameters.Add(new MySqlParameter("@new_zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
 
-
-                    Debug.WriteLine("Updating Person Details with the following values:");
-                    Debug.WriteLine($"pid: {patient.PersonId}");
-                    Debug.WriteLine($"SSN: {patient.SSN}");
-                    Debug.WriteLine($"First Name: {patient.FirstName}");
-                    Debug.WriteLine($"Last Name: {patient.LastName}");
-                    Debug.WriteLine($"Gender: {patient.Gender}");
-                    Debug.WriteLine($"Date of Birth: {patient.DateOfBirth}");
-                    Debug.WriteLine($"Street Address: {patient.MailAddress.StreetAddress}");
-                    Debug.WriteLine($"Zip: {patient.MailAddress.Zip}");
+                    Debug.WriteLine("Executing person details update with parameters:");
+                    Debug.WriteLine($"pid: {patient.PersonId}, SSN: {patient.SSN}, First Name: {patient.FirstName}, Last Name: {patient.LastName}");
+                    Debug.WriteLine($"Gender: {patient.Gender}, Date of Birth: {patient.DateOfBirth}, Street Address: {patient.MailAddress.StreetAddress}, Zip: {patient.MailAddress.Zip}");
 
                     var personRowsAffected = updatePersonCommand.ExecuteNonQuery();
-                    Debug.WriteLine($"Person rows affected: {personRowsAffected}");
+                    Debug.WriteLine($"Person details update completed, rows affected: {personRowsAffected}");
                 }
 
                 // Step 3: Update patient details
@@ -349,12 +342,11 @@ namespace DBAccess.DAL
                     updatePatientCommand.Parameters.Add(new MySqlParameter("@patientId", MySqlDbType.Int32) { Value = patient.PatientId });
                     updatePatientCommand.Parameters.Add(new MySqlParameter("@phoneNumber", MySqlDbType.VarChar) { Value = patient.PhoneNumber });
 
-                    Debug.WriteLine("Updating Patient Details with the following values:");
-                    Debug.WriteLine($"Patient ID: {patient.PatientId}");
-                    Debug.WriteLine($"Phone Number: {patient.PhoneNumber}");
+                    Debug.WriteLine("Executing patient details update with parameters:");
+                    Debug.WriteLine($"Patient ID: {patient.PatientId}, Phone Number: {patient.PhoneNumber}");
 
                     var patientRowsAffected = updatePatientCommand.ExecuteNonQuery();
-                    Debug.WriteLine($"Patient rows affected: {patientRowsAffected}");
+                    Debug.WriteLine($"Patient details update completed, rows affected: {patientRowsAffected}");
                 }
 
                 // Re-enable foreign key checks after completing the update
@@ -362,65 +354,84 @@ namespace DBAccess.DAL
                 using (var enableCommand = new MySqlCommand(enableFKChecks, connection, transaction))
                 {
                     enableCommand.ExecuteNonQuery();
+                    Debug.WriteLine("Foreign key checks re-enabled.");
                 }
 
                 // Commit transaction
                 transaction.Commit();
-                Debug.WriteLine("Patient updated successfully.");
+                Debug.WriteLine("Transaction committed successfully. Patient updated.");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error updating patient: {ex.Message}");
+                Debug.WriteLine($"Error occurred while updating patient: {ex.Message}");
+
+                // Rollback transaction if it exists
+                if (transaction != null)
+                {
+                    try
+                    {
+                        transaction.Rollback();
+                        Debug.WriteLine("Transaction rolled back successfully.");
+                    }
+                    catch (Exception rollbackEx)
+                    {
+                        Debug.WriteLine($"Error occurred during rollback: {rollbackEx.Message}");
+                    }
+                }
             }
         }
-
 
         public List<Patient> SearchPatient(string firstName, string lastName, DateTime dob)
         {
             var patientList = new List<Patient>();
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
+            Debug.WriteLine("Opening connection to the database...");
             connection.Open();
+            Debug.WriteLine("Connection opened successfully.");
 
             // Base query
             var query = @"
-                SELECT 
-                    p.patient_id, 
-                    p.pid, 
-                    p.phone_number,
-                    per.ssn,
-                    per.fname, 
-                    per.lname, 
-                    per.dob, 
-                    per.gender, 
-                    ma.street_address, 
-                    ma.zip, 
-                    ma.city, 
-                    ma.state, 
-                    ma.country
-                FROM 
-                    patient p
-                JOIN 
-                    person per ON p.pid = per.pid
-                JOIN 
-                    mailing_address ma ON per.street_address = ma.street_address AND per.zip = ma.zip
-                WHERE 1=1";
+        SELECT 
+            p.patient_id, 
+            p.pid, 
+            p.phone_number,
+            per.ssn,
+            per.fname, 
+            per.lname, 
+            per.dob, 
+            per.gender, 
+            ma.street_address, 
+            ma.zip, 
+            ma.city, 
+            ma.state, 
+            ma.country
+        FROM 
+            patient p
+        JOIN 
+            person per ON p.pid = per.pid
+        JOIN 
+            mailing_address ma ON per.street_address = ma.street_address AND per.zip = ma.zip
+        WHERE 1=1";
 
             // Add conditions based on input values
             if (!string.IsNullOrEmpty(firstName))
             {
                 query += " AND per.fname = @firstName";
+                Debug.WriteLine("Adding filter for firstName.");
             }
 
             if (!string.IsNullOrEmpty(lastName))
             {
                 query += " AND per.lname = @lastName";
+                Debug.WriteLine("Adding filter for lastName.");
             }
 
             DateTime defaultDob = new DateTime(1600, 12, 31);
             if (dob.Date != defaultDob)
             {
                 query += " AND per.dob = @dob";
+                Debug.WriteLine("Adding filter for dob.");
             }
 
             // Log the query and parameter values
@@ -435,18 +446,22 @@ namespace DBAccess.DAL
             if (!string.IsNullOrEmpty(firstName))
             {
                 command.Parameters.Add(new MySqlParameter("@firstName", MySqlDbType.VarChar) { Value = firstName });
+                Debug.WriteLine("Bound parameter @firstName.");
             }
 
             if (!string.IsNullOrEmpty(lastName))
             {
                 command.Parameters.Add(new MySqlParameter("@lastName", MySqlDbType.VarChar) { Value = lastName });
+                Debug.WriteLine("Bound parameter @lastName.");
             }
 
             if (dob.Date != defaultDob)
             {
                 command.Parameters.Add(new MySqlParameter("@dob", MySqlDbType.Date) { Value = dob.Date });
+                Debug.WriteLine("Bound parameter @dob.");
             }
 
+            Debug.WriteLine("Executing the command...");
             using var reader = command.ExecuteReader();
 
             // Retrieve ordinals to optimize reader
@@ -464,8 +479,10 @@ namespace DBAccess.DAL
             var stateOrdinal = reader.GetOrdinal("state");
             var countryOrdinal = reader.GetOrdinal("country");
 
+            Debug.WriteLine("Starting to read data from the database...");
             while (reader.Read())
             {
+                Debug.WriteLine("Reading a record...");
                 patientList.Add(CreatePatient(
                     reader,
                     ssnOrdinal,
@@ -482,8 +499,10 @@ namespace DBAccess.DAL
                     stateOrdinal,
                     countryOrdinal
                 ));
+                Debug.WriteLine("Record added to patient list.");
             }
 
+            Debug.WriteLine("Data reading complete. Returning patient list.");
             return patientList;
         }
 
