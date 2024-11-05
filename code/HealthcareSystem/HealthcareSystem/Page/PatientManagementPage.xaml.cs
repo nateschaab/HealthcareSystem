@@ -56,6 +56,10 @@ namespace HealthcareSystem
             if (e.Parameter is Patient selectedPatient)
             {
                 this.patient = selectedPatient;
+                var matchingPatient = PatientListView.Items.Cast<Patient>()
+                    .FirstOrDefault(p => p.PatientId == selectedPatient.PatientId); // assuming Patient has an Id property
+                PatientListView.SelectedItem = matchingPatient;
+
                 this.PopulatePatientFields(patient);
             }
         }
@@ -229,7 +233,7 @@ namespace HealthcareSystem
 
                 var mailingAddress = new MailingAddress
                     (
-                        address, zipcode, city, country, state
+                        address, zipcode, city, state, country
                     );
 
                 var patientInfo = new Patient
@@ -334,7 +338,7 @@ namespace HealthcareSystem
 
                     var mailingAddress = new MailingAddress
                         (
-                            address, zipcode, city, country, state
+                            address, zipcode, city, state, country
                         );
 
                     var patientInfo = new Patient
@@ -346,6 +350,7 @@ namespace HealthcareSystem
                     dal.UpdatePatientInDatabase(patientInfo);
                     // Example output (logging or further action)
                     Debug.WriteLine("Patient Registered: " + patientInfo);
+                    this.LoadPatients();
                 }
             }
         }
