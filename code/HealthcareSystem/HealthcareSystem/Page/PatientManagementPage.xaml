@@ -46,22 +46,22 @@
                 </Grid.RowDefinitions>
 
                 <!-- SSN Field -->
-                <TextBox x:Name="PatientSSNTextBox" PlaceholderText="Patient SSN" Margin="0,10,0,0" Grid.Row="0"/>
+                <TextBox x:Name="PatientSSNTextBox" PlaceholderText="Patient SSN" Margin="125,10,0,0" Grid.Row="0"/>
                 <TextBlock x:Name="SSNErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid SSN" Grid.Row="1"/>
 
                 <!-- First Name Field -->
-                <TextBox x:Name="PatientFirstNameTextBox" PlaceholderText="Patient First Name" Margin="0,10,0,0" Grid.Row="2"/>
+                <TextBox x:Name="PatientFirstNameTextBox" PlaceholderText="Patient First Name" Margin="125,10,0,0" Grid.Row="2"/>
                 <TextBlock x:Name="FirstNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="First Name Is Required" Grid.Row="3"/>
 
                 <!-- Last Name Field -->
-                <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Patient Last Name" Margin="0,10,0,0" Grid.Row="4"/>
+                <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Patient Last Name" Margin="125,10,0,0" Grid.Row="4"/>
                 <TextBlock x:Name="LastNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Last Name Is Required" Grid.Row="5"/>
                 <!-- DOB Field -->
-                <DatePicker x:Name="DOBDatePicker" Margin="0,10,0,0" Grid.Row="6"/>
+                <DatePicker x:Name="DOBDatePicker" Margin="125,10,0,0" Grid.Row="6"/>
                 <TextBlock x:Name="DOBErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Date Is Required" Grid.Row="7"/>
 
                 <!-- Gender Field -->
-                <ComboBox x:Name="GenderComboBox" PlaceholderText="Select Gender" Margin="0,10,0,0" Grid.Row="8">
+                <ComboBox x:Name="GenderComboBox" PlaceholderText="Select Gender" Margin="125,10,0,0" Grid.Row="8">
                     <ComboBoxItem Content="M"/>
                     <ComboBoxItem Content="F"/>
                     <ComboBoxItem Content="O"/>
@@ -69,16 +69,16 @@
                 <TextBlock x:Name="GenderErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Gender is required" Grid.Row="9"/>
 
                 <!-- Address Fields -->
-                <TextBox x:Name="StreetAddressTextBox" PlaceholderText="Street Address" Margin="0,10,0,0" Grid.Row="10"/>
+                <TextBox x:Name="StreetAddressTextBox" PlaceholderText="Street Address" Margin="125,10,0,0" Grid.Row="10"/>
                 <TextBlock x:Name="StreetAddressErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Street Address" Grid.Row="11"/>
 
-                <TextBox x:Name="ZipCodeTextBox" PlaceholderText="Zip Code" Margin="0,10,0,0" Grid.Row="12"/>
+                <TextBox x:Name="ZipCodeTextBox" PlaceholderText="Zip Code" Margin="125,10,0,0" Grid.Row="12"/>
                 <TextBlock x:Name="ZipCodeErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Zip Code" Grid.Row="13"/>
 
-                <TextBox x:Name="CityTextBox" PlaceholderText="City" Margin="0,10,0,0" Grid.Row="14"/>
+                <TextBox x:Name="CityTextBox" PlaceholderText="City" Margin="125,10,0,0" Grid.Row="14"/>
                 <TextBlock x:Name="CityErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="City Is Required" Grid.Row="15"/>
                 <!-- State ComboBox -->
-                <ComboBox x:Name="StateComboBox" PlaceholderText="Select State" Margin="0,10,0,0" Grid.Row="16">
+                <ComboBox x:Name="StateComboBox" PlaceholderText="Select State" Margin="125,10,0,0" Grid.Row="16">
                     <ComboBoxItem Content="Alabama"/>
                     <ComboBoxItem Content="Alaska"/>
                     <ComboBoxItem Content="Arizona"/>
@@ -133,7 +133,7 @@
                 <TextBlock x:Name="StateErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="State is required" Grid.Row="17"/>
 
                 <!-- Country ComboBox -->
-                <ComboBox x:Name="CountryComboBox" PlaceholderText="Select Country" Margin="0,10,0,0" Grid.Row="18">
+                <ComboBox x:Name="CountryComboBox" PlaceholderText="Select Country" Margin="125,10,0,0" Grid.Row="18">
                     <ComboBoxItem Content="United States"/>
                     <ComboBoxItem Content="Canada"/>
                     <ComboBoxItem Content="United Kingdom"/>
@@ -158,7 +158,7 @@
                 <TextBlock x:Name="CountryErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Country is required" Grid.Row="19"/>
 
                 <!-- Phone Number Field -->
-                <TextBox x:Name="PhoneNumberTextBox" PlaceholderText="Phone Number" Margin="0,10,0,0" Grid.Row="20"/>
+                <TextBox x:Name="PhoneNumberTextBox" PlaceholderText="Phone Number" Margin="125,10,0,0" Grid.Row="20"/>
                 <TextBlock x:Name="PhoneErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Phone Number" Grid.Row="21"/>
 
                 <Button Grid.Row="22" Content="Register Patient" Click="RegisterPatient_Click" Margin="0,20,10,0"/>
@@ -177,6 +177,17 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" IsHitTestVisible="False" Text="SSN" VerticalAlignment="Top" Margin="0,10,0,0" Grid.Row="0" TextChanged="TextBox_TextChanged"/>
+                <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" IsHitTestVisible="False" Text="First Name" VerticalAlignment="Top" Margin="0,10,0,0" Grid.Row="2" TextChanged="TextBox_TextChanged"/>
+                <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" IsHitTestVisible="False" Text="Last Name" VerticalAlignment="Top" Margin="0,10,0,0" Grid.Row="4" TextChanged="TextBox_TextChanged"/>
+                <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" IsHitTestVisible="False" Text="Birth Date" VerticalAlignment="Top" Margin="0,10,0,0" Grid.Row="6" TextChanged="TextBox_TextChanged"/>
+                <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" IsHitTestVisible="False" Text="Gender" VerticalAlignment="Top" Margin="0,10,0,0" Grid.Row="8" TextChanged="TextBox_TextChanged"/>
+                <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" IsHitTestVisible="False" Text="Street Address" VerticalAlignment="Top" Margin="0,10,0,0" Grid.Row="10" TextChanged="TextBox_TextChanged"/>
+                <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" IsHitTestVisible="False" Text="Zip Code" VerticalAlignment="Top" Margin="0,10,0,0" Grid.Row="12" TextChanged="TextBox_TextChanged"/>
+                <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" IsHitTestVisible="False" Text="City" VerticalAlignment="Top" Margin="0,10,0,0" Grid.Row="14" TextChanged="TextBox_TextChanged"/>
+                <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" IsHitTestVisible="False" Text="State" VerticalAlignment="Top" Margin="0,10,0,0" Grid.Row="16" TextChanged="TextBox_TextChanged"/>
+                <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" IsHitTestVisible="False" Text="Country" VerticalAlignment="Top" Margin="0,10,0,0" Grid.Row="18" TextChanged="TextBox_TextChanged"/>
+                <TextBox HorizontalAlignment="Left" TextWrapping="Wrap" IsHitTestVisible="False" Text="Phone Number" VerticalAlignment="Top" Margin="0,10,0,0" Grid.Row="20" TextChanged="TextBox_TextChanged"/>
             </Grid>
         </ScrollViewer>
     </Grid>

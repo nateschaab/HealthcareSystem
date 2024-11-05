@@ -368,5 +368,9 @@ namespace HealthcareSystem
             Frame.Navigate(typeof(MainPage));
         }
 
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
