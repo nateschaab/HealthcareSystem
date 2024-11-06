@@ -7,14 +7,17 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <Button Grid.Row="0" Content="Back" Click="BackButton_Click" Margin="0,0,0,0"/>
+
         <!-- Header Text -->
-        <TextBlock Text="Search Patient" FontSize="24" Grid.Row="0" Margin="0,0,0,20" />
+        <TextBlock Text="Search Patient" FontSize="24" Grid.Row="1" Margin="0,20,0,20" />
 
         <!-- Form and ListView container -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -60,7 +63,6 @@
 
                     </ListView.ItemTemplate>
                 </ListView>
-                <Button Grid.Row="8" Content="Back" Click="BackButton_Click" Margin="0,100,0,0"/>
             </Grid>
         </ScrollViewer>
     </Grid>

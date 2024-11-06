@@ -5,9 +5,12 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Margin="20">
-            <TextBlock Text="Create Appointment" FontSize="24" />
 
-            <ComboBox x:Name="DoctorComboBox" PlaceholderText="Select Doctor" Margin="0,10,0,0"/>
+            <Button Content="Back" Click="BackButton_Click" Margin="0,0,0,0" VerticalAlignment="Top"/>
+
+            <TextBlock Text="Create Appointment" FontSize="24" Margin="0,20,0,0"/>
+
+            <ComboBox x:Name="DoctorComboBox" PlaceholderText="Select Doctor" Margin="0,30,0,0"/>
 
             <ComboBox x:Name="PatientComboBox" PlaceholderText="Select Patient" Margin="0,10,0,0"/>
 
@@ -21,8 +24,6 @@
             <TextBlock x:Name="CreateErrorTextBlock" Foreground="Red" Visibility="Collapsed" />
             <Button Content="Edit Appointment" Click="EditAppointment_Click" Margin="0,20,0,0"/>
             <TextBlock x:Name="EditErrorTextBlock" Foreground="Red" Visibility="Collapsed" />
-
-            <Button Content="Back" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
             <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Margin="0,20,0,0"
             ScrollViewer.VerticalScrollBarVisibility="Auto" Height="328">
