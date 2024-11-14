@@ -58,13 +58,11 @@ namespace HealthcareSystem
             }
         }
 
-        // Load all patients from the database and populate the ListView
         private void LoadPatients()
         {
             Debug.WriteLine("Loading Patients From Database");
-            this.patients = this.GetPatientsFromDatabase();  // Retrieve patients from the DB
+            this.patients = this.GetPatientsFromDatabase();
 
-            // Bind the patient list to the ListView
             this.PatientListView.ItemsSource = this.patients;
         }
 
@@ -97,11 +95,9 @@ namespace HealthcareSystem
             this.CityTextBox.Text = selectedPatient.MailAddress?.City ?? string.Empty;
             this.PhoneNumberTextBox.Text = selectedPatient.PhoneNumber;
 
-            // Set ComboBox value for Gender
             this.GenderComboBox.SelectedItem = this.GenderComboBox.Items
                 .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.Gender);
 
-            // Check if MailAddress is not null before setting State and Country
             if (selectedPatient.MailAddress != null)
             {
                 this.StateComboBox.SelectedItem = this.StateComboBox.Items
