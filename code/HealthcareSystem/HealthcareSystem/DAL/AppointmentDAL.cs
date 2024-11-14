@@ -134,7 +134,6 @@ namespace DBAccess.DAL
 
             connection.Open();
 
-            // Query to retrieve appointments based on patient's name and DOB
             var query = @"
                 SELECT 
                     a.appt_id,
@@ -151,7 +150,6 @@ namespace DBAccess.DAL
                     person per ON p.pid = per.pid
                 WHERE 1=1";
 
-            // Add conditions based on input values
             if (!string.IsNullOrEmpty(patient.FirstName))
             {
                 query += " AND per.fname = @firstName";
@@ -168,7 +166,6 @@ namespace DBAccess.DAL
                 query += " AND per.dob = @dob";
             }
 
-            // Log the query and parameter values
             Debug.WriteLine("Executing query: " + query);
             Debug.WriteLine($"Parameter firstName: {patient.FirstName}");
             Debug.WriteLine($"Parameter lastName: {patient.LastName}");
@@ -176,7 +173,6 @@ namespace DBAccess.DAL
 
             using var command = new MySqlCommand(query, connection);
 
-            // Bind parameters
             if (!string.IsNullOrEmpty(patient.FirstName))
             {
                 command.Parameters.Add(new MySqlParameter("@firstName", MySqlDbType.VarChar) { Value = patient.FirstName });
@@ -194,7 +190,6 @@ namespace DBAccess.DAL
 
             using var reader = command.ExecuteReader();
 
-            // Retrieve ordinals to optimize reader
             var apptIdOrdinal = reader.GetOrdinal("appt_id");
             var doctorIdOrdinal = reader.GetOrdinal("doctor_id");
             var patientIdOrdinal = reader.GetOrdinal("patient_id");
@@ -222,14 +217,12 @@ namespace DBAccess.DAL
 
         public bool EditAppointment(int appointmentId, int doctorId, int patientId, DateTime newAppointmentDateTime, string newReason, bool isDateTimeChanged)
         {
-            // Check if the appointment date and time are in the future
             if (newAppointmentDateTime < DateTime.Now)
             {
                 Console.WriteLine("Cannot edit past appointments.");
                 return false;
             }
 
-            // Check for double-booking with the new date and time
             if (isDateTimeChanged && IsDoubleBooking(doctorId, patientId, newAppointmentDateTime))
             {
                 Console.WriteLine("Double booking detected. Appointment update aborted.");
@@ -241,10 +234,8 @@ namespace DBAccess.DAL
                 using var connection = new MySqlConnection(Connection.ConnectionString());
                 connection.Open();
 
-                // Start a transaction for updating appointment and visit records
                 using var transaction = connection.BeginTransaction();
 
-                // Update the appointment record in the database
                 string updateAppointmentQuery = @"
                     UPDATE appointment
                     SET doctor_id = @doctor_id,  
@@ -260,7 +251,6 @@ namespace DBAccess.DAL
 
                 int appointmentRowsAffected = appointmentCommand.ExecuteNonQuery();
 
-                // Update the associated visit record with the new date and time
                 string updateVisitQuery = @"
                     UPDATE visit
                     SET datetime = @datetime
@@ -272,7 +262,6 @@ namespace DBAccess.DAL
 
                 int visitRowsAffected = visitCommand.ExecuteNonQuery();
 
-                // Commit the transaction if both updates were successful
                 if (appointmentRowsAffected > 0)
                 {
                     transaction.Commit();

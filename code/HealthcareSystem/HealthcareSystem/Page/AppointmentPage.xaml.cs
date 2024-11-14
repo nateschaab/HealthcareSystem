@@ -72,7 +72,7 @@ namespace HealthcareSystem
 
         private void PopulateAppFields(Appointment app)
         {
-            int doctorId = app.DoctorId;
+            var doctorId = app.DoctorId;
 
             this.DoctorComboBox.SelectedItem = this.DoctorComboBox.Items
                 .OfType<string>()
@@ -80,10 +80,10 @@ namespace HealthcareSystem
                 {
                     var idPart = doctorInfo.Split(':')[0].Trim();
 
-                    return int.TryParse(idPart, out int parsedId) && parsedId == doctorId;
+                    return int.TryParse(idPart, out var parsedId) && parsedId == doctorId;
                 });
 
-            int patientId = app.PatientId;
+            var patientId = app.PatientId;
 
             this.PatientComboBox.SelectedItem = this.PatientComboBox.Items?
                 .OfType<Patient>()

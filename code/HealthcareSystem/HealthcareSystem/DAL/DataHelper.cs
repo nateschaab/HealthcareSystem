@@ -27,20 +27,6 @@ public static class DataHelper
         }
         return returnValue;
     }
-
-    /// <summary>
-    /// Extension method that checks if a column in a data row is null before return its value.
-    /// 
-    /// </summary>
-    /// <typeparam name="T">column type</typeparam>
-    /// <param name="row">data row that contains the data</param>
-    /// <param name="columnName">column name in DB</param>
-    /// <returns></returns>
-    /*public static T FieldOrDefault<T>(this DataRow row, string columnName)
-    {
-        return row.IsNull(columnName);
-    }*/
-
 }
 }
 

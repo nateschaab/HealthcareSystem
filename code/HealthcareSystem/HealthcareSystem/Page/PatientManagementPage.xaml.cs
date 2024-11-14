@@ -40,7 +40,6 @@ namespace HealthcareSystem
         {
             this.InitializeComponent();
             this.patient = selectedPatient;
-            // You can now use this.patient within this page
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -50,8 +49,8 @@ namespace HealthcareSystem
             if (e.Parameter is Patient selectedPatient)
             {
                 this.patient = selectedPatient;
-                var matchingPatient = this.PatientListView.Items.Cast<Patient>()
-                    .FirstOrDefault(p => p.PatientId == selectedPatient.PatientId); // assuming Patient has an Id property
+                var matchingPatient = this.PatientListView.Items?.Cast<Patient>()
+                    .FirstOrDefault(p => p.PatientId == selectedPatient.PatientId);
                 this.PatientListView.SelectedItem = matchingPatient;
 
                 this.PopulatePatientFields(this.patient);
@@ -66,15 +65,12 @@ namespace HealthcareSystem
             this.PatientListView.ItemsSource = this.patients;
         }
 
-        // Simulate retrieving patients from the DB (replace this with actual DB call)
         private List<Patient> GetPatientsFromDatabase()
         {
             var dal = new PatientDal();
-            // Example code - this should be replaced with actual DB retrieval logic
             return dal.GetPatientsFromReader();
         }
 
-        // Event when a patient is selected in the ListView
         private void PatientListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.PatientListView.SelectedItem is Patient selectedPatient)
@@ -85,7 +81,6 @@ namespace HealthcareSystem
 
         private void PopulatePatientFields(Patient selectedPatient)
         {
-            // Load the selected patient's data into the input fields
             this.PatientSSNTextBox.Text = selectedPatient.SSN;
             this.PatientFirstNameTextBox.Text = selectedPatient.FirstName;
             this.PatientLastNameTextBox.Text = selectedPatient.LastName;
@@ -95,15 +90,15 @@ namespace HealthcareSystem
             this.CityTextBox.Text = selectedPatient.MailAddress?.City ?? string.Empty;
             this.PhoneNumberTextBox.Text = selectedPatient.PhoneNumber;
 
-            this.GenderComboBox.SelectedItem = this.GenderComboBox.Items
+            this.GenderComboBox.SelectedItem = this.GenderComboBox.Items?
                 .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.Gender);
 
             if (selectedPatient.MailAddress != null)
             {
-                this.StateComboBox.SelectedItem = this.StateComboBox.Items
+                this.StateComboBox.SelectedItem = this.StateComboBox.Items?
                     .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.MailAddress.State);
 
-                this.CountryComboBox.SelectedItem = this.CountryComboBox.Items
+                this.CountryComboBox.SelectedItem = this.CountryComboBox.Items?
                     .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.MailAddress.Country);
             }
         }
@@ -111,22 +106,18 @@ namespace HealthcareSystem
         private void RegisterPatient_Click(object sender, RoutedEventArgs e)
         {
 
-            // If all fields are valid, proceed to register the patient
             if (this.ValidateInputs())
             {
-                // Code to register the patient
-                // Example: Saving to database or calling an API
-                // Use PatientSSNTextBox.Text, GenderComboBox.SelectedItem, etc.
                 var ssn = this.PatientSSNTextBox.Text;
-                var gender = (this.GenderComboBox.SelectedItem as ComboBoxItem).Content.ToString();
+                var gender = (this.GenderComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
                 var firstName = this.PatientFirstNameTextBox.Text;
                 var lastName = this.PatientLastNameTextBox.Text;
                 var dob = this.DOBDatePicker.Date.DateTime;
                 var address = this.StreetAddressTextBox.Text;
                 var zipcode = this.ZipCodeTextBox.Text;
                 var city = this.CityTextBox.Text;
-                var country = (this.CountryComboBox.SelectedItem as ComboBoxItem).Content.ToString();
-                var state = (this.StateComboBox.SelectedItem as ComboBoxItem).Content.ToString();
+                var country = (this.CountryComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
+                var state = (this.StateComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
                 var phoneNumber = this.PhoneNumberTextBox.Text;
 
                 var mailingAddress = new MailingAddress
@@ -157,7 +148,6 @@ namespace HealthcareSystem
         }
 
 
-        // Edit patient in the database
         private void EditPatient_Click(object sender, RoutedEventArgs e)
         {
             if (this.PatientListView.SelectedItem is Patient selectedPatient)
@@ -168,15 +158,15 @@ namespace HealthcareSystem
                     var personId = selectedPatient.PersonId;
                     var phoneNumber = this.PhoneNumberTextBox.Text;
                     var ssn = this.PatientSSNTextBox.Text;
-                    var gender = (this.GenderComboBox.SelectedItem as ComboBoxItem).Content.ToString();
+                    var gender = (this.GenderComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
                     var firstName = this.PatientFirstNameTextBox.Text;
                     var lastName = this.PatientLastNameTextBox.Text;
                     var dob = this.DOBDatePicker.Date.DateTime;
                     var address = this.StreetAddressTextBox.Text;
                     var zipcode = this.ZipCodeTextBox.Text;
                     var city = this.CityTextBox.Text;
-                    var country = (this.CountryComboBox.SelectedItem as ComboBoxItem).Content.ToString();
-                    var state = (this.StateComboBox.SelectedItem as ComboBoxItem).Content.ToString();
+                    var country = (this.CountryComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
+                    var state = (this.StateComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
 
                     var mailingAddress = new MailingAddress(address, zipcode, city, state, country);
 

@@ -27,7 +27,6 @@ namespace DBAccess.DAL
 
             connection.Open();
 
-            // Updated query to retrieve all necessary fields
             var query = @"
                 SELECT 
                     p.patient_id, 
@@ -138,10 +137,8 @@ namespace DBAccess.DAL
                 connection.Open();
                 using var transaction = connection.BeginTransaction();
 
-                // Debugging: Output the connection state and information
                 Debug.WriteLine($"Connection Opened: {connection.State == System.Data.ConnectionState.Open}");
 
-                // Step 1: Insert mailing address without the PID
                 var insertAddressQuery = @"
                     INSERT INTO mailing_address (street_address, zip, city, state, country)
                     VALUES (@street_address, @zip, @city, @state, @country);
@@ -157,7 +154,6 @@ namespace DBAccess.DAL
                     insertAddressCommand.Parameters.Add(new MySqlParameter("@country", MySqlDbType.VarChar) { Value = patient.MailAddress.Country });
 
 
-                    // Debugging: Output the parameter values being added
                     Debug.WriteLine("Inserting Mailing Address without PID with the following values:");
                     Debug.WriteLine($"Street Address: {patient.MailAddress.StreetAddress}");
                     Debug.WriteLine($"Zip: {patient.MailAddress.Zip}");
@@ -169,7 +165,6 @@ namespace DBAccess.DAL
                     Debug.WriteLine("Mailing address inserted successfully.");
                 }
 
-                // Step 2: Insert person details and get the generated PID
                 var insertPersonQuery = @"
                     INSERT INTO person (ssn, fname, lname, gender, dob, street_address, zip)
                     VALUES (@ssn, @fname, @lname, @gender, @dob, @street_address, @zip);
@@ -187,12 +182,10 @@ namespace DBAccess.DAL
                     insertPersonCommand.Parameters.Add(new MySqlParameter("@zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
 
 
-                    // Retrieve the newly generated person ID (pid)
                     patient.PersonId = Convert.ToInt32(insertPersonCommand.ExecuteScalar());
                     Debug.WriteLine($"Generated Person ID (pid): {patient.PersonId}");
                 }
 
-                // Step 3: Update mailing address with the generated PID
                 var updateAddressQuery = @"
                     UPDATE mailing_address
                     SET pid = @pid
@@ -206,7 +199,6 @@ namespace DBAccess.DAL
                     updateAddressCommand.Parameters.Add(new MySqlParameter("@zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
 
 
-                    // Debugging: Output the parameter values being added
                     Debug.WriteLine("Updating Mailing Address with the following values:");
                     Debug.WriteLine($"pid: {patient.PersonId}");
                     Debug.WriteLine($"Street Address: {patient.MailAddress.StreetAddress}");
@@ -216,7 +208,6 @@ namespace DBAccess.DAL
                     Debug.WriteLine("Mailing address updated with PID successfully.");
                 }
 
-                // Step 4: Insert patient details
                 var insertPatientQuery = @"
                     INSERT INTO patient (pid, phone_number)
                     VALUES (@pid, @phoneNumber);
@@ -228,7 +219,6 @@ namespace DBAccess.DAL
                     insertPatientCommand.Parameters.Add(new MySqlParameter("@phoneNumber", MySqlDbType.VarChar) { Value = patient.PhoneNumber });
 
 
-                    // Debugging: Output the parameter values being added
                     Debug.WriteLine("Inserting Patient Details with the following values:");
                     Debug.WriteLine($"pid: {patient.PersonId}");
                     Debug.WriteLine($"Phone Number: {patient.PhoneNumber}");
@@ -237,7 +227,6 @@ namespace DBAccess.DAL
                     Debug.WriteLine("Patient details inserted successfully.");
                 }
 
-                // Commit transaction
                 transaction.Commit();
                 Debug.WriteLine("Patient registered successfully.");
             }
@@ -251,7 +240,7 @@ namespace DBAccess.DAL
         public void UpdatePatientInDatabase(Patient patient)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
-            MySqlTransaction transaction = null; // Declare transaction outside of try block
+            MySqlTransaction transaction = null;
 
             try
             {
@@ -259,10 +248,9 @@ namespace DBAccess.DAL
                 connection.Open();
                 Debug.WriteLine($"Connection opened: {connection.State == System.Data.ConnectionState.Open}");
 
-                transaction = connection.BeginTransaction(); // Initialize transaction here
+                transaction = connection.BeginTransaction();
                 Debug.WriteLine("Transaction started.");
 
-                // Disable foreign key checks to avoid circular dependency issues during the update
                 var disableFKChecks = "SET FOREIGN_KEY_CHECKS=0;";
                 using (var disableCommand = new MySqlCommand(disableFKChecks, connection, transaction))
                 {
@@ -270,7 +258,6 @@ namespace DBAccess.DAL
                     Debug.WriteLine("Foreign key checks disabled.");
                 }
 
-                // Step 1: Update mailing address
                 var updateAddressQuery = @"
                     UPDATE mailing_address
                     SET street_address = @new_street_address,
@@ -298,7 +285,6 @@ namespace DBAccess.DAL
                     Debug.WriteLine($"Mailing address update completed, rows affected: {addressRowsAffected}");
                 }
 
-                // Step 2: Update person details
                 var updatePersonQuery = @"
                     UPDATE person 
                     SET ssn = @ssn,
@@ -330,7 +316,6 @@ namespace DBAccess.DAL
                     Debug.WriteLine($"Person details update completed, rows affected: {personRowsAffected}");
                 }
 
-                // Step 3: Update patient details
                 var updatePatientQuery = @"
                     UPDATE patient
                     SET phone_number = @phoneNumber
@@ -349,7 +334,6 @@ namespace DBAccess.DAL
                     Debug.WriteLine($"Patient details update completed, rows affected: {patientRowsAffected}");
                 }
 
-                // Re-enable foreign key checks after completing the update
                 var enableFKChecks = "SET FOREIGN_KEY_CHECKS=1;";
                 using (var enableCommand = new MySqlCommand(enableFKChecks, connection, transaction))
                 {
@@ -357,7 +341,6 @@ namespace DBAccess.DAL
                     Debug.WriteLine("Foreign key checks re-enabled.");
                 }
 
-                // Commit transaction
                 transaction.Commit();
                 Debug.WriteLine("Transaction committed successfully. Patient updated.");
             }
@@ -365,7 +348,6 @@ namespace DBAccess.DAL
             {
                 Debug.WriteLine($"Error occurred while updating patient: {ex.Message}");
 
-                // Rollback transaction if it exists
                 if (transaction != null)
                 {
                     try
@@ -390,7 +372,6 @@ namespace DBAccess.DAL
             connection.Open();
             Debug.WriteLine("Connection opened successfully.");
 
-            // Base query
             var query = @"
         SELECT 
             p.patient_id, 
@@ -414,7 +395,6 @@ namespace DBAccess.DAL
             mailing_address ma ON per.street_address = ma.street_address AND per.zip = ma.zip
         WHERE 1=1";
 
-            // Add conditions based on input values
             if (!string.IsNullOrEmpty(firstName))
             {
                 query += " AND per.fname = @firstName";
@@ -434,7 +414,6 @@ namespace DBAccess.DAL
                 Debug.WriteLine("Adding filter for dob.");
             }
 
-            // Log the query and parameter values
             Debug.WriteLine("Executing query: " + query);
             Debug.WriteLine($"Parameter firstName: {firstName}");
             Debug.WriteLine($"Parameter lastName: {lastName}");
@@ -442,7 +421,6 @@ namespace DBAccess.DAL
 
             using var command = new MySqlCommand(query, connection);
 
-            // Bind parameters
             if (!string.IsNullOrEmpty(firstName))
             {
                 command.Parameters.Add(new MySqlParameter("@firstName", MySqlDbType.VarChar) { Value = firstName });
@@ -464,7 +442,6 @@ namespace DBAccess.DAL
             Debug.WriteLine("Executing the command...");
             using var reader = command.ExecuteReader();
 
-            // Retrieve ordinals to optimize reader
             var ssnOrdinal = reader.GetOrdinal("ssn");
             var firstNameOrdinal = reader.GetOrdinal("fname");
             var lastNameOrdinal = reader.GetOrdinal("lname");
