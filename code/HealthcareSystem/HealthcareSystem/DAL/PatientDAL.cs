@@ -128,7 +128,7 @@ namespace DBAccess.DAL
             );
         }
 
-        public void RegisterPatient(Patient patient)
+        public bool RegisterPatient(Patient patient)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
 
@@ -213,6 +213,7 @@ namespace DBAccess.DAL
                     VALUES (@pid, @phoneNumber);
                 ";
 
+                int rowsAffected;
                 using (var insertPatientCommand = new MySqlCommand(insertPatientQuery, connection, transaction))
                 {
                     insertPatientCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32) { Value = patient.PersonId });
@@ -223,16 +224,25 @@ namespace DBAccess.DAL
                     Debug.WriteLine($"pid: {patient.PersonId}");
                     Debug.WriteLine($"Phone Number: {patient.PhoneNumber}");
 
-                    insertPatientCommand.ExecuteNonQuery();
+                    rowsAffected = insertPatientCommand.ExecuteNonQuery();
                     Debug.WriteLine("Patient details inserted successfully.");
                 }
 
-                transaction.Commit();
-                Debug.WriteLine("Patient registered successfully.");
+                if (rowsAffected > 0)
+                {
+                    transaction.Commit();
+                    return true;
+                }
+                else
+                {
+                    transaction.Rollback();
+                    return false;
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error registering patient: {ex.Message}");
+                return false;
             }
         }
 
