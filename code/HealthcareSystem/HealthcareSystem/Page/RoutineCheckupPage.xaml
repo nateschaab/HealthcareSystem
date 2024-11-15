@@ -3,38 +3,94 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel Margin="20">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <Button Content="Back" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0"/>
+        <!-- Back Button -->
+        <Button Content="Back" Click="BackButton_Click" HorizontalAlignment="Left" Grid.Row="0"/>
 
+        <!-- Header Text -->
+        <TextBlock Text="Routine Checkup" FontSize="24" Margin="0,20,0,0" Grid.Row="1"/>
 
-            <TextBlock Text="Routine Checkup" FontSize="24" Margin="0,20,0,0"/>
+        <!-- Divider Line -->
+        <Rectangle Grid.Row="2" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,0"/>
 
-            <ComboBox x:Name="AppointmentComboBox" PlaceholderText="Select Appointment" Margin="0,10,0,0"/>
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
+            <Grid>
+                <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <TextBox x:Name="SystolicTextBox" PlaceholderText="Systolic Blood Pressure" Margin="0,10,0,0"/>
-            <TextBox x:Name="DiastolicTextBox" PlaceholderText="Diastolic Blood Pressure" Margin="0,10,0,0"/>
+        <!-- Form Labels and Fields -->
+        <TextBlock Text="Appointment" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="3"/>
+        <ComboBox x:Name="AppointmentComboBox" PlaceholderText="Select Appointment" Margin="0,0,0,0" Grid.Row="4"/>
 
-            <TextBox x:Name="BodyTempTextBox" PlaceholderText="Body Temperature" Margin="0,10,0,0"/>
+        <TextBlock Text="Systolic Blood Pressure" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="5"/>
+        <TextBox x:Name="SystolicTextBox" PlaceholderText="Systolic Blood Pressure" Margin="0,0,0,0" Grid.Row="6"/>
 
-            <TextBox x:Name="WeightTextBox" PlaceholderText="Weight" Margin="0,10,0,0"/>
+        <TextBlock Text="Diastolic Blood Pressure" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="7"/>
+        <TextBox x:Name="DiastolicTextBox" PlaceholderText="Diastolic Blood Pressure" Margin="0,0,0,0" Grid.Row="8"/>
 
-            <TextBox x:Name="HeightTextBox" PlaceholderText="Height" Margin="0,10,0,0"/>
+        <TextBlock Text="Body Temperature" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="9"/>
+        <TextBox x:Name="BodyTempTextBox" PlaceholderText="Body Temperature" Margin="0,0,0,0" Grid.Row="10"/>
 
-            <TextBox x:Name="PulseTextBox" PlaceholderText="Pulse" Margin="0,10,0,0"/>
+        <TextBlock Text="Weight" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="11"/>
+        <TextBox x:Name="WeightTextBox" PlaceholderText="Weight" Margin="0,0,0,0" Grid.Row="12"/>
 
-            <TextBox x:Name="SymptomsTextBox" PlaceholderText="Symptoms" Margin="0,10,0,0"/>
+        <TextBlock Text="Height" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="13"/>
+        <TextBox x:Name="HeightTextBox" PlaceholderText="Height" Margin="0,0,0,0" Grid.Row="14"/>
 
-            <TextBox x:Name="InitialDiagnosisTextBox" PlaceholderText="Initial Diagnosis" Margin="0,10,0,0"/>
+        <TextBlock Text="Pulse" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="15"/>
+        <TextBox x:Name="PulseTextBox" PlaceholderText="Pulse" Margin="0,0,0,0" Grid.Row="16"/>
 
-            <TextBox x:Name="FinalDiagnosisTextBox" PlaceholderText="Final Diagnosis" Margin="0,10,0,0"/>
+        <TextBlock Text="Symptoms" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="17"/>
+        <TextBox x:Name="SymptomsTextBox" PlaceholderText="Symptoms" Margin="0,0,0,0" Grid.Row="18"/>
 
-            <ComboBox x:Name="LabTestTypeComboBox" PlaceholderText="Lab Test Type" Margin="0,10,0,0"/>
+        <TextBlock Text="Initial Diagnosis" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="19"/>
+        <TextBox x:Name="InitialDiagnosisTextBox" PlaceholderText="Initial Diagnosis" Margin="0,0,0,0" Grid.Row="20"/>
 
-            <Button Content="Complete Checkup" Click="CompleteCheckupButton_Click" Margin="0,20,0,0"/>
+        <TextBlock Text="Final Diagnosis" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="21"/>
+        <TextBox x:Name="FinalDiagnosisTextBox" PlaceholderText="Final Diagnosis" Margin="0,0,0,0" Grid.Row="22"/>
 
-            <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Collapsed" />
-        </StackPanel>
+        <TextBlock Text="Lab Test Type" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="23"/>
+        <ComboBox x:Name="LabTestTypeComboBox" PlaceholderText="Lab Test Type" Margin="0,0,0,0" Grid.Row="24"/>
+
+        <!-- Complete Checkup Button -->
+        <Button Content="Complete Checkup" Click="CompleteCheckupButton_Click" Margin="0,20,0,0" Grid.Row="25"/>
+
+        <!-- Error TextBlock -->
+        <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Collapsed" Grid.Row="26"/>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Page>

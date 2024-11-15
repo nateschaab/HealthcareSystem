@@ -14,7 +14,7 @@ namespace HealthcareSystem.Model
         public int PersonId { get; set; }
         public string PhoneNumber { get; set; }
         public Appointment Appointment { get; set; }
-        public string DisplayName => $"{this.PatientId} : {FirstName} {LastName}";
+        public string DisplayName => $"{this.PatientId} : {FirstName}, {LastName}";
 
         public Patient (string ssn, string gender, string fname, string lname, DateTime dob, MailingAddress address, string phoneNumber) : 
             base(ssn, gender, fname, lname, dob, address)
