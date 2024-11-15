@@ -1,26 +1,15 @@
-﻿using DBAccess.DAL;
-using HealthcareSystem.Model;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO.Ports;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text.RegularExpressions;
-using Windows.Networking;
-using Windows.Services.Maps;
+﻿using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
+using DBAccess.DAL;
+using HealthcareSystem.Model;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace HealthcareSystem
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    ///     An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class SearchPatientPage : Page
     {
@@ -60,7 +49,7 @@ namespace HealthcareSystem
 
         private void PatientListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (PatientListView.SelectedItem is Patient selectedPatient)
+            if (this.PatientListView.SelectedItem is Patient selectedPatient)
             {
                 this.patient = selectedPatient;
             }
@@ -70,17 +59,22 @@ namespace HealthcareSystem
         {
             var Dal = new PatientDal();
 
-            var patients = Dal.SearchPatient(
-                PatientFirstNameTextBox.Text,
-                PatientLastNameTextBox.Text,
-                DOBDatePicker.Date.DateTime);
+            var patients = Dal.SearchPatient(this.PatientFirstNameTextBox.Text, this.PatientLastNameTextBox.Text,
+                this.DOBDatePicker.Date.DateTime);
 
-            PatientListView.ItemsSource = patients;
+            this.PatientListView.ItemsSource = patients;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(MainPage));
+        }
+
+        private void Clear_Click(object sender, RoutedEventArgs e)
+        {
+            this.PatientFirstNameTextBox.Text = string.Empty;
+            this.PatientLastNameTextBox.Text = string.Empty;
+            this.DOBDatePicker.SelectedDate = null;
         }
     }
 }

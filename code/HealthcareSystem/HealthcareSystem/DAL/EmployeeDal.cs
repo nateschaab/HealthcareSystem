@@ -79,8 +79,8 @@ namespace DBAccess.DAL
         {
             return new MailingAddress
             (
-                reader.GetString(cityOrdinal), //reader.GetString(firstnameOrdinal),
-                reader.GetString(stateOrdinal), //reader.IsDBNull(birthdateOrdinal) ? (DateTime?)null : reader.GetDateTime(birthdateOrdinal)
+                reader.GetString(cityOrdinal),
+                reader.GetString(stateOrdinal),
                 reader.GetString(zipOrdinal)
             );
         }

@@ -1,5 +1,6 @@
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 namespace DBAccess.DAL
 {
@@ -18,7 +19,7 @@ namespace DBAccess.DAL
 
             while (reader.Read())
             {
-                string doctorInfo = $"{reader["doctor_id"]}";
+                string doctorInfo = $"{reader["doctor_id"]} : {reader["fname"]}, {reader["lname"]}";
                 doctors.Add(doctorInfo);
             }
 

@@ -8,7 +8,6 @@ namespace DBAccess.DAL
         {
             var builder = new MySqlConnectionStringBuilder();
 
-            // Set the connection string properties
             builder.Server = "cs-dblab01.uwg.westga.edu";    // MySQL server address
             builder.Database = "cs3230f24e";        // Database name
             builder.UserID = "cs3230f24e";          // MySQL username
@@ -17,7 +16,6 @@ namespace DBAccess.DAL
             builder.SslMode = MySqlSslMode.None;
             builder.AllowUserVariables = true;
 
-            // Get the constructed connection string
             return builder.ToString();
         }
     }

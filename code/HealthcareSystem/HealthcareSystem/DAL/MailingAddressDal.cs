@@ -137,30 +137,5 @@ namespace DBAccess.DAL
             return employeeList;
 
         }
-
-        public List<MailingAddress> GetMailingAddressBy(char gender, double salary)
-        {
-            var employeeList = new List<MailingAddress>();
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-
-            connection.Open();
-            var query = "select city, state, zip from mailing_address where salary > @salary AND sex = @gender";
-
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.Add("@gender", (DbType)MySqlDbType.VarChar).Value = gender;
-            command.Parameters.Add("@salary", (DbType)MySqlDbType.Double).Value = salary;
-
-            using var reader = command.ExecuteReader();
-            var firstnameOrdinal = reader.GetOrdinal("fname");
-            var birthdateOrdinal = reader.GetOrdinal("bdate");
-            var departmentNumberOrdinal = reader.GetOrdinal("dno");
-
-            while (reader.Read())
-            {
-                //employeeList.Add(CreateMailingAddress(reader, firstnameOrdinal, birthdateOrdinal, departmentNumberOrdinal));
-            }
-
-            return employeeList;
-        }
     }
 }

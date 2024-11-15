@@ -1,42 +1,53 @@
-using DBAccess.DAL;
-using HealthcareSystem.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using DBAccess.DAL;
+using HealthcareSystem.Model;
 
 namespace HealthcareSystem
 {
     public sealed partial class AppointmentPage : Page
     {
-        private Appointment App { get; set; }
-        private List<Appointment> Appointments { get; set; }
+        #region Data members
+
         private readonly DoctorDAL _doctorDAL = new DoctorDAL();
         private readonly PatientDal _patientDAL = new PatientDal();
         private readonly AppointmentDAL _appointmentDAL = new AppointmentDAL();
 
+        #endregion
+
+        #region Properties
+
+        private Appointment App { get; set; }
+        private List<Appointment> Appointments { get; set; }
+
+        #endregion
+
+        #region Constructors
+
         public AppointmentPage()
         {
             this.InitializeComponent();
-            LoadDoctorsAndPatients();
+            this.LoadDoctorsAndPatients();
         }
+
+        #endregion
+
+        #region Methods
 
         private void LoadDoctorsAndPatients()
         {
-            var doctors = _doctorDAL.GetAllDoctors();
-            DoctorComboBox.ItemsSource = doctors;
+            var doctors = this._doctorDAL.GetAllDoctors();
+            this.DoctorComboBox.ItemsSource = doctors;
 
-            var patients = _patientDAL.GetPatientsFromReader();
-            var patientInfoList = new List<string>();
-            foreach (var patient in patients)
-            {
-                string patientInfo = $"{patient.PatientId}";
-                patientInfoList.Add(patientInfo);
-            }
-            PatientComboBox.ItemsSource = patientInfoList;
+            var patients = this._patientDAL.GetPatientsFromReader();
+
+            this.PatientComboBox.ItemsSource = patients;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -52,20 +63,31 @@ namespace HealthcareSystem
 
         private void PatientListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (PatientListView.SelectedItem is Appointment app)
+            if (this.PatientListView.SelectedItem is Appointment app)
             {
-                PopulateAppFields(app);
+                this.PopulateAppFields(app);
                 this.App = app;
             }
         }
 
         private void PopulateAppFields(Appointment app)
         {
-            var doctorInfo = $"{app.DoctorId}";
-            DoctorComboBox.SelectedItem = doctorInfo;
+            var doctorId = app.DoctorId;
 
-            var patientId = $"{app.PatientId}";
-            PatientComboBox.SelectedItem = patientId;
+            this.DoctorComboBox.SelectedItem = this.DoctorComboBox.Items
+                .OfType<string>()
+                .FirstOrDefault(doctorInfo =>
+                {
+                    var idPart = doctorInfo.Split(':')[0].Trim();
+
+                    return int.TryParse(idPart, out var parsedId) && parsedId == doctorId;
+                });
+
+            var patientId = app.PatientId;
+
+            this.PatientComboBox.SelectedItem = this.PatientComboBox.Items?
+                .OfType<Patient>()
+                .FirstOrDefault(patient => patient.PatientId == patientId);
 
             this.AppointmentDatePicker.Date = app.Date;
 
@@ -78,43 +100,45 @@ namespace HealthcareSystem
         {
             try
             {
-                string selectedDoctor = DoctorComboBox.SelectedItem as string;
-                string selectedPatient = PatientComboBox.SelectedItem as string;
+                var selectedDoctor = this.DoctorComboBox.SelectedItem as string;
+                var selectedPatient = this.PatientComboBox.SelectedItem as string;
                 if (selectedDoctor == null || selectedPatient == null)
                 {
-                    CreateErrorTextBlock.Text = "Please select both a doctor and a patient.";
-                    CreateErrorTextBlock.Visibility = Visibility.Visible;
+                    this.CreateErrorTextBlock.Text = "Please select both a doctor and a patient.";
+                    this.CreateErrorTextBlock.Visibility = Visibility.Visible;
                     return;
                 }
 
-                int doctorId = int.Parse(selectedDoctor.Split(':')[0]);
-                int patientId = int.Parse(selectedPatient.Split(':')[0]);
+                var doctorId = int.Parse(selectedDoctor.Split(':')[0]);
+                var patientId = int.Parse(selectedPatient.Split(':')[0]);
 
-                DateTime date = AppointmentDatePicker.Date.Date;
-                TimeSpan time = AppointmentTimePicker.Time;
-                DateTime appointmentDateTime = date + time;
+                var date = this.AppointmentDatePicker.Date.Date;
+                var time = this.AppointmentTimePicker.Time;
+                var appointmentDateTime = date + time;
 
-                string reason = ReasonTextBox.Text;
+                var reason = this.ReasonTextBox.Text;
 
-                bool success = _appointmentDAL.CreateAppointment(doctorId, patientId, appointmentDateTime, reason);
+                var success = this._appointmentDAL.CreateAppointment(doctorId, patientId, appointmentDateTime, reason);
 
                 if (success)
                 {
-                    CreateErrorTextBlock.Text = "Appointment created successfully!";
-                    CreateErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Green);
+                    this.CreateErrorTextBlock.Text = "Appointment created successfully!";
+                    this.CreateErrorTextBlock.Foreground = new SolidColorBrush(Colors.Green);
                 }
                 else
                 {
-                    CreateErrorTextBlock.Text = "Failed to create appointment. Check for double booking or try again.";
-                    CreateErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                    this.CreateErrorTextBlock.Text =
+                        "Failed to create appointment. Check for double booking or try again.";
+                    this.CreateErrorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
                 }
-                CreateErrorTextBlock.Visibility = Visibility.Visible;
+
+                this.CreateErrorTextBlock.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
-                CreateErrorTextBlock.Text = $"Error: {ex.Message}";
-                CreateErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
-                CreateErrorTextBlock.Visibility = Visibility.Visible;
+                this.CreateErrorTextBlock.Text = $"Error: {ex.Message}";
+                this.CreateErrorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+                this.CreateErrorTextBlock.Visibility = Visibility.Visible;
             }
         }
 
@@ -122,54 +146,57 @@ namespace HealthcareSystem
         {
             try
             {
-                string selectedDoctor = DoctorComboBox.SelectedItem as string;
-                string selectedPatient = PatientComboBox.SelectedItem as string;
+                var selectedDoctor = this.DoctorComboBox.SelectedItem as string;
+                var selectedPatient = this.PatientComboBox.SelectedItem as string;
                 if (selectedDoctor == null || selectedPatient == null)
                 {
-                    EditErrorTextBlock.Text = "Please select both a doctor and a patient.";
-                    EditErrorTextBlock.Visibility = Visibility.Visible;
+                    this.EditErrorTextBlock.Text = "Please select both a doctor and a patient.";
+                    this.EditErrorTextBlock.Visibility = Visibility.Visible;
                     return;
                 }
 
-                int doctorId = int.Parse(selectedDoctor.Split(':')[0]);
-                int patientId = int.Parse(selectedPatient.Split(':')[0]);
+                var doctorId = int.Parse(selectedDoctor.Split(':')[0]);
+                var patientId = int.Parse(selectedPatient.Split(':')[0]);
 
-                DateTime date = AppointmentDatePicker.Date.Date;
-                TimeSpan time = AppointmentTimePicker.Time;
-                DateTime newAppointmentDateTime = date + time;
+                var date = this.AppointmentDatePicker.Date.Date;
+                var time = this.AppointmentTimePicker.Time;
+                var newAppointmentDateTime = date + time;
 
                 if (newAppointmentDateTime < DateTime.Now)
                 {
-                    EditErrorTextBlock.Text = "Cannot edit an appointment for a past date and time.";
-                    EditErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
-                    EditErrorTextBlock.Visibility = Visibility.Visible;
+                    this.EditErrorTextBlock.Text = "Cannot edit an appointment for a past date and time.";
+                    this.EditErrorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+                    this.EditErrorTextBlock.Visibility = Visibility.Visible;
                     return;
                 }
 
-                string reason = ReasonTextBox.Text;
-                int appointmentId = App.AppointmentId;
+                var reason = this.ReasonTextBox.Text;
+                var appointmentId = this.App.AppointmentId;
 
-                bool isDateTimeChanged = newAppointmentDateTime != App.Date;
+                var isDateTimeChanged = newAppointmentDateTime != this.App.Date;
 
-                bool success = _appointmentDAL.EditAppointment(appointmentId, doctorId, patientId, newAppointmentDateTime, reason, isDateTimeChanged);
+                var success = this._appointmentDAL.EditAppointment(appointmentId, doctorId, patientId,
+                    newAppointmentDateTime, reason, isDateTimeChanged);
 
                 if (success)
                 {
-                    EditErrorTextBlock.Text = "Appointment updated successfully!";
-                    EditErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Green);
+                    this.EditErrorTextBlock.Text = "Appointment updated successfully!";
+                    this.EditErrorTextBlock.Foreground = new SolidColorBrush(Colors.Green);
                 }
                 else
                 {
-                    EditErrorTextBlock.Text = "Failed to update appointment. Check for double booking or try again.";
-                    EditErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                    this.EditErrorTextBlock.Text =
+                        "Failed to update appointment. Check for double booking or try again.";
+                    this.EditErrorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
                 }
-                EditErrorTextBlock.Visibility = Visibility.Visible;
+
+                this.EditErrorTextBlock.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
-                EditErrorTextBlock.Text = $"Error: {ex.Message}";
-                EditErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
-                EditErrorTextBlock.Visibility = Visibility.Visible;
+                this.EditErrorTextBlock.Text = $"Error: {ex.Message}";
+                this.EditErrorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+                this.EditErrorTextBlock.Visibility = Visibility.Visible;
             }
         }
 
@@ -177,5 +204,7 @@ namespace HealthcareSystem
         {
             Frame.Navigate(typeof(MainPage));
         }
+
+        #endregion
     }
 }
