@@ -15,7 +15,7 @@
         <Button Grid.Row="0" Content="Back" Click="BackButton_Click" VerticalAlignment="Top"/>
 
         <!-- Header Text -->
-        <TextBlock Text="Patient Management" FontSize="24" Grid.Row="1" Margin="0,20,0,10" />
+        <TextBlock Text="Patient Management" FontSize="24" Grid.Row="1" Margin="0,20,0,0" />
 
         <Rectangle Grid.Row="2" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,0"/>
 
@@ -109,15 +109,85 @@
                 <!-- State ComboBox -->
                 <TextBlock Text="State" Grid.Row="24" Margin="0,10,0,0"/>
                 <ComboBox x:Name="StateComboBox" PlaceholderText="Select State" Grid.Row="25">
-                    <!-- States list -->
+                    <ComboBoxItem Content="Alabama" />
+                    <ComboBoxItem Content="Alaska" />
+                    <ComboBoxItem Content="Arizona" />
+                    <ComboBoxItem Content="Arkansas" />
+                    <ComboBoxItem Content="California" />
+                    <ComboBoxItem Content="Colorado" />
+                    <ComboBoxItem Content="Connecticut" />
+                    <ComboBoxItem Content="Delaware" />
+                    <ComboBoxItem Content="Florida" />
+                    <ComboBoxItem Content="Georgia" />
+                    <ComboBoxItem Content="Hawaii" />
+                    <ComboBoxItem Content="Idaho" />
+                    <ComboBoxItem Content="Illinois" />
+                    <ComboBoxItem Content="Indiana" />
+                    <ComboBoxItem Content="Iowa" />
+                    <ComboBoxItem Content="Kansas" />
+                    <ComboBoxItem Content="Kentucky" />
+                    <ComboBoxItem Content="Louisiana" />
+                    <ComboBoxItem Content="Maine" />
+                    <ComboBoxItem Content="Maryland" />
+                    <ComboBoxItem Content="Massachusetts" />
+                    <ComboBoxItem Content="Michigan" />
+                    <ComboBoxItem Content="Minnesota" />
+                    <ComboBoxItem Content="Mississippi" />
+                    <ComboBoxItem Content="Missouri" />
+                    <ComboBoxItem Content="Montana" />
+                    <ComboBoxItem Content="Nebraska" />
+                    <ComboBoxItem Content="Nevada" />
+                    <ComboBoxItem Content="New Hampshire" />
+                    <ComboBoxItem Content="New Jersey" />
+                    <ComboBoxItem Content="New Mexico" />
+                    <ComboBoxItem Content="New York" />
+                    <ComboBoxItem Content="North Carolina" />
+                    <ComboBoxItem Content="North Dakota" />
+                    <ComboBoxItem Content="Ohio" />
+                    <ComboBoxItem Content="Oklahoma" />
+                    <ComboBoxItem Content="Oregon" />
+                    <ComboBoxItem Content="Pennsylvania" />
+                    <ComboBoxItem Content="Rhode Island" />
+                    <ComboBoxItem Content="South Carolina" />
+                    <ComboBoxItem Content="South Dakota" />
+                    <ComboBoxItem Content="Tennessee" />
+                    <ComboBoxItem Content="Texas" />
+                    <ComboBoxItem Content="Utah" />
+                    <ComboBoxItem Content="Vermont" />
+                    <ComboBoxItem Content="Virginia" />
+                    <ComboBoxItem Content="Washington" />
+                    <ComboBoxItem Content="West Virginia" />
+                    <ComboBoxItem Content="Wisconsin" />
+                    <ComboBoxItem Content="Wyoming" />
                 </ComboBox>
+
                 <TextBlock x:Name="StateErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="State is required" Grid.Row="26"/>
 
                 <!-- Country ComboBox -->
                 <TextBlock Text="Country" Grid.Row="27" Margin="0,10,0,0"/>
                 <ComboBox x:Name="CountryComboBox" PlaceholderText="Select Country" Grid.Row="28">
-                    <!-- Country list -->
+                    <ComboBoxItem Content="United States" />
+                    <ComboBoxItem Content="Canada" />
+                    <ComboBoxItem Content="United Kingdom" />
+                    <ComboBoxItem Content="Australia" />
+                    <ComboBoxItem Content="India" />
+                    <ComboBoxItem Content="China" />
+                    <ComboBoxItem Content="Japan" />
+                    <ComboBoxItem Content="Germany" />
+                    <ComboBoxItem Content="France" />
+                    <ComboBoxItem Content="Italy" />
+                    <ComboBoxItem Content="Spain" />
+                    <ComboBoxItem Content="Brazil" />
+                    <ComboBoxItem Content="Russia" />
+                    <ComboBoxItem Content="Mexico" />
+                    <ComboBoxItem Content="South Africa" />
+                    <ComboBoxItem Content="Nigeria" />
+                    <ComboBoxItem Content="Kenya" />
+                    <ComboBoxItem Content="Egypt" />
+                    <ComboBoxItem Content="South Korea" />
+                    <ComboBoxItem Content="Argentina" />
                 </ComboBox>
+
                 <TextBlock x:Name="CountryErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Country is required" Grid.Row="29"/>
 
                 <!-- Phone Number Field -->

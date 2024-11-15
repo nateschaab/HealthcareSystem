@@ -34,6 +34,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -47,27 +49,23 @@
                 <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Enter Last Name" Grid.Row="4" />
                 <TextBlock x:Name="LastNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Last Name Is Required" Grid.Row="5" />
 
-<<<<<<< Updated upstream
-                <Button Grid.Row="4" Content="Clear" Click="Clear_Click" Margin="368,15,0,0" VerticalAlignment="Top"/>
-                <Button Grid.Row="6" Content="Search Patient" Margin="0,20,0,0" VerticalAlignment="Top" Click="SearchPatientsButton_Click" Width="120"/>
-                <Button Grid.Row="6" Content="Edit Patient" Click="EditPatients_Click" Margin="160,20,0,0" VerticalAlignment="Top"/>
-                <Button Grid.Row="6" Content="Edit Appointment" Click="EditAppointment_Click" Margin="290,20,0,0" VerticalAlignment="Top"/>
-=======
+                <!-- Clear Button -->
+                <Button Grid.Row="8" Content="Clear" Click="Clear_Click" Margin="340,1,0,0" VerticalAlignment="Top"/>
+
                 <!-- DOB Field -->
-                <TextBlock Text="Date of Birth" Grid.Row="6" Margin="0,10,0,0" />
-                <DatePicker x:Name="DOBDatePicker" Grid.Row="7" />
-                <TextBlock x:Name="DOBErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Date Is Required" Grid.Row="8" />
+                <TextBlock Text="Date of Birth" Grid.Row="7" Margin="0,10,0,0" />
+                <DatePicker x:Name="DOBDatePicker" Grid.Row="8" />
+                <TextBlock x:Name="DOBErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Date Is Required" Grid.Row="9" />
 
                 <!-- Buttons -->
-                <StackPanel Orientation="Horizontal" Grid.Row="9" Margin="0,20,0,0">
+                <StackPanel Orientation="Horizontal" Grid.Row="10" Margin="0,20,0,0">
                     <Button Content="Search Patient" Click="SearchPatientsButton_Click" Width="120" />
                     <Button Content="Edit Patient" Click="EditPatients_Click" Margin="20,0,0,0" />
                     <Button Content="Edit Appointment" Click="EditAppointment_Click" Margin="20,0,0,0" />
                 </StackPanel>
->>>>>>> Stashed changes
 
                 <!-- ListView for displaying the patients -->
-                <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Grid.Row="10" Margin="0,20,0,0"
+                <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Grid.Row="11" Margin="0,20,0,0"
                           ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.ItemTemplate>
                         <DataTemplate>

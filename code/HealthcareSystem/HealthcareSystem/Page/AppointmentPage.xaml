@@ -17,6 +17,7 @@
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -31,9 +32,14 @@
 
             <!-- Title -->
             <TextBlock Text="Create Appointment" FontSize="24" Grid.Row="0" Margin="0,20,0,0" />
+            <Rectangle Grid.Row="1" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,0"/>
 
-<<<<<<< Updated upstream
-            <ComboBox x:Name="PatientComboBox" PlaceholderText="Select Patient" Margin="0,10,0,0">
+            <!-- Doctor ComboBox -->
+            <TextBlock Text="Select Doctor" Grid.Row="2" Margin="0,10,0,0" />
+            <ComboBox x:Name="DoctorComboBox" PlaceholderText="Select Doctor" Grid.Row="3" />
+
+            <TextBlock Text="Select Patient" Grid.Row="4" Margin="0,10,0,0" />
+            <ComboBox x:Name="PatientComboBox" PlaceholderText="Select Patient" Grid.Row="5" Margin="0,10,0,0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
@@ -42,27 +48,18 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-=======
-            <!-- Doctor ComboBox -->
-            <TextBlock Text="Select Doctor" Grid.Row="1" Margin="0,10,0,0" />
-            <ComboBox x:Name="DoctorComboBox" PlaceholderText="Select Doctor" Grid.Row="2" />
->>>>>>> Stashed changes
-
-            <!-- Patient ComboBox -->
-            <TextBlock Text="Select Patient" Grid.Row="3" Margin="0,10,0,0" />
-            <ComboBox x:Name="PatientComboBox" PlaceholderText="Select Patient" Grid.Row="4" />
 
             <!-- DatePicker -->
-            <TextBlock Text="Select Date" Grid.Row="5" Margin="0,10,0,0" />
-            <DatePicker x:Name="AppointmentDatePicker" Grid.Row="6" />
+            <TextBlock Text="Select Date" Grid.Row="6" Margin="0,10,0,0" />
+            <DatePicker x:Name="AppointmentDatePicker" Grid.Row="7" />
 
             <!-- TimePicker -->
-            <TextBlock Text="Select Time" Grid.Row="7" Margin="0,10,0,0" />
-            <TimePicker x:Name="AppointmentTimePicker" Grid.Row="8" />
+            <TextBlock Text="Select Time" Grid.Row="8" Margin="0,10,0,0"/>
+            <TimePicker x:Name="AppointmentTimePicker" Grid.Row="9" />
 
             <!-- Reason TextBox -->
-            <TextBlock Text="Reason for Appointment" Grid.Row="9" Margin="0,10,0,0" />
-            <TextBox x:Name="ReasonTextBox" PlaceholderText="Reason for Appointment" Grid.Row="10" />
+            <TextBlock Text="Reason for Appointment" Grid.Row="10" Margin="0,10,0,0" />
+            <TextBox x:Name="ReasonTextBox" PlaceholderText="Reason for Appointment" Grid.Row="11" />
         </Grid>
 
         <!-- Actions -->
