@@ -1,5 +1,7 @@
+using HealthcareSystem.Model;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 
 namespace DBAccess.DAL
 {
@@ -106,6 +108,115 @@ namespace DBAccess.DAL
             }
         }
 
+        public List<RoutineCheckup> GetRoutineCheckups()
+        {
+            var routineCheckupList = new List<RoutineCheckup>();
+            using var connection = new MySqlConnection(Connection.ConnectionString());
 
+            connection.Open();
+
+            var query = @"
+        SELECT 
+            v.visit_id, 
+            v.appt_id, 
+            v.blood_pressure_reading, 
+            v.body_temp, 
+            v.weight, 
+            v.height, 
+            v.pulse, 
+            v.symptoms, 
+            v.initial_diagnosis, 
+            v.final_diagnosis, 
+            v.lab_test_id, 
+            lt.test_code, 
+            lt.test_type_name
+        FROM 
+            visit v
+        LEFT JOIN 
+            lab_test lt ON v.lab_test_id = lt.lab_test_id
+        WHERE 
+            v.blood_pressure_reading IS NOT NULL OR 
+            v.body_temp IS NOT NULL OR 
+            v.weight IS NOT NULL OR 
+            v.height IS NOT NULL OR 
+            v.pulse IS NOT NULL OR 
+            v.symptoms IS NOT NULL OR 
+            v.initial_diagnosis IS NOT NULL OR 
+            v.final_diagnosis IS NOT NULL OR 
+            v.lab_test_id IS NOT NULL;";
+
+            using var command = new MySqlCommand(query, connection);
+            using var reader = command.ExecuteReader();
+
+            var visitIdOrdinal = reader.GetOrdinal("visit_id");
+            var apptIdOrdinal = reader.GetOrdinal("appt_id");
+            var bloodPressureOrdinal = reader.GetOrdinal("blood_pressure_reading");
+            var bodyTempOrdinal = reader.GetOrdinal("body_temp");
+            var weightOrdinal = reader.GetOrdinal("weight");
+            var heightOrdinal = reader.GetOrdinal("height");
+            var pulseOrdinal = reader.GetOrdinal("pulse");
+            var symptomsOrdinal = reader.GetOrdinal("symptoms");
+            var initialDiagnosisOrdinal = reader.GetOrdinal("initial_diagnosis");
+            var finalDiagnosisOrdinal = reader.GetOrdinal("final_diagnosis");
+            var labTestIdOrdinal = reader.GetOrdinal("lab_test_id");
+            var testCodeOrdinal = reader.GetOrdinal("test_code");
+            var testTypeNameOrdinal = reader.GetOrdinal("test_type_name");
+
+            while (reader.Read())
+            {
+                routineCheckupList.Add(CreateRoutineCheckup(
+                    reader,
+                    visitIdOrdinal,
+                    apptIdOrdinal,
+                    bloodPressureOrdinal,
+                    bodyTempOrdinal,
+                    weightOrdinal,
+                    heightOrdinal,
+                    pulseOrdinal,
+                    symptomsOrdinal,
+                    initialDiagnosisOrdinal,
+                    finalDiagnosisOrdinal,
+                    labTestIdOrdinal,
+                    testCodeOrdinal,
+                    testTypeNameOrdinal
+                ));
+            }
+
+            return routineCheckupList;
+        }
+
+        private static RoutineCheckup CreateRoutineCheckup(
+            MySqlDataReader reader,
+            int visitIdOrdinal,
+            int apptIdOrdinal,
+            int bloodPressureOrdinal,
+            int bodyTempOrdinal,
+            int weightOrdinal,
+            int heightOrdinal,
+            int pulseOrdinal,
+            int symptomsOrdinal,
+            int initialDiagnosisOrdinal,
+            int finalDiagnosisOrdinal,
+            int labTestIdOrdinal,
+            int testCodeOrdinal,
+            int testTypeNameOrdinal)
+        {
+            return new RoutineCheckup
+            {
+                VisitId = reader.GetInt32(visitIdOrdinal),
+                AppointmentId = reader.GetInt32(apptIdOrdinal),
+                BloodPressureReading = reader.GetString(bloodPressureOrdinal),
+                BodyTemp = reader.GetDecimal(bodyTempOrdinal),
+                Weight = reader.GetDecimal(weightOrdinal),
+                Height = reader.GetDecimal(heightOrdinal),
+                Pulse = reader.GetInt32(pulseOrdinal),
+                Symptoms = reader.GetString(symptomsOrdinal),
+                InitialDiagnosis = reader.IsDBNull(initialDiagnosisOrdinal) ? null : reader.GetString(initialDiagnosisOrdinal),
+                FinalDiagnosis = reader.IsDBNull(finalDiagnosisOrdinal) ? null : reader.GetString(finalDiagnosisOrdinal),
+                LabTestId = reader.IsDBNull(labTestIdOrdinal) ? 0 : reader.GetInt32(labTestIdOrdinal),
+                TestCode = reader.IsDBNull(testCodeOrdinal) ? null : reader.GetString(testCodeOrdinal),
+                TestTypeName = reader.IsDBNull(testTypeNameOrdinal) ? null : reader.GetString(testTypeNameOrdinal)
+            };
+        }
     }
 }
