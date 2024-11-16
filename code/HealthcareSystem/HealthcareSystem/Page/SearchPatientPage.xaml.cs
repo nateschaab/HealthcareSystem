@@ -76,5 +76,20 @@ namespace HealthcareSystem
             this.PatientLastNameTextBox.Text = string.Empty;
             this.DOBDatePicker.SelectedDate = null;
         }
+
+        private void EditCheckup_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.patient != null)
+            {
+                var dal = new AppointmentDAL();
+                var app = dal.GetPatientAppointments(this.patient);
+
+                Frame.Navigate(typeof(RoutineCheckupPage), app);
+            }
+            else
+            {
+                Debug.WriteLine("No patient selected.");
+            }
+        }
     }
 }

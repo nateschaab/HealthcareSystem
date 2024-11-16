@@ -21,5 +21,19 @@ namespace HealthcareSystem.Model
         public int LabTestId { get; set; }
         public string TestCode { get; set; }
         public string TestTypeName { get; set; }
+        public int Systolic
+        {
+            get
+            {
+                return int.Parse(BloodPressureReading.Split('/')[0]);
+            }
+        }
+        public int Dystolic
+        {
+            get
+            {
+                return int.Parse(BloodPressureReading.Split('/')[1]);
+            }
+        }
     }
 }

@@ -102,7 +102,7 @@ namespace HealthcareSystem
             try
             {
                 var selectedDoctor = this.DoctorComboBox.SelectedItem as string;
-                var selectedPatient = this.PatientComboBox.SelectedItem as string;
+                var selectedPatient = this.PatientComboBox.SelectedItem as Patient;
                 if (selectedDoctor == null || selectedPatient == null)
                 {
                     this.CreateErrorTextBlock.Text = "Please select both a doctor and a patient.";
@@ -111,7 +111,7 @@ namespace HealthcareSystem
                 }
 
                 var doctorId = int.Parse(selectedDoctor.Split(':')[0]);
-                var patientId = int.Parse(selectedPatient.Split(':')[0]);
+                var patientId = selectedPatient.PatientId;
 
                 var date = this.AppointmentDatePicker.Date.Date;
                 var time = this.AppointmentTimePicker.Time;

@@ -53,8 +53,15 @@
 
                 <!-- Form Labels and Fields -->
                 <TextBlock Text="Appointment" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="3"/>
-                <ComboBox x:Name="AppointmentComboBox" PlaceholderText="Select Appointment" Margin="0,0,0,0" Grid.Row="4"/>
-
+                <ComboBox x:Name="AppointmentComboBox" PlaceholderText="Select Appointment" SelectionChanged="ComboBox_SelectionChanged" Margin="0,0,0,0" Grid.Row="4">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding DisplayName}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+                </ComboBox>
                 <TextBlock Text="Systolic Blood Pressure (mmHg)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="5"/>
                 <TextBox x:Name="SystolicTextBox" PlaceholderText="Systolic Blood Pressure" Margin="0,0,0,0" Grid.Row="6"/>
 
