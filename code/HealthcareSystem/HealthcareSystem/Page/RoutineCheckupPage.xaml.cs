@@ -58,29 +58,60 @@ namespace HealthcareSystem
 
         private void PopulateCheckupFields(RoutineCheckup checkup)
         {
-            this.SystolicTextBox.Text = checkup.Systolic.ToString();
+            if (checkup.Symptoms != null)
+                this.SystolicTextBox.Text = checkup.Systolic.ToString();
+            else
+                this.SystolicTextBox.Text = string.Empty;
 
-            this.DiastolicTextBox.Text = checkup.Dystolic.ToString();
+            if (checkup.Symptoms != null)
+                this.DiastolicTextBox.Text = checkup.Dystolic.ToString();
+            else
+                this.DiastolicTextBox.Text = string.Empty;
 
-            this.BodyTempTextBox.Text = checkup.BodyTemp.ToString();
+            if (checkup.Symptoms != null)
+                this.BodyTempTextBox.Text = checkup.BodyTemp.ToString();
+            else
+                this.BodyTempTextBox.Text = string.Empty;
 
-            this.WeightTextBox.Text = checkup.Weight.ToString();
+            if (checkup.Symptoms != null)
+                this.WeightTextBox.Text = checkup.Weight.ToString();
+            else
+                this.WeightTextBox.Text = string.Empty;
 
-            this.HeightTextBox.Text = checkup.Height.ToString();
+            if (checkup.Symptoms != null)
+                this.HeightTextBox.Text = checkup.Height.ToString();
+            else
+                this.HeightTextBox.Text = string.Empty;
 
-            this.PulseTextBox.Text = checkup.Pulse.ToString();
+            if (checkup.Symptoms != null)
+                this.PulseTextBox.Text = checkup.Pulse.ToString();
+            else
+                this.PulseTextBox.Text = string.Empty;
 
-            this.SymptomsTextBox.Text = checkup.Symptoms;
+            if (checkup.Symptoms != null)
+                this.SymptomsTextBox.Text = checkup.Symptoms;
+            else
+                this.SymptomsTextBox.Text = string.Empty;
 
-            this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis;
+            if (checkup.InitialDiagnosis != null)
+                this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis;
+            else
+                this.InitialDiagnosisTextBox.Text = string.Empty;
 
-            this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis;
+            if (checkup.FinalDiagnosis != null)
+                this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis;
+            else
+                this.FinalDiagnosisTextBox.Text = string.Empty;
 
             if (checkup.TestTypeName != null)
             {
                 this.LabTestTypeComboBox.SelectedItem = this.LabTestTypeComboBox.Items
                     .OfType<string>()
                     .FirstOrDefault(testType => testType.Contains(checkup.TestTypeName));
+            }
+            else
+            {
+                this.LabTestTypeComboBox.SelectedItem = null;
             }
 
         }
