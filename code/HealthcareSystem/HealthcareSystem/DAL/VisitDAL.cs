@@ -133,17 +133,7 @@ namespace DBAccess.DAL
         FROM 
             visit v
         LEFT JOIN 
-            lab_test lt ON v.lab_test_id = lt.lab_test_id
-        WHERE 
-            v.blood_pressure_reading IS NOT NULL OR 
-            v.body_temp IS NOT NULL OR 
-            v.weight IS NOT NULL OR 
-            v.height IS NOT NULL OR 
-            v.pulse IS NOT NULL OR 
-            v.symptoms IS NOT NULL OR 
-            v.initial_diagnosis IS NOT NULL OR 
-            v.final_diagnosis IS NOT NULL OR 
-            v.lab_test_id IS NOT NULL;";
+            lab_test lt ON v.lab_test_id = lt.lab_test_id;";
 
             using var command = new MySqlCommand(query, connection);
             using var reader = command.ExecuteReader();
@@ -203,17 +193,17 @@ namespace DBAccess.DAL
         {
             return new RoutineCheckup
             {
-                VisitId = reader.GetInt32(visitIdOrdinal),
-                AppointmentId = reader.GetInt32(apptIdOrdinal),
-                BloodPressureReading = reader.GetString(bloodPressureOrdinal),
-                BodyTemp = reader.GetDecimal(bodyTempOrdinal),
-                Weight = reader.GetDecimal(weightOrdinal),
-                Height = reader.GetDecimal(heightOrdinal),
-                Pulse = reader.GetInt32(pulseOrdinal),
-                Symptoms = reader.GetString(symptomsOrdinal),
+                VisitId = reader.IsDBNull(visitIdOrdinal) ? (int?)null : reader.GetInt32(visitIdOrdinal),
+                AppointmentId = reader.IsDBNull(apptIdOrdinal) ? (int?)null : reader.GetInt32(apptIdOrdinal),
+                BloodPressureReading = reader.IsDBNull(bloodPressureOrdinal) ? null : reader.GetString(bloodPressureOrdinal),
+                BodyTemp = reader.IsDBNull(bodyTempOrdinal) ? (decimal?)null : reader.GetDecimal(bodyTempOrdinal),
+                Weight = reader.IsDBNull(weightOrdinal) ? (decimal?)null : reader.GetDecimal(weightOrdinal),
+                Height = reader.IsDBNull(heightOrdinal) ? (decimal?)null : reader.GetDecimal(heightOrdinal),
+                Pulse = reader.IsDBNull(pulseOrdinal) ? (int?)null : reader.GetInt32(pulseOrdinal),
+                Symptoms = reader.IsDBNull(symptomsOrdinal) ? null : reader.GetString(symptomsOrdinal),
                 InitialDiagnosis = reader.IsDBNull(initialDiagnosisOrdinal) ? null : reader.GetString(initialDiagnosisOrdinal),
                 FinalDiagnosis = reader.IsDBNull(finalDiagnosisOrdinal) ? null : reader.GetString(finalDiagnosisOrdinal),
-                LabTestId = reader.IsDBNull(labTestIdOrdinal) ? 0 : reader.GetInt32(labTestIdOrdinal),
+                LabTestId = reader.IsDBNull(labTestIdOrdinal) ? (int?)null : reader.GetInt32(labTestIdOrdinal),
                 TestCode = reader.IsDBNull(testCodeOrdinal) ? null : reader.GetString(testCodeOrdinal),
                 TestTypeName = reader.IsDBNull(testTypeNameOrdinal) ? null : reader.GetString(testTypeNameOrdinal)
             };

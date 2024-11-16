@@ -71,11 +71,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock>
-                                    <Run Text="{Binding FirstName}" />
-                                    <Run Text=", " />
-                                    <Run Text="{Binding LastName}" />
-                                </TextBlock>
+                                <TextBlock Text="{Binding DisplayName}"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
