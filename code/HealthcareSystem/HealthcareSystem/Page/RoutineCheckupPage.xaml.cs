@@ -13,7 +13,6 @@ namespace HealthcareSystem
 {
     public sealed partial class RoutineCheckupPage : Page
     {
-        private readonly AppointmentDAL _appointmentDAL = new AppointmentDAL();
         private readonly VisitDAL _visitDAL = new VisitDAL();
         private readonly TestTypeDAL _testTypeDAL = new TestTypeDAL();
 
@@ -102,7 +101,6 @@ namespace HealthcareSystem
                 this.DiastolicTextBox.Text = string.Empty;
                 this.DiastolicTextBox.IsReadOnly = false;
                 this.DiastolicTextBox.IsHitTestVisible = !hasFinalDiagnosis;
-
             }
 
             this.BodyTempTextBox.Text = checkup.BodyTemp?.ToString() ?? string.Empty;
@@ -133,26 +131,30 @@ namespace HealthcareSystem
             this.FinalDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.FinalDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            if (checkup.TestTypeName != null)
-            {
-                this.LabTestTypeComboBox.SelectedItem = this.LabTestTypeComboBox.Items
-                    .OfType<string>()
-                    .FirstOrDefault(testType => testType.Contains(checkup.TestTypeName));
-            }
-            else
-            {
-                this.LabTestTypeComboBox.SelectedItem = null;
-            }
+            this.LowDensityLipoproteinsCheckBox.IsChecked = checkup.TestTypeName?.Contains("Low Density Lipoproteins") ?? false;
+            this.HepatitisACheckBox.IsChecked = checkup.TestTypeName?.Contains("Hepatitis A") ?? false;
+            this.HepatitisBCheckBox.IsChecked = checkup.TestTypeName?.Contains("Hepatitis B") ?? false;
+            this.WhiteBloodCellCheckBox.IsChecked = checkup.TestTypeName?.Contains("White Blood Cell") ?? false;
 
-            this.LabTestTypeComboBox.IsEnabled = !hasFinalDiagnosis;
+            this.LowDensityLipoproteinsCheckBox.IsEnabled = !hasFinalDiagnosis;
+            this.HepatitisACheckBox.IsEnabled = !hasFinalDiagnosis;
+            this.HepatitisBCheckBox.IsEnabled = !hasFinalDiagnosis;
+            this.WhiteBloodCellCheckBox.IsEnabled = !hasFinalDiagnosis;
+
             this.CheckupButton.IsEnabled = !hasFinalDiagnosis;
         }
 
         private void LoadTestTypes()
         {
             var testTypes = _testTypeDAL.GetAllTestTypes();
-            LabTestTypeComboBox.ItemsSource = testTypes;
+
+            // Example for dynamic checkbox creation (if needed in the future)
+            this.LowDensityLipoproteinsCheckBox.Content = testTypes.FirstOrDefault(t => t.Contains("Low Density Lipoproteins")) ?? "Low Density Lipoproteins";
+            this.HepatitisACheckBox.Content = testTypes.FirstOrDefault(t => t.Contains("Hepatitis A")) ?? "Hepatitis A";
+            this.HepatitisBCheckBox.Content = testTypes.FirstOrDefault(t => t.Contains("Hepatitis B")) ?? "Hepatitis B";
+            this.WhiteBloodCellCheckBox.Content = testTypes.FirstOrDefault(t => t.Contains("White Blood Cell")) ?? "White Blood Cell";
         }
+
 
         private int GenerateRandomLabTestId()
         {
@@ -182,17 +184,17 @@ namespace HealthcareSystem
                     return;
                 }
 
-                string selectedAppointment = AppointmentComboBox.SelectedItem as string;
                 int appointmentId = (AppointmentComboBox.SelectedItem as Appointment).AppointmentId;
-
-/*                if (_visitDAL.CheckIfRoutineCheckupExists(appointmentId))
+/*              
+                // Check if routine checkup is already completed
+                if (_visitDAL.CheckIfRoutineCheckupExists(appointmentId)
                 {
                     ErrorTextBlock.Text = "A routine checkup has already been completed for this appointment.";
                     ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
                     ErrorTextBlock.Visibility = Visibility.Visible;
                     return;
-                }*/
-
+                }
+*/
                 string bloodPressureReading = $"{int.Parse(SystolicTextBox.Text)}/{int.Parse(DiastolicTextBox.Text)}";
                 decimal bodyTemp = decimal.Parse(BodyTempTextBox.Text);
                 decimal weight = decimal.Parse(WeightTextBox.Text);
@@ -202,14 +204,21 @@ namespace HealthcareSystem
                 string initialDiagnosis = InitialDiagnosisTextBox.Text;
                 string finalDiagnosis = FinalDiagnosisTextBox.Text;
 
-                int labTestId = GenerateRandomLabTestId();
-                string selectedTestType = LabTestTypeComboBox.SelectedItem as string;
-                string testCode = selectedTestType.Split(':')[0];
-                string testTypeName = selectedTestType.Split(':')[1].Trim();
+                // Retrieve selected test types
+                var selectedTestTypes = new List<string>();
+                if (LowDensityLipoproteinsCheckBox.IsChecked == true)
+                    selectedTestTypes.Add("Low Density Lipoproteins");
+                if (HepatitisACheckBox.IsChecked == true)
+                    selectedTestTypes.Add("Hepatitis A");
+                if (HepatitisBCheckBox.IsChecked == true)
+                    selectedTestTypes.Add("Hepatitis B");
+                if (WhiteBloodCellCheckBox.IsChecked == true)
+                    selectedTestTypes.Add("White Blood Cell");
 
-                bool success = _visitDAL.CompleteRoutineCheckup(
+                // Complete the routine checkup with multiple lab tests
+                bool success = _visitDAL.CompleteRoutineCheckupWithTests(
                     appointmentId, bloodPressureReading, bodyTemp, weight, height,
-                    pulse, symptoms, initialDiagnosis, finalDiagnosis, labTestId, testCode, testTypeName);
+                    pulse, symptoms, initialDiagnosis, finalDiagnosis, selectedTestTypes);
 
                 if (success)
                 {

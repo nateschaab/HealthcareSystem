@@ -179,8 +179,7 @@ namespace HealthcareSystem
             {
                 ValidateCheckupFields();
 
-                string selectedAppointment = AppointmentComboBox.SelectedItem as string;
-                int appointmentId = int.Parse(selectedAppointment.Split(':')[0]);
+                int appointmentId = (AppointmentComboBox.SelectedItem as Appointment).AppointmentId;
 
                 if (_visitDAL.CheckIfRoutineCheckupExists(appointmentId))
                 {
