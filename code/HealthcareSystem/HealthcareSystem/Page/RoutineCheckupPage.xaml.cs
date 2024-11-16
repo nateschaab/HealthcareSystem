@@ -75,7 +75,6 @@ namespace HealthcareSystem
             this.SymptomsErrorTextBlock.Visibility = Visibility.Collapsed;
             this.InitialDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
             this.FinalDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
-            this.LabTestTypeErrorComboBox.Visibility = Visibility.Collapsed;
         }
 
         private void PopulateCheckupFields(RoutineCheckup checkup)
@@ -123,11 +122,11 @@ namespace HealthcareSystem
             this.SymptomsTextBox.IsReadOnly = hasFinalDiagnosis;
             this.SymptomsTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis ?? string.Empty;
+            this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis ?? null;
             this.InitialDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.InitialDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis ?? string.Empty;
+            this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis ?? null;
             this.FinalDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.FinalDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
@@ -204,7 +203,6 @@ namespace HealthcareSystem
                 string initialDiagnosis = InitialDiagnosisTextBox.Text;
                 string finalDiagnosis = FinalDiagnosisTextBox.Text;
 
-                // Retrieve selected test types
                 var selectedTestTypes = new List<string>();
                 if (LowDensityLipoproteinsCheckBox.IsChecked == true)
                     selectedTestTypes.Add("Low Density Lipoproteins");
@@ -322,16 +320,6 @@ namespace HealthcareSystem
             else
             {
                 SymptomsErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
-
-            if (LabTestTypeComboBox.SelectedItem == null)
-            {
-                LabTestTypeErrorComboBox.Visibility = Visibility.Visible;
-                isValid = false;
-            }
-            else
-            {
-                LabTestTypeErrorComboBox.Visibility = Visibility.Collapsed;
             }
 
             if (!isValid)

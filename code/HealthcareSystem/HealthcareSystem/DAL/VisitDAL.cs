@@ -226,7 +226,6 @@ namespace DBAccess.DAL
                     updateVisitCommand.ExecuteNonQuery();
                 }
 
-                // Insert rows into lab_test table if tests are selected
                 if (testTypes.Count > 0)
                 {
                     string labTestQuery = @"

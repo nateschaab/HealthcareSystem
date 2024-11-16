@@ -58,9 +58,6 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <!-- Form Labels and Fields -->
@@ -112,10 +109,6 @@
                 <TextBox x:Name="FinalDiagnosisTextBox" PlaceholderText="Final Diagnosis" Margin="0,0,0,0" Grid.Row="31"/>
                 <TextBlock x:Name="FinalDiagnosisErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Final Diagnosis is required." Grid.Row="32"/>
 
-                <TextBlock Text="Lab Test Type" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="33"/>
-                <ComboBox x:Name="LabTestTypeComboBox" PlaceholderText="Lab Test Type" Margin="0,0,0,0" Grid.Row="34"/>
-                <TextBlock x:Name="LabTestTypeErrorComboBox" Foreground="Red" Visibility="Collapsed" Text="Lab Test Selection is required." Grid.Row="35"/>
-
                 <!-- Complete Checkup Button -->
                 <Button x:Name="CheckupButton" Content="Complete Checkup" Click="CompleteCheckupButton_Click" Margin="0,20,0,0" Grid.Row="36"/>
                 <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Collapsed" Grid.Row="37"/>
@@ -123,10 +116,10 @@
                 <TextBlock Text="Select Lab Tests" FontSize="18" Margin="0,10,0,10" Grid.Row="23"/>
 
                 <!-- Checkboxes for each test type -->
-                <CheckBox x:Name="LowDensityLipoproteinsCheckBox" Content="Low Density Lipoproteins" Grid.Row="24" RenderTransformOrigin="0.543,0.375"/>
-                <CheckBox x:Name="HepatitisACheckBox" Content="Hepatitis A" Margin="482,0,0,0" Grid.Row="24"/>
-                <CheckBox x:Name="HepatitisBCheckBox" Content="Hepatitis B" Margin="362,0,0,0" Grid.Row="24"/>
-                <CheckBox x:Name="WhiteBloodCellCheckBox" Content="White Blood Cell" Margin="209,0,0,0" Grid.Row="24"/>
+                <CheckBox x:Name="LowDensityLipoproteinsCheckBox" Content="Low Density Lipoproteins" Grid.Row="33" RenderTransformOrigin="0.543,0.375"/>
+                <CheckBox x:Name="HepatitisACheckBox" Content="Hepatitis A" Margin="482,0,0,0" Grid.Row="33"/>
+                <CheckBox x:Name="HepatitisBCheckBox" Content="Hepatitis B" Margin="362,0,0,0" Grid.Row="33"/>
+                <CheckBox x:Name="WhiteBloodCellCheckBox" Content="White Blood Cell" Margin="209,0,0,0" Grid.Row="33"/>
 
                 <ContentDialog
                     x:Name="ConfirmationDialog"

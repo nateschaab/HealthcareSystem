@@ -115,22 +115,7 @@
                 <TextBlock Text="Lab Test Type" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="33"/>
                 <ComboBox x:Name="LabTestTypeComboBox" PlaceholderText="Lab Test Type" Margin="0,0,0,0" Grid.Row="34"/>
                 <TextBlock x:Name="LabTestTypeErrorComboBox" Foreground="Red" Visibility="Collapsed" Text="Lab Test Selection is required." Grid.Row="35"/>
-
-                <!-- Complete Checkup Button -->
-                <Button x:Name="CheckupButton" Content="Complete Checkup" Click="CompleteCheckupButton_Click" Margin="0,20,0,0" Grid.Row="36"/>
-                <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Collapsed" Grid.Row="37"/>
-
-                <ContentDialog
-                    x:Name="ConfirmationDialog"
-                    Title="Confirmation"
-                    Content="The final diagnosis has been entered. All fields related to the visit will be set to read-only. Do you wish to proceed?"
-                    PrimaryButtonText="Yes"
-                    SecondaryButtonText="No"
-                    DefaultButton="Primary"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Visibility="Collapsed">
-                </ContentDialog>
+                <TextBlock x:Name="ErrorTextBlock" Visibility="Collapsed"></TextBlock>
             </Grid>
         </ScrollViewer>
     </Grid>
