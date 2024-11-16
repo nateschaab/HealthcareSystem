@@ -20,7 +20,7 @@
         <!-- Divider Line -->
         <Rectangle Grid.Row="2" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,0"/>
 
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Hidden" Margin="0,0,40,2" Grid.RowSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -54,13 +54,13 @@
                 <!-- Form Labels and Fields -->
                 <TextBlock Text="Appointment" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="3"/>
                 <ComboBox x:Name="AppointmentComboBox" PlaceholderText="Select Appointment" SelectionChanged="ComboBox_SelectionChanged" Margin="0,0,0,0" Grid.Row="4">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding DisplayName}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding DisplayName}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
                 <TextBlock Text="Systolic Blood Pressure (mmHg)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="5"/>
                 <TextBox x:Name="SystolicTextBox" PlaceholderText="Systolic Blood Pressure" Margin="0,0,0,0" Grid.Row="6"/>
@@ -89,14 +89,19 @@
                 <TextBlock Text="Final Diagnosis" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="21"/>
                 <TextBox x:Name="FinalDiagnosisTextBox" PlaceholderText="Final Diagnosis" Margin="0,0,0,0" Grid.Row="22"/>
 
-                <TextBlock Text="Lab Test Type" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="23"/>
-                <ComboBox x:Name="LabTestTypeComboBox" PlaceholderText="Lab Test Type" Margin="0,0,0,0" Grid.Row="24"/>
+                <TextBlock Text="Select Lab Tests" FontSize="18" Margin="0,10,0,10" Grid.Row="23"/>
+
+                <!-- Checkboxes for each test type -->
+                <CheckBox x:Name="LowDensityLipoproteinsCheckBox" Content="Low Density Lipoproteins" Grid.Row="24" RenderTransformOrigin="0.543,0.375"/>
+                <CheckBox x:Name="HepatitisACheckBox" Content="Hepatitis A" Margin="482,0,0,0" Grid.Row="24"/>
+                <CheckBox x:Name="HepatitisBCheckBox" Content="Hepatitis B" Margin="362,0,0,0" Grid.Row="24"/>
+                <CheckBox x:Name="WhiteBloodCellCheckBox" Content="White Blood Cell" Margin="209,0,0,0" Grid.Row="24"/>
 
                 <!-- Complete Checkup Button -->
-                <Button x:Name="CheckupButton" Content="Complete Checkup" Click="CompleteCheckupButton_Click" Margin="0,20,0,0" Grid.Row="25"/>
+                <Button x:Name="CheckupButton" Content="Complete Checkup" Click="CompleteCheckupButton_Click" Margin="0,32,0,0" Grid.Row="25" VerticalAlignment="Top"/>
 
                 <!-- Error TextBlock -->
-                <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Collapsed" Grid.Row="26"/>
+                <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Collapsed" Grid.Row="31"/>
                 <ContentDialog
                     x:Name="ConfirmationDialog"
                     Title="Confirmation"
