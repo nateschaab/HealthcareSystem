@@ -97,6 +97,17 @@
 
                 <!-- Error TextBlock -->
                 <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Collapsed" Grid.Row="26"/>
+                <ContentDialog
+                    x:Name="ConfirmationDialog"
+                    Title="Confirmation"
+                    Content="The final diagnosis has been entered. All fields related to the visit will be set to read-only. Do you wish to proceed?"
+                    PrimaryButtonText="Yes"
+                    SecondaryButtonText="No"
+                    DefaultButton="Primary"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="Collapsed">
+                </ContentDialog>
             </Grid>
         </ScrollViewer>
     </Grid>

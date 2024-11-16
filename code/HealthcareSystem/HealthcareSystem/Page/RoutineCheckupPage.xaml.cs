@@ -56,52 +56,56 @@ namespace HealthcareSystem
             }
         }
 
-        private void PopulateCheckupFields(RoutineCheckup checkup)
+        private async void PopulateCheckupFields(RoutineCheckup checkup)
         {
-            if (checkup.Symptoms != null)
+            bool hasFinalDiagnosis = !string.IsNullOrWhiteSpace(checkup.FinalDiagnosis);
+
+            if (hasFinalDiagnosis && AreFieldsEditable())
+            {
+                ConfirmationDialog.Visibility = Visibility.Visible;
+                var result = await ConfirmationDialog.ShowAsync();
+
+                if (result != ContentDialogResult.Primary)
+                {
+                    return;
+                }
+            }
+
+            if (checkup.BloodPressureReading != null)
+            {
                 this.SystolicTextBox.Text = checkup.Systolic.ToString();
+                this.SystolicTextBox.IsReadOnly = hasFinalDiagnosis;
+                this.DiastolicTextBox.Text = checkup.Diastolic.ToString();
+                this.DiastolicTextBox.IsReadOnly = hasFinalDiagnosis;
+            }
             else
+            {
                 this.SystolicTextBox.Text = string.Empty;
-
-            if (checkup.Symptoms != null)
-                this.DiastolicTextBox.Text = checkup.Dystolic.ToString();
-            else
+                this.SystolicTextBox.IsReadOnly = false;
                 this.DiastolicTextBox.Text = string.Empty;
+                this.DiastolicTextBox.IsReadOnly = false;
+            }
 
-            if (checkup.Symptoms != null)
-                this.BodyTempTextBox.Text = checkup.BodyTemp.ToString();
-            else
-                this.BodyTempTextBox.Text = string.Empty;
+            this.BodyTempTextBox.Text = checkup.BodyTemp?.ToString() ?? string.Empty;
+            this.BodyTempTextBox.IsReadOnly = hasFinalDiagnosis;
 
-            if (checkup.Symptoms != null)
-                this.WeightTextBox.Text = checkup.Weight.ToString();
-            else
-                this.WeightTextBox.Text = string.Empty;
+            this.WeightTextBox.Text = checkup.Weight?.ToString() ?? string.Empty;
+            this.WeightTextBox.IsReadOnly = hasFinalDiagnosis;
 
-            if (checkup.Symptoms != null)
-                this.HeightTextBox.Text = checkup.Height.ToString();
-            else
-                this.HeightTextBox.Text = string.Empty;
+            this.HeightTextBox.Text = checkup.Height?.ToString() ?? string.Empty;
+            this.HeightTextBox.IsReadOnly = hasFinalDiagnosis;
 
-            if (checkup.Symptoms != null)
-                this.PulseTextBox.Text = checkup.Pulse.ToString();
-            else
-                this.PulseTextBox.Text = string.Empty;
+            this.PulseTextBox.Text = checkup.Pulse?.ToString() ?? string.Empty;
+            this.PulseTextBox.IsReadOnly = hasFinalDiagnosis;
 
-            if (checkup.Symptoms != null)
-                this.SymptomsTextBox.Text = checkup.Symptoms;
-            else
-                this.SymptomsTextBox.Text = string.Empty;
+            this.SymptomsTextBox.Text = checkup.Symptoms ?? string.Empty;
+            this.SymptomsTextBox.IsReadOnly = hasFinalDiagnosis;
 
-            if (checkup.InitialDiagnosis != null)
-                this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis;
-            else
-                this.InitialDiagnosisTextBox.Text = string.Empty;
+            this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis ?? string.Empty;
+            this.InitialDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
 
-            if (checkup.FinalDiagnosis != null)
-                this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis;
-            else
-                this.FinalDiagnosisTextBox.Text = string.Empty;
+            this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis ?? string.Empty;
+            this.FinalDiagnosisTextBox.IsReadOnly = true;
 
             if (checkup.TestTypeName != null)
             {
@@ -114,7 +118,23 @@ namespace HealthcareSystem
                 this.LabTestTypeComboBox.SelectedItem = null;
             }
 
+            this.LabTestTypeComboBox.IsEnabled = !hasFinalDiagnosis;
         }
+
+        private bool AreFieldsEditable()
+        {
+            return !this.SystolicTextBox.IsReadOnly &&
+                   !this.DiastolicTextBox.IsReadOnly &&
+                   !this.BodyTempTextBox.IsReadOnly &&
+                   !this.WeightTextBox.IsReadOnly &&
+                   !this.HeightTextBox.IsReadOnly &&
+                   !this.PulseTextBox.IsReadOnly &&
+                   !this.SymptomsTextBox.IsReadOnly &&
+                   !this.InitialDiagnosisTextBox.IsReadOnly &&
+                   this.LabTestTypeComboBox.IsEnabled;
+        }
+
+
 
         private void LoadTestTypes()
         {

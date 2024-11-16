@@ -29,7 +29,7 @@ namespace HealthcareSystem.Model
                 return int.Parse(BloodPressureReading.Split('/')[0]);
             }
         }
-        public int Dystolic
+        public int Diastolic
         {
             get
             {
