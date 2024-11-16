@@ -50,26 +50,32 @@ namespace HealthcareSystem
                 foreach (var checkup in checkups) {
                     if (checkup.AppointmentId == app.AppointmentId)
                     {
+                        this.ClearErrorMessages();
                         this.PopulateCheckupFields(checkup);
                     }
                 }
             }
         }
 
-        private async void PopulateCheckupFields(RoutineCheckup checkup)
+        private void ClearErrorMessages()
+        {
+            this.ErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.AppointmentErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.SystolicErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.DiastolicErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.BodyTempErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.WeightErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.HeightErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.PulseErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.SymptomsErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.InitialDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.FinalDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.LabTestTypeErrorComboBox.Visibility = Visibility.Collapsed;
+        }
+
+        private void PopulateCheckupFields(RoutineCheckup checkup)
         {
             bool hasFinalDiagnosis = !string.IsNullOrWhiteSpace(checkup.FinalDiagnosis);
-
-            if (hasFinalDiagnosis)
-            {
-                ConfirmationDialog.Visibility = Visibility.Visible;
-                var result = await ConfirmationDialog.ShowAsync();
-
-                if (result != ContentDialogResult.Primary)
-                {
-                    return;
-                }
-            }
 
             if (checkup.BloodPressureReading != null)
             {
@@ -136,21 +142,6 @@ namespace HealthcareSystem
             this.CheckupButton.IsEnabled = !hasFinalDiagnosis;
         }
 
-        private bool AreFieldsEditable()
-        {
-            return !this.SystolicTextBox.IsReadOnly &&
-                   !this.DiastolicTextBox.IsReadOnly &&
-                   !this.BodyTempTextBox.IsReadOnly &&
-                   !this.WeightTextBox.IsReadOnly &&
-                   !this.HeightTextBox.IsReadOnly &&
-                   !this.PulseTextBox.IsReadOnly &&
-                   !this.SymptomsTextBox.IsReadOnly &&
-                   !this.InitialDiagnosisTextBox.IsReadOnly &&
-                   this.LabTestTypeComboBox.IsEnabled;
-        }
-
-
-
         private void LoadTestTypes()
         {
             var testTypes = _testTypeDAL.GetAllTestTypes();
@@ -163,23 +154,24 @@ namespace HealthcareSystem
             return random.Next(100000, 999999);
         }
 
-        private void CompleteCheckupButton_Click(object sender, RoutedEventArgs e)
+        private async void CompleteCheckupButton_Click(object sender, RoutedEventArgs e)
         {
+            bool hasFinalDiagnosis = !string.IsNullOrWhiteSpace(this.FinalDiagnosisTextBox.Text);
+
+            if (hasFinalDiagnosis)
+            {
+                ConfirmationDialog.Visibility = Visibility.Visible;
+                var result = await ConfirmationDialog.ShowAsync();
+
+                if (result != ContentDialogResult.Primary)
+                {
+                    return;
+                }
+            }
+
             try
             {
-                if (AppointmentComboBox.SelectedItem == null)
-                {
-                    ErrorTextBlock.Text = "Please select an appointment.";
-                    ErrorTextBlock.Visibility = Visibility.Visible;
-                    return;
-                }
-
-                if (LabTestTypeComboBox.SelectedItem == null)
-                {
-                    ErrorTextBlock.Text = "Please select a lab test type.";
-                    ErrorTextBlock.Visibility = Visibility.Visible;
-                    return;
-                }
+                ValidateCheckupFields();
 
                 string selectedAppointment = AppointmentComboBox.SelectedItem as string;
                 int appointmentId = int.Parse(selectedAppointment.Split(':')[0]);
@@ -227,6 +219,128 @@ namespace HealthcareSystem
                 ErrorTextBlock.Text = $"Error: {ex.Message}";
                 ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
                 ErrorTextBlock.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void ValidateCheckupFields()
+        {
+            bool isValid = true;
+
+            if (AppointmentComboBox.SelectedItem == null)
+            {
+                AppointmentErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                AppointmentErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (string.IsNullOrWhiteSpace(SystolicTextBox.Text))
+            {
+                SystolicErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                SystolicErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (string.IsNullOrWhiteSpace(DiastolicTextBox.Text))
+            {
+                DiastolicErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                DiastolicErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (string.IsNullOrWhiteSpace(BodyTempTextBox.Text))
+            {
+                BodyTempErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                BodyTempErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (string.IsNullOrWhiteSpace(WeightTextBox.Text))
+            {
+                WeightErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                WeightErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (string.IsNullOrWhiteSpace(HeightTextBox.Text))
+            {
+                HeightErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                HeightErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (string.IsNullOrWhiteSpace(PulseTextBox.Text))
+            {
+                PulseErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                PulseErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (string.IsNullOrWhiteSpace(SymptomsTextBox.Text))
+            {
+                SymptomsErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                SymptomsErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (string.IsNullOrWhiteSpace(InitialDiagnosisTextBox.Text))
+            {
+                InitialDiagnosisErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                InitialDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (string.IsNullOrWhiteSpace(FinalDiagnosisTextBox.Text))
+            {
+                FinalDiagnosisErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                FinalDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (LabTestTypeComboBox.SelectedItem == null)
+            {
+                LabTestTypeErrorComboBox.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                LabTestTypeErrorComboBox.Visibility = Visibility.Collapsed;
+            }
+
+            if (!isValid)
+            {
+                ErrorTextBlock.Text = "Please fill out all required fields.";
+                ErrorTextBlock.Visibility = Visibility.Visible;
+                return;
             }
         }
 
