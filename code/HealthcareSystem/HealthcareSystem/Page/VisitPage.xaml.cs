@@ -1,4 +1,4 @@
-using DBAccess.DAL;
+﻿using DBAccess.DAL;
 using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace HealthcareSystem
 {
-    public sealed partial class RoutineCheckupPage : Page
+    public sealed partial class VisitPage : Page
     {
         private readonly AppointmentDAL _appointmentDAL = new AppointmentDAL();
         private readonly VisitDAL _visitDAL = new VisitDAL();
@@ -18,7 +18,7 @@ namespace HealthcareSystem
 
         private List<Appointment> Appointments { get; set; }
 
-        public RoutineCheckupPage()
+        public VisitPage()
         {
             this.InitializeComponent();
             LoadTestTypes();
@@ -52,7 +52,8 @@ namespace HealthcareSystem
             {
                 var dal = new VisitDAL();
                 var checkups = dal.GetRoutineCheckups();
-                foreach (var checkup in checkups) {
+                foreach (var checkup in checkups)
+                {
                     if (checkup.AppointmentId == app.AppointmentId)
                     {
                         this.ClearErrorMessages();
@@ -179,7 +180,7 @@ namespace HealthcareSystem
                 ValidateCheckupFields();
 
                 string selectedAppointment = AppointmentComboBox.SelectedItem as string;
-                int appointmentId = (AppointmentComboBox.SelectedItem as Appointment).AppointmentId;
+                int appointmentId = int.Parse(selectedAppointment.Split(':')[0]);
 
                 if (_visitDAL.CheckIfRoutineCheckupExists(appointmentId))
                 {
