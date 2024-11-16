@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using HealthcareSystem.Model;
 using System.Linq;
+using Windows.UI.Xaml.Documents;
 
 namespace HealthcareSystem
 {
@@ -176,18 +177,21 @@ namespace HealthcareSystem
 
             try
             {
-                ValidateCheckupFields();
+                if (!ValidateCheckupFields())
+                {
+                    return;
+                }
 
                 string selectedAppointment = AppointmentComboBox.SelectedItem as string;
                 int appointmentId = (AppointmentComboBox.SelectedItem as Appointment).AppointmentId;
 
-                if (_visitDAL.CheckIfRoutineCheckupExists(appointmentId))
+/*                if (_visitDAL.CheckIfRoutineCheckupExists(appointmentId))
                 {
                     ErrorTextBlock.Text = "A routine checkup has already been completed for this appointment.";
                     ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
                     ErrorTextBlock.Visibility = Visibility.Visible;
                     return;
-                }
+                }*/
 
                 string bloodPressureReading = $"{int.Parse(SystolicTextBox.Text)}/{int.Parse(DiastolicTextBox.Text)}";
                 decimal bodyTemp = decimal.Parse(BodyTempTextBox.Text);
@@ -227,7 +231,7 @@ namespace HealthcareSystem
             }
         }
 
-        private void ValidateCheckupFields()
+        private bool ValidateCheckupFields()
         {
             bool isValid = true;
 
@@ -311,26 +315,6 @@ namespace HealthcareSystem
                 SymptomsErrorTextBlock.Visibility = Visibility.Collapsed;
             }
 
-            if (string.IsNullOrWhiteSpace(InitialDiagnosisTextBox.Text))
-            {
-                InitialDiagnosisErrorTextBlock.Visibility = Visibility.Visible;
-                isValid = false;
-            }
-            else
-            {
-                InitialDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
-
-            if (string.IsNullOrWhiteSpace(FinalDiagnosisTextBox.Text))
-            {
-                FinalDiagnosisErrorTextBlock.Visibility = Visibility.Visible;
-                isValid = false;
-            }
-            else
-            {
-                FinalDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
-
             if (LabTestTypeComboBox.SelectedItem == null)
             {
                 LabTestTypeErrorComboBox.Visibility = Visibility.Visible;
@@ -345,8 +329,8 @@ namespace HealthcareSystem
             {
                 ErrorTextBlock.Text = "Please fill out all required fields.";
                 ErrorTextBlock.Visibility = Visibility.Visible;
-                return;
             }
+            return isValid;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
