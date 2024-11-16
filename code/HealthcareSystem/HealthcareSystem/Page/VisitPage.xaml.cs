@@ -311,36 +311,6 @@ namespace HealthcareSystem
                 SymptomsErrorTextBlock.Visibility = Visibility.Collapsed;
             }
 
-            if (string.IsNullOrWhiteSpace(InitialDiagnosisTextBox.Text))
-            {
-                InitialDiagnosisErrorTextBlock.Visibility = Visibility.Visible;
-                isValid = false;
-            }
-            else
-            {
-                InitialDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
-
-            if (string.IsNullOrWhiteSpace(FinalDiagnosisTextBox.Text))
-            {
-                FinalDiagnosisErrorTextBlock.Visibility = Visibility.Visible;
-                isValid = false;
-            }
-            else
-            {
-                FinalDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
-
-            if (LabTestTypeComboBox.SelectedItem == null)
-            {
-                LabTestTypeErrorComboBox.Visibility = Visibility.Visible;
-                isValid = false;
-            }
-            else
-            {
-                LabTestTypeErrorComboBox.Visibility = Visibility.Collapsed;
-            }
-
             if (!isValid)
             {
                 ErrorTextBlock.Text = "Please fill out all required fields.";
