@@ -60,7 +60,7 @@ namespace HealthcareSystem
         {
             bool hasFinalDiagnosis = !string.IsNullOrWhiteSpace(checkup.FinalDiagnosis);
 
-            if (hasFinalDiagnosis && AreFieldsEditable())
+            if (hasFinalDiagnosis)
             {
                 ConfirmationDialog.Visibility = Visibility.Visible;
                 var result = await ConfirmationDialog.ShowAsync();
@@ -75,37 +75,51 @@ namespace HealthcareSystem
             {
                 this.SystolicTextBox.Text = checkup.Systolic.ToString();
                 this.SystolicTextBox.IsReadOnly = hasFinalDiagnosis;
+                this.SystolicTextBox.IsHitTestVisible = !hasFinalDiagnosis;
+
                 this.DiastolicTextBox.Text = checkup.Diastolic.ToString();
                 this.DiastolicTextBox.IsReadOnly = hasFinalDiagnosis;
+                this.DiastolicTextBox.IsHitTestVisible = !hasFinalDiagnosis;
             }
             else
             {
                 this.SystolicTextBox.Text = string.Empty;
                 this.SystolicTextBox.IsReadOnly = false;
+                this.SystolicTextBox.IsHitTestVisible = !hasFinalDiagnosis;
+
                 this.DiastolicTextBox.Text = string.Empty;
                 this.DiastolicTextBox.IsReadOnly = false;
+                this.DiastolicTextBox.IsHitTestVisible = !hasFinalDiagnosis;
+
             }
 
             this.BodyTempTextBox.Text = checkup.BodyTemp?.ToString() ?? string.Empty;
             this.BodyTempTextBox.IsReadOnly = hasFinalDiagnosis;
+            this.BodyTempTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
             this.WeightTextBox.Text = checkup.Weight?.ToString() ?? string.Empty;
             this.WeightTextBox.IsReadOnly = hasFinalDiagnosis;
+            this.WeightTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
             this.HeightTextBox.Text = checkup.Height?.ToString() ?? string.Empty;
             this.HeightTextBox.IsReadOnly = hasFinalDiagnosis;
+            this.HeightTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
             this.PulseTextBox.Text = checkup.Pulse?.ToString() ?? string.Empty;
             this.PulseTextBox.IsReadOnly = hasFinalDiagnosis;
+            this.PulseTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
             this.SymptomsTextBox.Text = checkup.Symptoms ?? string.Empty;
             this.SymptomsTextBox.IsReadOnly = hasFinalDiagnosis;
+            this.SymptomsTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
             this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis ?? string.Empty;
             this.InitialDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
+            this.InitialDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
             this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis ?? string.Empty;
-            this.FinalDiagnosisTextBox.IsReadOnly = true;
+            this.FinalDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
+            this.FinalDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
             if (checkup.TestTypeName != null)
             {
@@ -119,6 +133,7 @@ namespace HealthcareSystem
             }
 
             this.LabTestTypeComboBox.IsEnabled = !hasFinalDiagnosis;
+            this.CheckupButton.IsEnabled = !hasFinalDiagnosis;
         }
 
         private bool AreFieldsEditable()
