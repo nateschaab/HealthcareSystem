@@ -11,10 +11,14 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Button Grid.Row="0" Content="Back" Click="BackButton_Click" Margin="0,0,0,0"/>
+        <!-- Back Button -->
+        <Button Grid.Row="0" Content="Back" Click="BackButton_Click" VerticalAlignment="Top" />
 
         <!-- Header Text -->
-        <TextBlock Text="Search Patient" FontSize="24" Grid.Row="1" Margin="0,20,0,20" />
+        <TextBlock Text="Search Patient" FontSize="24" Grid.Row="1" Margin="0,20,0,5" />
+
+        <!-- Divider Line -->
+        <Rectangle Grid.Row="1" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,50,0,0"/>
 
         <!-- Form and ListView container -->
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Hidden">
@@ -27,41 +31,52 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="500"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
 
-                    <!-- ListView row -->
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+
                 <!-- First Name Field -->
-                <TextBox x:Name="PatientFirstNameTextBox" PlaceholderText="Patient First Name" Margin="0,10,0,0" Grid.Row="0"/>
-                <TextBlock x:Name="FirstNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="First Name Is Required" Grid.Row="1"/>
+                <TextBlock Text="First Name" Grid.Row="0" Margin="0,0,0,0" />
+                <TextBox x:Name="PatientFirstNameTextBox" PlaceholderText="Enter First Name" Grid.Row="1" />
+                <TextBlock x:Name="FirstNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="First Name Is Required" Grid.Row="2" />
 
                 <!-- Last Name Field -->
-                <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Patient Last Name" Margin="0,10,0,0" Grid.Row="2"/>
-                <TextBlock x:Name="LastNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Last Name Is Required" Grid.Row="3"/>
-                <!-- DOB Field -->
-                <DatePicker x:Name="DOBDatePicker" Margin="0,10,0,0" Grid.Row="4"/>
-                <TextBlock x:Name="DOBErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Date Is Required" Grid.Row="5"/>
+                <TextBlock Text="Last Name" Grid.Row="3" Margin="0,10,0,0" />
+                <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Enter Last Name" Grid.Row="4" />
+                <TextBlock x:Name="LastNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Last Name Is Required" Grid.Row="5" />
 
-                <Button Grid.Row="4" Content="Clear" Click="Clear_Click" Margin="368,15,0,0" VerticalAlignment="Top"/>
-                <Button Grid.Row="6" Content="Search Patient" Margin="0,20,0,0" VerticalAlignment="Top" Click="SearchPatientsButton_Click" Width="120"/>
-                <Button Grid.Row="6" Content="Edit Patient" Click="EditPatients_Click" Margin="160,20,0,0" VerticalAlignment="Top"/>
-                <Button Grid.Row="6" Content="Edit Appointment" Click="EditAppointment_Click" Margin="290,20,0,0" VerticalAlignment="Top"/>
+                <!-- Clear Button -->
+                <Button Grid.Row="8" Content="Clear" Click="Clear_Click" Margin="340,1,0,0" VerticalAlignment="Top"/>
+
+                <!-- DOB Field -->
+                <TextBlock Text="Date of Birth" Grid.Row="7" Margin="0,10,0,0" />
+                <DatePicker x:Name="DOBDatePicker" Grid.Row="8" />
+                <TextBlock x:Name="DOBErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Date Is Required" Grid.Row="9" />
+
+                <!-- Buttons -->
+                <StackPanel Orientation="Horizontal" Grid.Row="10" Margin="0,20,0,0">
+                    <Button Content="Search Patient" Click="SearchPatientsButton_Click" Width="120" />
+                    <Button Content="Edit Patient" Click="EditPatients_Click" Margin="20,0,0,0" />
+                    <Button Content="Edit Appointment" Click="EditAppointment_Click" Margin="20,0,0,0" />
+                </StackPanel>
 
                 <!-- ListView for displaying the patients -->
-                <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Grid.Row="7" Margin="0,20,0,0"
+                <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Grid.Row="11" Margin="0,20,0,0"
                           ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock>
                                     <Run Text="{Binding FirstName}" />
-                                    <Run Text=" " />
+                                    <Run Text=", " />
                                     <Run Text="{Binding LastName}" />
                                 </TextBlock>
                             </StackPanel>
                         </DataTemplate>
-
                     </ListView.ItemTemplate>
                 </ListView>
             </Grid>
