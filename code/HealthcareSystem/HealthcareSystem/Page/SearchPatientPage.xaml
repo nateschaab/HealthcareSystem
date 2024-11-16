@@ -62,6 +62,7 @@
                     <Button Content="Search Patient" Click="SearchPatientsButton_Click" Width="120" />
                     <Button Content="Edit Patient" Click="EditPatients_Click" Margin="20,0,0,0" />
                     <Button Content="Edit Appointment" Click="EditAppointment_Click" Margin="20,0,0,0" />
+                    <Button Content="Edit Checkup" Click="EditCheckup_Click" Margin="20,0,0,0" />
                 </StackPanel>
 
                 <!-- ListView for displaying the patients -->

@@ -58,6 +58,7 @@ namespace HealthcareSystem
             {
                 this.Appointments = app;
                 this.PatientListView.ItemsSource = app;
+
             }
         }
 
@@ -101,7 +102,7 @@ namespace HealthcareSystem
             try
             {
                 var selectedDoctor = this.DoctorComboBox.SelectedItem as string;
-                var selectedPatient = this.PatientComboBox.SelectedItem as string;
+                var selectedPatient = this.PatientComboBox.SelectedItem as Patient;
                 if (selectedDoctor == null || selectedPatient == null)
                 {
                     this.CreateErrorTextBlock.Text = "Please select both a doctor and a patient.";
@@ -110,7 +111,7 @@ namespace HealthcareSystem
                 }
 
                 var doctorId = int.Parse(selectedDoctor.Split(':')[0]);
-                var patientId = int.Parse(selectedPatient.Split(':')[0]);
+                var patientId = selectedPatient.PatientId;
 
                 var date = this.AppointmentDatePicker.Date.Date;
                 var time = this.AppointmentTimePicker.Time;
@@ -146,18 +147,6 @@ namespace HealthcareSystem
         {
             try
             {
-                var selectedDoctor = this.DoctorComboBox.SelectedItem as string;
-                var selectedPatient = this.PatientComboBox.SelectedItem as string;
-                if (selectedDoctor == null || selectedPatient == null)
-                {
-                    this.EditErrorTextBlock.Text = "Please select both a doctor and a patient.";
-                    this.EditErrorTextBlock.Visibility = Visibility.Visible;
-                    return;
-                }
-
-                var doctorId = int.Parse(selectedDoctor.Split(':')[0]);
-                var patientId = int.Parse(selectedPatient.Split(':')[0]);
-
                 var date = this.AppointmentDatePicker.Date.Date;
                 var time = this.AppointmentTimePicker.Time;
                 var newAppointmentDateTime = date + time;
@@ -169,6 +158,18 @@ namespace HealthcareSystem
                     this.EditErrorTextBlock.Visibility = Visibility.Visible;
                     return;
                 }
+
+                var selectedDoctor = this.DoctorComboBox.SelectedItem as string;
+                var selectedPatient = this.PatientComboBox.SelectedItem as Patient;
+                if (selectedDoctor == null || selectedPatient == null)
+                {
+                    this.EditErrorTextBlock.Text = "Please select both a doctor and a patient.";
+                    this.EditErrorTextBlock.Visibility = Visibility.Visible;
+                    return;
+                }
+
+                var doctorId = int.Parse(selectedDoctor.Split(':')[0]);
+                var patientId = selectedPatient.PatientId;
 
                 var reason = this.ReasonTextBox.Text;
                 var appointmentId = this.App.AppointmentId;

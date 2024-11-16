@@ -1,8 +1,12 @@
 using DBAccess.DAL;
 using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
+using HealthcareSystem.Model;
+using System.Linq;
 
 namespace HealthcareSystem
 {
@@ -12,17 +16,73 @@ namespace HealthcareSystem
         private readonly VisitDAL _visitDAL = new VisitDAL();
         private readonly TestTypeDAL _testTypeDAL = new TestTypeDAL();
 
+        private List<Appointment> Appointments { get; set; }
+
         public RoutineCheckupPage()
         {
             this.InitializeComponent();
-            LoadAppointments();
             LoadTestTypes();
         }
 
-        private void LoadAppointments()
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            var appointments = _appointmentDAL.GetAllAppointments();
-            AppointmentComboBox.ItemsSource = appointments;
+            base.OnNavigatedTo(e);
+
+            if (e.Parameter is List<Appointment> app)
+            {
+                this.Appointments = app;
+                this.AppointmentComboBox.ItemsSource = app;
+            }
+            else
+            {
+                ErrorTextBlock.Text = "No appointments found.";
+                ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                ErrorTextBlock.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.AppointmentComboBox.SelectedItem is Appointment app)
+            {
+                var dal = new VisitDAL();
+                var checkups = dal.GetRoutineCheckups();
+                foreach (var checkup in checkups) {
+                    if (checkup.AppointmentId == app.AppointmentId)
+                    {
+                        this.PopulateCheckupFields(checkup);
+                    }
+                }
+            }
+        }
+
+        private void PopulateCheckupFields(RoutineCheckup checkup)
+        {
+            this.SystolicTextBox.Text = checkup.Systolic.ToString();
+
+            this.DiastolicTextBox.Text = checkup.Dystolic.ToString();
+
+            this.BodyTempTextBox.Text = checkup.BodyTemp.ToString();
+
+            this.WeightTextBox.Text = checkup.Weight.ToString();
+
+            this.HeightTextBox.Text = checkup.Height.ToString();
+
+            this.PulseTextBox.Text = checkup.Pulse.ToString();
+
+            this.SymptomsTextBox.Text = checkup.Symptoms;
+
+            this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis;
+
+            this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis;
+
+            if (checkup.TestTypeName != null)
+            {
+                this.LabTestTypeComboBox.SelectedItem = this.LabTestTypeComboBox.Items
+                    .OfType<string>()
+                    .FirstOrDefault(testType => testType.Contains(checkup.TestTypeName));
+            }
+
         }
 
         private void LoadTestTypes()
