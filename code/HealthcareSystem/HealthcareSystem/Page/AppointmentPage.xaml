@@ -71,11 +71,11 @@
             </Grid.RowDefinitions>
 
             <!-- Create Appointment Button -->
-            <Button Content="Create Appointment" Click="CreateAppointment_Click" Grid.Row="0" HorizontalAlignment="Left" Width="150" />
+            <Button Content="Create Appointment" Click="CreateAppointment_Click" Width="145" />
             <TextBlock x:Name="CreateErrorTextBlock" Foreground="Red" Visibility="Collapsed" Grid.Row="1" Margin="0,5,0,0" />
 
             <!-- Edit Appointment Button -->
-            <Button Content="Edit Appointment" Click="EditAppointment_Click" Grid.Row="0" HorizontalAlignment="Left" Width="150" Margin="160,0,0,0" />
+            <Button Content="Edit Appointment" Click="EditAppointment_Click" Width="135" Margin="185,0,0,0" />
             <TextBlock x:Name="EditErrorTextBlock" Foreground="Red" Visibility="Collapsed" Grid.Row="3" Margin="0,5,0,0" />
 
             <!-- Patient ListView -->
@@ -90,6 +90,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Button Content="View Visit" Click="ViewVisit_Click" Width="85" Margin="360,0,0,0" />
         </Grid>
     </Grid>
 </Page>

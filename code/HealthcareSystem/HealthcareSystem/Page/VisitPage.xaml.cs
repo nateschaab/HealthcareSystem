@@ -1,4 +1,4 @@
-using DBAccess.DAL;
+﻿using DBAccess.DAL;
 using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
@@ -7,11 +7,10 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using HealthcareSystem.Model;
 using System.Linq;
-using Windows.UI.Xaml.Documents;
 
 namespace HealthcareSystem
 {
-    public sealed partial class RoutineCheckupPage : Page
+    public sealed partial class VisitPage : Page
     {
         private readonly AppointmentDAL _appointmentDAL = new AppointmentDAL();
         private readonly VisitDAL _visitDAL = new VisitDAL();
@@ -19,7 +18,7 @@ namespace HealthcareSystem
 
         private List<Appointment> Appointments { get; set; }
 
-        public RoutineCheckupPage()
+        public VisitPage()
         {
             this.InitializeComponent();
             LoadTestTypes();
@@ -53,7 +52,8 @@ namespace HealthcareSystem
             {
                 var dal = new VisitDAL();
                 var checkups = dal.GetRoutineCheckups();
-                foreach (var checkup in checkups) {
+                foreach (var checkup in checkups)
+                {
                     if (checkup.AppointmentId == app.AppointmentId)
                     {
                         this.ClearErrorMessages();
@@ -177,21 +177,18 @@ namespace HealthcareSystem
 
             try
             {
-                if (!ValidateCheckupFields())
-                {
-                    return;
-                }
+                ValidateCheckupFields();
 
                 string selectedAppointment = AppointmentComboBox.SelectedItem as string;
-                int appointmentId = (AppointmentComboBox.SelectedItem as Appointment).AppointmentId;
+                int appointmentId = int.Parse(selectedAppointment.Split(':')[0]);
 
-/*                if (_visitDAL.CheckIfRoutineCheckupExists(appointmentId))
+                if (_visitDAL.CheckIfRoutineCheckupExists(appointmentId))
                 {
                     ErrorTextBlock.Text = "A routine checkup has already been completed for this appointment.";
                     ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
                     ErrorTextBlock.Visibility = Visibility.Visible;
                     return;
-                }*/
+                }
 
                 string bloodPressureReading = $"{int.Parse(SystolicTextBox.Text)}/{int.Parse(DiastolicTextBox.Text)}";
                 decimal bodyTemp = decimal.Parse(BodyTempTextBox.Text);
@@ -231,7 +228,7 @@ namespace HealthcareSystem
             }
         }
 
-        private bool ValidateCheckupFields()
+        private void ValidateCheckupFields()
         {
             bool isValid = true;
 
@@ -315,6 +312,26 @@ namespace HealthcareSystem
                 SymptomsErrorTextBlock.Visibility = Visibility.Collapsed;
             }
 
+            if (string.IsNullOrWhiteSpace(InitialDiagnosisTextBox.Text))
+            {
+                InitialDiagnosisErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                InitialDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (string.IsNullOrWhiteSpace(FinalDiagnosisTextBox.Text))
+            {
+                FinalDiagnosisErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                FinalDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
             if (LabTestTypeComboBox.SelectedItem == null)
             {
                 LabTestTypeErrorComboBox.Visibility = Visibility.Visible;
@@ -329,8 +346,8 @@ namespace HealthcareSystem
             {
                 ErrorTextBlock.Text = "Please fill out all required fields.";
                 ErrorTextBlock.Visibility = Visibility.Visible;
+                return;
             }
-            return isValid;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
