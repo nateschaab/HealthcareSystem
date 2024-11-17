@@ -166,9 +166,7 @@ namespace DBAccess.DAL
                     symptomsOrdinal,
                     initialDiagnosisOrdinal,
                     finalDiagnosisOrdinal,
-                    labTestIdOrdinal,
-                    testCodeOrdinal,
-                    testTypeNameOrdinal
+                    labTestIdOrdinal
                 ));
             }
 
@@ -272,9 +270,8 @@ namespace DBAccess.DAL
             int symptomsOrdinal,
             int initialDiagnosisOrdinal,
             int finalDiagnosisOrdinal,
-            int labTestIdOrdinal,
-            int testCodeOrdinal,
-            int testTypeNameOrdinal)
+            int labTestIdOrdinal
+            )
         {
             return new RoutineCheckup
             {
@@ -289,9 +286,81 @@ namespace DBAccess.DAL
                 InitialDiagnosis = reader.IsDBNull(initialDiagnosisOrdinal) ? null : reader.GetString(initialDiagnosisOrdinal),
                 FinalDiagnosis = reader.IsDBNull(finalDiagnosisOrdinal) ? null : reader.GetString(finalDiagnosisOrdinal),
                 LabTestId = reader.IsDBNull(labTestIdOrdinal) ? (int?)null : reader.GetInt32(labTestIdOrdinal),
-                TestCode = reader.IsDBNull(testCodeOrdinal) ? null : reader.GetString(testCodeOrdinal),
-                TestTypeName = reader.IsDBNull(testTypeNameOrdinal) ? null : reader.GetString(testTypeNameOrdinal)
             };
         }
+
+        public List<LabTest> GetLabTestsForVisit(int? visitId)
+        {
+            var labTestList = new List<LabTest>();
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+
+            connection.Open();
+
+            var query = @"
+                SELECT 
+                    lt.lab_test_id,
+                    lt.visit_id,
+                    lt.time_performed,
+                    lt.test_type_name,
+                    lt.test_code,
+                    lt.result,
+                    lt.abnormality
+                FROM 
+                    lab_test lt
+                WHERE 
+                    lt.visit_id = @visit_id;";
+
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@visit_id", visitId);
+
+            using var reader = command.ExecuteReader();
+
+            var labTestIdOrdinal = reader.GetOrdinal("lab_test_id");
+            var visitIdOrdinal = reader.GetOrdinal("visit_id");
+            var timePerformedOrdinal = reader.GetOrdinal("time_performed");
+            var testTypeNameOrdinal = reader.GetOrdinal("test_type_name");
+            var testCodeOrdinal = reader.GetOrdinal("test_code");
+            var resultOrdinal = reader.GetOrdinal("result");
+            var abnormalityOrdinal = reader.GetOrdinal("abnormality");
+
+            while (reader.Read())
+            {
+                labTestList.Add(CreateLabTest(
+                    reader,
+                    labTestIdOrdinal,
+                    visitIdOrdinal,
+                    timePerformedOrdinal,
+                    testTypeNameOrdinal,
+                    testCodeOrdinal,
+                    resultOrdinal,
+                    abnormalityOrdinal
+                ));
+            }
+
+            return labTestList;
+        }
+
+        private static LabTest CreateLabTest(
+            MySqlDataReader reader,
+            int labTestIdOrdinal,
+            int visitIdOrdinal,
+            int timePerformedOrdinal,
+            int testTypeNameOrdinal,
+            int testCodeOrdinal,
+            int resultOrdinal,
+            int abnormalityOrdinal)
+        {
+            return new LabTest
+            {
+                LabTestId = reader.GetInt32(labTestIdOrdinal),
+                VisitId = reader.GetInt32(visitIdOrdinal),
+                TimePerformed = reader.GetDateTime(timePerformedOrdinal),
+                TestTypeName = reader.IsDBNull(testTypeNameOrdinal) ? null : reader.GetString(testTypeNameOrdinal),
+                TestCode = reader.IsDBNull(testCodeOrdinal) ? null : reader.GetString(testCodeOrdinal),
+                Result = reader.IsDBNull(resultOrdinal) ? null : reader.GetString(resultOrdinal),
+                Abnormality = reader.IsDBNull(abnormalityOrdinal) ? null : reader.GetString(abnormalityOrdinal)
+            };
+        }
+
     }
 }

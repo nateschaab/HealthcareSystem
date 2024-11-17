@@ -21,6 +21,7 @@ namespace HealthcareSystem.Model
         public int? LabTestId { get; set; }
         public string TestCode { get; set; }
         public string TestTypeName { get; set; }
+        public IList<LabTest> LabTests { get; set; }
 
         public int Systolic
         {

@@ -19,7 +19,6 @@ namespace HealthcareSystem
         public VisitPage()
         {
             this.InitializeComponent();
-            LoadTestTypes();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -35,12 +34,6 @@ namespace HealthcareSystem
             {
                 this.Appointments = new List<Appointment> { appSingle };
                 this.AppointmentComboBox.ItemsSource = new List<Appointment> { appSingle };
-            }
-            else
-            {
-                ErrorTextBlock.Text = "No appointments found.";
-                ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
-                ErrorTextBlock.Visibility = Visibility.Visible;
             }
         }
 
@@ -63,7 +56,6 @@ namespace HealthcareSystem
 
         private void ClearErrorMessages()
         {
-            this.ErrorTextBlock.Visibility = Visibility.Collapsed;
             this.AppointmentErrorTextBlock.Visibility = Visibility.Collapsed;
             this.SystolicErrorTextBlock.Visibility = Visibility.Collapsed;
             this.DiastolicErrorTextBlock.Visibility = Visibility.Collapsed;
@@ -74,7 +66,6 @@ namespace HealthcareSystem
             this.SymptomsErrorTextBlock.Visibility = Visibility.Collapsed;
             this.InitialDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
             this.FinalDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
-            this.LabTestTypeErrorComboBox.Visibility = Visibility.Collapsed;
         }
 
         private void PopulateCheckupFields(RoutineCheckup checkup)
@@ -131,24 +122,7 @@ namespace HealthcareSystem
             this.FinalDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.FinalDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            if (checkup.TestTypeName != null)
-            {
-                this.LabTestTypeComboBox.SelectedItem = this.LabTestTypeComboBox.Items
-                    .OfType<string>()
-                    .FirstOrDefault(testType => testType.Contains(checkup.TestTypeName));
-            }
-            else
-            {
-                this.LabTestTypeComboBox.SelectedItem = null;
-            }
-
-            this.LabTestTypeComboBox.IsEnabled = !hasFinalDiagnosis;
-        }
-
-        private void LoadTestTypes()
-        {
-            var testTypes = _testTypeDAL.GetAllTestTypes();
-            LabTestTypeComboBox.ItemsSource = testTypes;
+            this.WhiteBloodCellCheckBox.IsChecked = checkup.TestCode == "WBC";
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
