@@ -75,6 +75,10 @@ namespace HealthcareSystem
             this.SymptomsErrorTextBlock.Visibility = Visibility.Collapsed;
             this.InitialDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
             this.FinalDiagnosisErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.LDLResultErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.WBCResultErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.HBResultErrorTextBlock.Visibility = Visibility.Collapsed;
+            this.HAResultErrorTextBlock.Visibility = Visibility.Collapsed;
         }
 
         private void PopulateCheckupFields(RoutineCheckup checkup)
@@ -101,6 +105,46 @@ namespace HealthcareSystem
                 this.DiastolicTextBox.IsReadOnly = false;
                 this.DiastolicTextBox.IsHitTestVisible = !hasFinalDiagnosis;
             }
+
+            LDLResultTextBox.Text = string.Empty;
+            WBCResultTextBox.Text = string.Empty;
+            HBResultTextBox.Text = string.Empty;
+            HAResultTextBox.Text = string.Empty;
+
+            if (checkup.LabTests != null)
+            {
+                foreach (var labTest in checkup.LabTests)
+                {
+                    if (labTest.TestTypeName.Contains("Low Density Lipoproteins"))
+                    {
+                        LDLResultTextBox.Text = labTest.Result;
+                    }
+                    else if (labTest.TestTypeName.Contains("Hepatitis A"))
+                    {
+                        HAResultTextBox.Text = labTest.Result;
+                    }
+                    else if (labTest.TestTypeName.Contains("Hepatitis B"))
+                    {
+                        HBResultTextBox.Text = labTest.Result;
+                    }
+                    else if (labTest.TestTypeName.Contains("White Blood Cell"))
+                    {
+                        WBCResultTextBox.Text = labTest.Result;
+                    }
+                }
+            }
+
+            LDLResultTextBox.IsReadOnly = hasFinalDiagnosis;
+            LDLResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
+
+            WBCResultTextBox.IsReadOnly = hasFinalDiagnosis;
+            WBCResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
+
+            HBResultTextBox.IsReadOnly = hasFinalDiagnosis;
+            HBResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
+
+            HAResultTextBox.IsReadOnly = hasFinalDiagnosis;
+            HAResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
             this.BodyTempTextBox.Text = checkup.BodyTemp?.ToString() ?? string.Empty;
             this.BodyTempTextBox.IsReadOnly = hasFinalDiagnosis;
@@ -183,16 +227,7 @@ namespace HealthcareSystem
                 }
 
                 int appointmentId = (AppointmentComboBox.SelectedItem as Appointment).AppointmentId;
-/*              
-                // Check if routine checkup is already completed
-                if (_visitDAL.CheckIfRoutineCheckupExists(appointmentId)
-                {
-                    ErrorTextBlock.Text = "A routine checkup has already been completed for this appointment.";
-                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
-                    ErrorTextBlock.Visibility = Visibility.Visible;
-                    return;
-                }
-*/
+
                 string bloodPressureReading = $"{int.Parse(SystolicTextBox.Text)}/{int.Parse(DiastolicTextBox.Text)}";
                 decimal bodyTemp = decimal.Parse(BodyTempTextBox.Text);
                 decimal weight = decimal.Parse(WeightTextBox.Text);
@@ -212,10 +247,35 @@ namespace HealthcareSystem
                 if (WhiteBloodCellCheckBox.IsChecked == true)
                     selectedTestTypes.Add("White Blood Cell");
 
-                // Complete the routine checkup with multiple lab tests
+                var testResults = new Dictionary<string, string>();
+
+                if (LowDensityLipoproteinsCheckBox.IsChecked == true)
+                {
+                    string ldlResult = LDLResultTextBox.Text;
+                    testResults.Add("Low Density Lipoproteins", ldlResult);
+                }
+
+                if (HepatitisACheckBox.IsChecked == true)
+                {
+                    string haResult = HAResultTextBox.Text;
+                    testResults.Add("Hepatitis A", haResult);
+                }
+
+                if (HepatitisBCheckBox.IsChecked == true)
+                {
+                    string hbResult = HBResultTextBox.Text;
+                    testResults.Add("Hepatitis B", hbResult);
+                }
+
+                if (WhiteBloodCellCheckBox.IsChecked == true)
+                {
+                    string wbcResult = WBCResultTextBox.Text;
+                    testResults.Add("White Blood Cell", wbcResult);
+                }
+
                 bool success = _visitDAL.CompleteRoutineCheckupWithTests(
                     appointmentId, bloodPressureReading, bodyTemp, weight, height,
-                    pulse, symptoms, initialDiagnosis, finalDiagnosis, selectedTestTypes);
+                    pulse, symptoms, initialDiagnosis, finalDiagnosis, selectedTestTypes, testResults);
 
                 if (success)
                 {
@@ -240,6 +300,7 @@ namespace HealthcareSystem
         private bool ValidateCheckupFields()
         {
             bool isValid = true;
+            ClearErrorMessages();
 
             if (AppointmentComboBox.SelectedItem == null)
             {
@@ -319,6 +380,46 @@ namespace HealthcareSystem
             else
             {
                 SymptomsErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (!string.IsNullOrWhiteSpace(LDLResultTextBox.Text) && LowDensityLipoproteinsCheckBox.IsChecked != true)
+            {
+                LDLResultErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                LDLResultErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (!string.IsNullOrWhiteSpace(WBCResultTextBox.Text) && WhiteBloodCellCheckBox.IsChecked != true)
+            {
+                WBCResultErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                WBCResultErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (!string.IsNullOrWhiteSpace(HBResultTextBox.Text) && HepatitisBCheckBox.IsChecked != true)
+            {
+                HBResultErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                HBResultErrorTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+            if (!string.IsNullOrWhiteSpace(HAResultTextBox.Text) && HepatitisACheckBox.IsChecked != true)
+            {
+                HAResultErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                HAResultErrorTextBlock.Visibility = Visibility.Collapsed;
             }
 
             if (!isValid)

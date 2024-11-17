@@ -173,7 +173,7 @@ namespace DBAccess.DAL
 
         public bool CompleteRoutineCheckupWithTests(int appointmentId, string bloodPressureReading, decimal bodyTemp,
     decimal weight, decimal height, int pulse, string symptoms, string initialDiagnosis,
-    string finalDiagnosis, List<string> testTypes)
+    string finalDiagnosis, List<string> testTypes, Dictionary<string, string> testResults)
         {
             try
             {
@@ -189,9 +189,6 @@ namespace DBAccess.DAL
                     getVisitIdCommand.Parameters.AddWithValue("@appt_id", appointmentId);
                     visitId = Convert.ToInt32(getVisitIdCommand.ExecuteScalar());
                 }
-
-                // If no tests are selected, set lab_test_id to NULL in the visit table
-                int? labTestId = testTypes.Count > 0 ? GenerateRandomLabTestId() : (int?)null;
 
                 string updateVisitQuery = @"
             UPDATE visit 
@@ -223,16 +220,38 @@ namespace DBAccess.DAL
                 if (testTypes.Count > 0)
                 {
                     string labTestQuery = @"
-                INSERT INTO lab_test (lab_test_id, visit_id, time_performed, test_type_name)
-                VALUES (@lab_test_id, @visit_id, NOW(), @test_type_name);";
+                INSERT INTO lab_test (lab_test_id, visit_id, time_performed, test_type_name, result)
+                VALUES (@lab_test_id, @visit_id, NOW(), @test_type_name, @result)
+                ON DUPLICATE KEY UPDATE 
+                    result = @result, 
+                    time_performed = NOW();";
 
                     foreach (string testType in testTypes)
                     {
                         using var labTestCommand = new MySqlCommand(labTestQuery, connection, transaction);
-                        int individualLabTestId = GenerateRandomLabTestId();
-                        labTestCommand.Parameters.AddWithValue("@lab_test_id", individualLabTestId);
+
+                        int labTestId;
+                        string fetchLabTestIdQuery = @"
+                    SELECT lab_test_id 
+                    FROM lab_test 
+                    WHERE visit_id = @visit_id AND test_type_name = @test_type_name;";
+
+                        using (var fetchLabTestIdCommand = new MySqlCommand(fetchLabTestIdQuery, connection, transaction))
+                        {
+                            fetchLabTestIdCommand.Parameters.AddWithValue("@visit_id", visitId);
+                            fetchLabTestIdCommand.Parameters.AddWithValue("@test_type_name", testType);
+
+                            object result = fetchLabTestIdCommand.ExecuteScalar();
+                            labTestId = result != null ? Convert.ToInt32(result) : GenerateRandomLabTestId();
+                        }
+
+                        labTestCommand.Parameters.AddWithValue("@lab_test_id", labTestId);
                         labTestCommand.Parameters.AddWithValue("@visit_id", visitId);
                         labTestCommand.Parameters.AddWithValue("@test_type_name", testType);
+
+                        string testResult = testResults.ContainsKey(testType) ? testResults[testType] : null;
+                        labTestCommand.Parameters.AddWithValue("@result", testResult ?? (object)DBNull.Value);
+
                         labTestCommand.ExecuteNonQuery();
                     }
                 }
@@ -246,6 +265,7 @@ namespace DBAccess.DAL
                 return false;
             }
         }
+
 
         private int GenerateRandomLabTestId()
         {
@@ -355,6 +375,7 @@ namespace DBAccess.DAL
                 Abnormality = reader.IsDBNull(abnormalityOrdinal) ? null : reader.GetString(abnormalityOrdinal)
             };
         }
+
 
     }
 }
