@@ -123,11 +123,11 @@ namespace HealthcareSystem
             this.SymptomsTextBox.IsReadOnly = hasFinalDiagnosis;
             this.SymptomsTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis ?? null;
+            this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis ?? string.Empty;
             this.InitialDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.InitialDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis ?? null;
+            this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis ?? string.Empty;
             this.FinalDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.FinalDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
