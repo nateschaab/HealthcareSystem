@@ -63,7 +63,7 @@
 
                 <!-- Form Labels and Fields -->
                 <TextBlock Text="Appointment" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="3"/>
-                <ComboBox x:Name="AppointmentComboBox" PlaceholderText="Select Appointment" SelectionChanged="ComboBox_SelectionChanged" Margin="0,0,0,0" Grid.Row="4">
+                <ComboBox x:Name="AppointmentComboBox" PlaceholderText="Select Appointment" Margin="0,0,0,0" Grid.Row="4">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
