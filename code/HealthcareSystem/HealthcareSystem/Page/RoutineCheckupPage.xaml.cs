@@ -55,6 +55,7 @@ namespace HealthcareSystem
                 foreach (var checkup in checkups) {
                     if (checkup.AppointmentId == app.AppointmentId)
                     {
+                        checkup.LabTests = dal.GetLabTestsForVisit(checkup.VisitId);
                         this.ClearErrorMessages();
                         this.PopulateCheckupFields(checkup);
                     }
@@ -130,10 +131,10 @@ namespace HealthcareSystem
             this.FinalDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.FinalDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            this.LowDensityLipoproteinsCheckBox.IsChecked = checkup.TestTypeName?.Contains("Low Density Lipoproteins") ?? false;
-            this.HepatitisACheckBox.IsChecked = checkup.TestTypeName?.Contains("Hepatitis A") ?? false;
-            this.HepatitisBCheckBox.IsChecked = checkup.TestTypeName?.Contains("Hepatitis B") ?? false;
-            this.WhiteBloodCellCheckBox.IsChecked = checkup.TestTypeName?.Contains("White Blood Cell") ?? false;
+            this.LowDensityLipoproteinsCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Low Density Lipoproteins")) > 0;
+            this.HepatitisACheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Hepatitis A")) > 0;
+            this.HepatitisBCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Hepatitis B")) > 0;
+            this.WhiteBloodCellCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("White Blood Cell")) > 0;
 
             this.LowDensityLipoproteinsCheckBox.IsEnabled = !hasFinalDiagnosis;
             this.HepatitisACheckBox.IsEnabled = !hasFinalDiagnosis;
@@ -147,7 +148,6 @@ namespace HealthcareSystem
         {
             var testTypes = _testTypeDAL.GetAllTestTypes();
 
-            // Example for dynamic checkbox creation (if needed in the future)
             this.LowDensityLipoproteinsCheckBox.Content = testTypes.FirstOrDefault(t => t.Contains("Low Density Lipoproteins")) ?? "Low Density Lipoproteins";
             this.HepatitisACheckBox.Content = testTypes.FirstOrDefault(t => t.Contains("Hepatitis A")) ?? "Hepatitis A";
             this.HepatitisBCheckBox.Content = testTypes.FirstOrDefault(t => t.Contains("Hepatitis B")) ?? "Hepatitis B";
