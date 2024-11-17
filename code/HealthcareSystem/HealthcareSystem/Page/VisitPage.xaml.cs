@@ -12,10 +12,6 @@ namespace HealthcareSystem
 {
     public sealed partial class VisitPage : Page
     {
-        private readonly TestTypeDAL _testTypeDAL = new TestTypeDAL();
-
-        private List<Appointment> Appointments { get; set; }
-
         public VisitPage()
         {
             this.InitializeComponent();
@@ -25,21 +21,7 @@ namespace HealthcareSystem
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter is List<Appointment> app)
-            {
-                this.Appointments = app;
-                this.AppointmentComboBox.ItemsSource = app;
-            }
-            else if (e.Parameter is Appointment appSingle)
-            {
-                this.Appointments = new List<Appointment> { appSingle };
-                this.AppointmentComboBox.ItemsSource = new List<Appointment> { appSingle };
-            }
-        }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (this.AppointmentComboBox.SelectedItem is Appointment app)
+            if (e.Parameter is Appointment app)
             {
                 var dal = new VisitDAL();
                 var checkups = dal.GetRoutineCheckups();
@@ -47,6 +29,10 @@ namespace HealthcareSystem
                 {
                     if (checkup.AppointmentId == app.AppointmentId)
                     {
+                        this.AppointmentComboBox.ItemsSource = new List<Appointment> { app };
+                        this.AppointmentComboBox.SelectedItem = AppointmentComboBox.Items[0];
+
+                        checkup.LabTests = dal.GetLabTestsForVisit(checkup.VisitId);
                         this.ClearErrorMessages();
                         this.PopulateCheckupFields(checkup);
                     }
@@ -91,7 +77,6 @@ namespace HealthcareSystem
                 this.DiastolicTextBox.Text = string.Empty;
                 this.DiastolicTextBox.IsReadOnly = false;
                 this.DiastolicTextBox.IsHitTestVisible = !hasFinalDiagnosis;
-
             }
 
             this.BodyTempTextBox.Text = checkup.BodyTemp?.ToString() ?? string.Empty;
@@ -114,15 +99,23 @@ namespace HealthcareSystem
             this.SymptomsTextBox.IsReadOnly = hasFinalDiagnosis;
             this.SymptomsTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis ?? string.Empty;
+            this.InitialDiagnosisTextBox.Text = checkup.InitialDiagnosis ?? null;
             this.InitialDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.InitialDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis ?? string.Empty;
+            this.FinalDiagnosisTextBox.Text = checkup.FinalDiagnosis ?? null;
             this.FinalDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.FinalDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            this.WhiteBloodCellCheckBox.IsChecked = checkup.TestCode == "WBC";
+            this.LowDensityLipoproteinsCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Low Density Lipoproteins")) > 0;
+            this.HepatitisACheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Hepatitis A")) > 0;
+            this.HepatitisBCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Hepatitis B")) > 0;
+            this.WhiteBloodCellCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("White Blood Cell")) > 0;
+
+            this.LowDensityLipoproteinsCheckBox.IsEnabled = !hasFinalDiagnosis;
+            this.HepatitisACheckBox.IsEnabled = !hasFinalDiagnosis;
+            this.HepatitisBCheckBox.IsEnabled = !hasFinalDiagnosis;
+            this.WhiteBloodCellCheckBox.IsEnabled = !hasFinalDiagnosis;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
