@@ -7,7 +7,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using HealthcareSystem.Model;
 using System.Linq;
-using Windows.UI.Xaml.Documents;
 
 namespace HealthcareSystem
 {
@@ -131,10 +130,10 @@ namespace HealthcareSystem
             this.FinalDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.FinalDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            this.LowDensityLipoproteinsCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Low Density Lipoproteins")) > 0;
-            this.HepatitisACheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Hepatitis A")) > 0;
-            this.HepatitisBCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Hepatitis B")) > 0;
-            this.WhiteBloodCellCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("White Blood Cell")) > 0;
+            this.LowDensityLipoproteinsCheckBox.IsChecked = checkup.LabTests?.Count(l => l.TestTypeName.Contains("Low Density Lipoproteins")) > 0;
+            this.HepatitisACheckBox.IsChecked = checkup.LabTests?.Count(l => l.TestTypeName.Contains("Hepatitis A")) > 0;
+            this.HepatitisBCheckBox.IsChecked = checkup.LabTests?.Count(l => l.TestTypeName.Contains("Hepatitis B")) > 0;
+            this.WhiteBloodCellCheckBox.IsChecked = checkup.LabTests?.Count(l => l.TestTypeName.Contains("White Blood Cell")) > 0;
 
             this.LowDensityLipoproteinsCheckBox.IsEnabled = !hasFinalDiagnosis;
             this.HepatitisACheckBox.IsEnabled = !hasFinalDiagnosis;
