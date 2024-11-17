@@ -116,24 +116,24 @@ namespace DBAccess.DAL
             connection.Open();
 
             var query = @"
-        SELECT 
-            v.visit_id, 
-            v.appt_id, 
-            v.blood_pressure_reading, 
-            v.body_temp, 
-            v.weight, 
-            v.height, 
-            v.pulse, 
-            v.symptoms, 
-            v.initial_diagnosis, 
-            v.final_diagnosis, 
-            v.lab_test_id, 
-            lt.test_code, 
-            lt.test_type_name
-        FROM 
-            visit v
-        LEFT JOIN 
-            lab_test lt ON v.lab_test_id = lt.lab_test_id;";
+                SELECT 
+                    v.visit_id, 
+                    v.appt_id, 
+                    v.blood_pressure_reading, 
+                    v.body_temp, 
+                    v.weight, 
+                    v.height, 
+                    v.pulse, 
+                    v.symptoms, 
+                    v.initial_diagnosis, 
+                    v.final_diagnosis,
+                    lt.test_code, 
+                    lt.test_type_name
+                FROM 
+                    visit v
+                LEFT JOIN 
+                    lab_test lt ON v.visit_id = lt.visit_id;";
+
 
             using var command = new MySqlCommand(query, connection);
             using var reader = command.ExecuteReader();
@@ -148,7 +148,6 @@ namespace DBAccess.DAL
             var symptomsOrdinal = reader.GetOrdinal("symptoms");
             var initialDiagnosisOrdinal = reader.GetOrdinal("initial_diagnosis");
             var finalDiagnosisOrdinal = reader.GetOrdinal("final_diagnosis");
-            var labTestIdOrdinal = reader.GetOrdinal("lab_test_id");
             var testCodeOrdinal = reader.GetOrdinal("test_code");
             var testTypeNameOrdinal = reader.GetOrdinal("test_type_name");
 
@@ -165,8 +164,7 @@ namespace DBAccess.DAL
                     pulseOrdinal,
                     symptomsOrdinal,
                     initialDiagnosisOrdinal,
-                    finalDiagnosisOrdinal,
-                    labTestIdOrdinal
+                    finalDiagnosisOrdinal
                 ));
             }
 
@@ -205,8 +203,7 @@ namespace DBAccess.DAL
                 pulse = @pulse,
                 symptoms = @symptoms,
                 initial_diagnosis = @initial_diagnosis,
-                final_diagnosis = @final_diagnosis,
-                lab_test_id = @lab_test_id
+                final_diagnosis = @final_diagnosis
             WHERE visit_id = @visit_id;";
 
                 using (var updateVisitCommand = new MySqlCommand(updateVisitQuery, connection, transaction))
@@ -219,7 +216,6 @@ namespace DBAccess.DAL
                     updateVisitCommand.Parameters.AddWithValue("@symptoms", symptoms);
                     updateVisitCommand.Parameters.AddWithValue("@initial_diagnosis", initialDiagnosis);
                     updateVisitCommand.Parameters.AddWithValue("@final_diagnosis", finalDiagnosis);
-                    updateVisitCommand.Parameters.AddWithValue("@lab_test_id", (object)labTestId ?? DBNull.Value);
                     updateVisitCommand.Parameters.AddWithValue("@visit_id", visitId);
                     updateVisitCommand.ExecuteNonQuery();
                 }
@@ -269,8 +265,7 @@ namespace DBAccess.DAL
             int pulseOrdinal,
             int symptomsOrdinal,
             int initialDiagnosisOrdinal,
-            int finalDiagnosisOrdinal,
-            int labTestIdOrdinal
+            int finalDiagnosisOrdinal
             )
         {
             return new RoutineCheckup
@@ -285,7 +280,6 @@ namespace DBAccess.DAL
                 Symptoms = reader.IsDBNull(symptomsOrdinal) ? null : reader.GetString(symptomsOrdinal),
                 InitialDiagnosis = reader.IsDBNull(initialDiagnosisOrdinal) ? null : reader.GetString(initialDiagnosisOrdinal),
                 FinalDiagnosis = reader.IsDBNull(finalDiagnosisOrdinal) ? null : reader.GetString(finalDiagnosisOrdinal),
-                LabTestId = reader.IsDBNull(labTestIdOrdinal) ? (int?)null : reader.GetInt32(labTestIdOrdinal),
             };
         }
 
