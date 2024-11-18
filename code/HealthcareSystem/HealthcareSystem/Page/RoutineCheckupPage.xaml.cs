@@ -275,25 +275,25 @@ namespace HealthcareSystem
 
                 if (LowDensityLipoproteinsCheckBox.IsChecked == true)
                 {
-                    string ldlResult = LDLResultTextBox.Text;
+                    string ldlResult = ParseResult(LDLResultTextBox.Text);
                     testResults.Add("Low Density Lipoproteins", ldlResult);
                 }
 
                 if (HepatitisACheckBox.IsChecked == true)
                 {
-                    string haResult = HAResultTextBox.Text;
+                    string haResult = ParseResult(HAResultTextBox.Text);
                     testResults.Add("Hepatitis A", haResult);
                 }
 
                 if (HepatitisBCheckBox.IsChecked == true)
                 {
-                    string hbResult = HBResultTextBox.Text;
+                    string hbResult = ParseResult(HBResultTextBox.Text);
                     testResults.Add("Hepatitis B", hbResult);
                 }
 
                 if (WhiteBloodCellCheckBox.IsChecked == true)
                 {
-                    string wbcResult = WBCResultTextBox.Text;
+                    string wbcResult = ParseResult(WBCResultTextBox.Text);
                     testResults.Add("White Blood Cell", wbcResult);
                 }
 
@@ -319,6 +319,16 @@ namespace HealthcareSystem
                 ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
                 ErrorTextBlock.Visibility = Visibility.Visible;
             }
+        }
+
+        private string ParseResult(string input)
+        {
+            int colonIndex = input.IndexOf(':');
+            if (colonIndex != -1)
+            {
+                return input.Substring(0, colonIndex).Trim();
+            }
+            return input.Trim();
         }
 
         private bool ValidateCheckupFields()
