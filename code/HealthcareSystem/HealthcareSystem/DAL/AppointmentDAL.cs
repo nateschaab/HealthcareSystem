@@ -105,28 +105,6 @@ namespace DBAccess.DAL
             return random.Next(100000, 999999);
         }
 
-        public List<string> GetAllAppointments()
-        {
-            var appointments = new List<string>();
-
-            using var connection = new MySqlConnection(Connection.ConnectionString());
-            connection.Open();
-
-            string query = "SELECT appt_id, datetime FROM appointment;";
-            using var command = new MySqlCommand(query, connection);
-            using var reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                int appointmentId = reader.GetInt32(0);
-                string dateTime = reader.GetDateTime(1).ToString("g");
-                string appointmentInfo = $"{appointmentId}: {dateTime}";
-                appointments.Add(appointmentInfo);
-            }
-
-            return appointments;
-        }
-
         public List<Appointment> GetPatientAppointments(Patient patient)
         {
             var appointmentList = new List<Appointment>();
@@ -141,13 +119,20 @@ namespace DBAccess.DAL
                     a.patient_id,
                     a.datetime,
                     a.appt_reason,
-                    a.visit_id
+                    a.visit_id,
+                    CONCAT(dper.fname, ' ', dper.lname) AS doctor_name,
+                    CONCAT(per.fname, ' ', per.lname) AS patient_name,
+                    per.dob AS patient_dob
                 FROM 
                     appointment a
                 JOIN 
                     patient p ON a.patient_id = p.patient_id
                 JOIN 
                     person per ON p.pid = per.pid
+                JOIN 
+                    doctor d ON a.doctor_id = d.doctor_id
+                JOIN 
+                    person dper ON d.pid = dper.pid
                 WHERE 1=1";
 
             if (!string.IsNullOrEmpty(patient.FirstName))
@@ -196,6 +181,9 @@ namespace DBAccess.DAL
             var datetimeOrdinal = reader.GetOrdinal("datetime");
             var apptReasonOrdinal = reader.GetOrdinal("appt_reason");
             var visitIdOrdinal = reader.GetOrdinal("visit_id");
+            var doctorNameOrdinal = reader.GetOrdinal("doctor_name");
+            var patientNameOrdinal = reader.GetOrdinal("patient_name");
+            var patientDobOrdinal = reader.GetOrdinal("patient_dob");
 
             while (reader.Read())
             {
@@ -209,11 +197,16 @@ namespace DBAccess.DAL
                     reader.IsDBNull(apptReasonOrdinal) ? null : reader.GetString(apptReasonOrdinal)
                 );
 
+                appointment.DoctorName = reader.GetString(doctorNameOrdinal);
+                appointment.PatientName = reader.GetString(patientNameOrdinal);
+                appointment.PatientDOB = reader.GetDateTime(patientDobOrdinal);
+
                 appointmentList.Add(appointment);
             }
 
             return appointmentList;
         }
+
 
         public bool EditAppointment(int appointmentId, int doctorId, int patientId, DateTime newAppointmentDateTime, string newReason, bool isDateTimeChanged)
         {
