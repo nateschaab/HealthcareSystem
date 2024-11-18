@@ -109,22 +109,22 @@ namespace HealthcareSystem
 
             foreach (var test in checkup.LabTests)
             {
-                if (test.TestTypeName.Contains("Low Density Lipoproteins"))
+                if (test.Result != null && test.TestTypeName.Contains("Low Density Lipoproteins"))
                 {
                     this.LowDensityLipoproteinsCheckBox.IsChecked = true;
                     this.LowDensityLipoproteinsCheckBox.IsEnabled = false;
                 }
-                if (test.TestTypeName.Contains("Hepatitis A"))
+                if (test.Result != null && test.TestTypeName.Contains("Hepatitis A"))
                 {
                     this.HepatitisACheckBox.IsChecked = true;
                     this.HepatitisACheckBox.IsEnabled = false;
                 }
-                if (test.TestTypeName.Contains("Hepatitis B"))
+                if (test.Result != null && test.TestTypeName.Contains("Hepatitis B"))
                 {
                     this.HepatitisBCheckBox.IsChecked = true;
                     this.HepatitisBCheckBox.IsEnabled = false;
                 }
-                if (test.TestTypeName.Contains("White Blood Cell"))
+                if (test.Result != null && test.TestTypeName.Contains("White Blood Cell"))
                 {
                     this.WhiteBloodCellCheckBox.IsChecked = true;
                     this.WhiteBloodCellCheckBox.IsEnabled = false;

@@ -12,10 +12,13 @@ namespace HealthcareSystem.Model
         public int AppointmentId { get; set; }
         public int VisitId { get; set; }
         public int DoctorId { get; set; }
+        public string DoctorName { get; set; }
         public int PatientId { get; set; }
+        public string PatientName { get; set; }
+        public DateTime PatientDOB { get; set; }
         public DateTime Date { get; set; }
         public string Reason { get; set; }
-        public string DisplayName => $"{this.AppointmentId} : {Date}, {Reason}";
+        public string DisplayName => $"{Date}, {DoctorName}, {PatientName}, {PatientDOB.ToShortDateString()}";
 
         public Appointment(int appId, int visitId, int doctorId, int patientId, DateTime date, string reason)
         {
@@ -25,11 +28,6 @@ namespace HealthcareSystem.Model
             PatientId = patientId;
             Date = date;
             Reason = reason;
-        }
-
-        public override string ToString()
-        {
-            return $"{AppointmentId} - {Date}"; // Example fields
         }
     }
 }
