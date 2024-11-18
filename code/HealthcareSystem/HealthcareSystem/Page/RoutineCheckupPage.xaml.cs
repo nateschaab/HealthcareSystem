@@ -7,6 +7,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using HealthcareSystem.Model;
 using System.Linq;
+using Windows.UI.Xaml.Documents;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace HealthcareSystem
 {
@@ -56,10 +58,19 @@ namespace HealthcareSystem
                     {
                         checkup.LabTests = dal.GetLabTestsForVisit(checkup.VisitId);
                         this.ClearErrorMessages();
+                        this.ClearCheckboxes();
                         this.PopulateCheckupFields(checkup);
                     }
                 }
             }
+        }
+
+        private void ClearCheckboxes()
+        {
+            this.LowDensityLipoproteinsCheckBox.IsChecked = false;
+            this.HepatitisACheckBox.IsChecked = false;
+            this.HepatitisBCheckBox.IsChecked = false;
+            this.WhiteBloodCellCheckBox.IsChecked = false;
         }
 
         private void ClearErrorMessages()
@@ -115,19 +126,19 @@ namespace HealthcareSystem
             {
                 foreach (var labTest in checkup.LabTests)
                 {
-                    if (labTest.TestTypeName.Contains("Low Density Lipoproteins"))
+                    if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Low Density Lipoproteins"))
                     {
                         LDLResultTextBox.Text = labTest.Result;
                     }
-                    else if (labTest.TestTypeName.Contains("Hepatitis A"))
+                    else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Hepatitis A"))
                     {
                         HAResultTextBox.Text = labTest.Result;
                     }
-                    else if (labTest.TestTypeName.Contains("Hepatitis B"))
+                    else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Hepatitis B"))
                     {
                         HBResultTextBox.Text = labTest.Result;
                     }
-                    else if (labTest.TestTypeName.Contains("White Blood Cell"))
+                    else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("White Blood Cell"))
                     {
                         WBCResultTextBox.Text = labTest.Result;
                     }
@@ -174,10 +185,25 @@ namespace HealthcareSystem
             this.FinalDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.FinalDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            this.LowDensityLipoproteinsCheckBox.IsChecked = checkup.LabTests?.Count(l => l.TestTypeName.Contains("Low Density Lipoproteins")) > 0;
-            this.HepatitisACheckBox.IsChecked = checkup.LabTests?.Count(l => l.TestTypeName.Contains("Hepatitis A")) > 0;
-            this.HepatitisBCheckBox.IsChecked = checkup.LabTests?.Count(l => l.TestTypeName.Contains("Hepatitis B")) > 0;
-            this.WhiteBloodCellCheckBox.IsChecked = checkup.LabTests?.Count(l => l.TestTypeName.Contains("White Blood Cell")) > 0;
+            foreach(var test in checkup.LabTests)
+            {
+                if (test.TestTypeName != null &&  test.TestTypeName.Contains("Low Density Lipoproteins"))
+                {
+                    this.LowDensityLipoproteinsCheckBox.IsChecked = true;
+                }
+                if (test.TestTypeName != null && test.TestTypeName.Contains("Hepatitis A"))
+                {
+                    this.HepatitisACheckBox.IsChecked = true;
+                }
+                if (test.TestTypeName != null && test.TestTypeName.Contains("Hepatitis B"))
+                {
+                    this.HepatitisBCheckBox.IsChecked = true;
+                }
+                if (test.TestTypeName != null && test.TestTypeName.Contains("White Blood Cell"))
+                {
+                    this.WhiteBloodCellCheckBox.IsChecked = true;
+                }
+            }
 
             this.LowDensityLipoproteinsCheckBox.IsEnabled = !hasFinalDiagnosis;
             this.HepatitisACheckBox.IsEnabled = !hasFinalDiagnosis;

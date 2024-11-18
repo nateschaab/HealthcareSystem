@@ -107,11 +107,29 @@ namespace HealthcareSystem
             this.FinalDiagnosisTextBox.IsReadOnly = hasFinalDiagnosis;
             this.FinalDiagnosisTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            this.LowDensityLipoproteinsCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Low Density Lipoproteins")) > 0;
-            this.HepatitisACheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Hepatitis A")) > 0;
-            this.HepatitisBCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("Hepatitis B")) > 0;
-            this.WhiteBloodCellCheckBox.IsChecked = checkup.LabTests.Count(l => l.TestTypeName.Contains("White Blood Cell")) > 0;
-
+            foreach (var test in checkup.LabTests)
+            {
+                if (test.TestTypeName.Contains("Low Density Lipoproteins"))
+                {
+                    this.LowDensityLipoproteinsCheckBox.IsChecked = true;
+                    this.LowDensityLipoproteinsCheckBox.IsEnabled = false;
+                }
+                if (test.TestTypeName.Contains("Hepatitis A"))
+                {
+                    this.HepatitisACheckBox.IsChecked = true;
+                    this.HepatitisACheckBox.IsEnabled = false;
+                }
+                if (test.TestTypeName.Contains("Hepatitis B"))
+                {
+                    this.HepatitisBCheckBox.IsChecked = true;
+                    this.HepatitisBCheckBox.IsEnabled = false;
+                }
+                if (test.TestTypeName.Contains("White Blood Cell"))
+                {
+                    this.WhiteBloodCellCheckBox.IsChecked = true;
+                    this.WhiteBloodCellCheckBox.IsEnabled = false;
+                }
+            }
             this.LowDensityLipoproteinsCheckBox.IsEnabled = !hasFinalDiagnosis;
             this.HepatitisACheckBox.IsEnabled = !hasFinalDiagnosis;
             this.HepatitisBCheckBox.IsEnabled = !hasFinalDiagnosis;

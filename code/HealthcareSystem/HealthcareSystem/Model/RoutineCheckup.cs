@@ -18,9 +18,6 @@ namespace HealthcareSystem.Model
         public string Symptoms { get; set; }
         public string InitialDiagnosis { get; set; }
         public string FinalDiagnosis { get; set; }
-        public int? LabTestId { get; set; }
-        public string TestCode { get; set; }
-        public string TestTypeName { get; set; }
         public IList<LabTest> LabTests { get; set; }
 
         public int Systolic
