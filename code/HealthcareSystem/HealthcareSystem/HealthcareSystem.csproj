@@ -149,9 +149,6 @@
     <Compile Include="DAL\SQLInjectionDemo.cs" />
     <Compile Include="DAL\TestTypeDAL.cs" />
     <Compile Include="DAL\VisitDAL.cs" />
-    <Compile Include="Page\VisitPage.xaml.cs">
-      <DependentUpon>VisitPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Page\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
@@ -202,10 +199,6 @@
     <Page Include="Page\AppointmentPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Page\VisitPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Page\LoginPage.xaml">
       <SubType>Designer</SubType>

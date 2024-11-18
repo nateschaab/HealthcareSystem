@@ -126,19 +126,19 @@ namespace HealthcareSystem
                 {
                     if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Low Density Lipoproteins"))
                     {
-                        LDLResultTextBox.Text = labTest.Result;
+                        LDLResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
                     }
                     else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Hepatitis A"))
                     {
-                        HAResultTextBox.Text = labTest.Result;
+                        HAResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
                     }
                     else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Hepatitis B"))
                     {
-                        HBResultTextBox.Text = labTest.Result;
+                        HBResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
                     }
                     else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("White Blood Cell"))
                     {
-                        WBCResultTextBox.Text = labTest.Result;
+                        WBCResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
                     }
                 }
             }
