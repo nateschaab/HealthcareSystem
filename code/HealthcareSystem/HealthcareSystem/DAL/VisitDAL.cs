@@ -2,6 +2,7 @@ using HealthcareSystem.Model;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace DBAccess.DAL
 {
@@ -290,22 +291,12 @@ namespace DBAccess.DAL
 
             connection.Open();
 
-            var query = @"
-                SELECT 
-                    lt.lab_test_id,
-                    lt.visit_id,
-                    lt.time_performed,
-                    lt.test_type_name,
-                    lt.test_code,
-                    lt.result,
-                    lt.abnormality
-                FROM 
-                    lab_test lt
-                WHERE 
-                    lt.visit_id = @visit_id;";
+            using var command = new MySqlCommand("GetLabTestsForVisit", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
 
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.AddWithValue("@visit_id", visitId);
+            command.Parameters.AddWithValue("p_visit_id", visitId);
 
             using var reader = command.ExecuteReader();
 
@@ -333,6 +324,7 @@ namespace DBAccess.DAL
 
             return labTestList;
         }
+
 
         private static LabTest CreateLabTest(
             MySqlDataReader reader,
