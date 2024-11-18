@@ -90,7 +90,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Content="View Visit" Click="ViewVisit_Click" Width="85" Margin="360,0,0,0" />
         </Grid>
     </Grid>
 </Page>

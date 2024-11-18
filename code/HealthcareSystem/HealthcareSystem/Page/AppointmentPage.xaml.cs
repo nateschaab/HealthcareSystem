@@ -206,11 +206,6 @@ namespace HealthcareSystem
             Frame.Navigate(typeof(MainPage));
         }
 
-        private void ViewVisit_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(VisitPage), App);
-        }
-
         #endregion
 
     }
