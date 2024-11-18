@@ -116,27 +116,11 @@ namespace DBAccess.DAL
 
             connection.Open();
 
-            var query = @"
-                SELECT 
-                    v.visit_id, 
-                    v.appt_id, 
-                    v.blood_pressure_reading, 
-                    v.body_temp, 
-                    v.weight, 
-                    v.height, 
-                    v.pulse, 
-                    v.symptoms, 
-                    v.initial_diagnosis, 
-                    v.final_diagnosis,
-                    lt.test_code, 
-                    lt.test_type_name
-                FROM 
-                    visit v
-                LEFT JOIN 
-                    lab_test lt ON v.visit_id = lt.visit_id;";
+            using var command = new MySqlCommand("GetRoutineCheckups", connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
 
-
-            using var command = new MySqlCommand(query, connection);
             using var reader = command.ExecuteReader();
 
             var visitIdOrdinal = reader.GetOrdinal("visit_id");
@@ -171,6 +155,7 @@ namespace DBAccess.DAL
 
             return routineCheckupList;
         }
+
 
         public bool CompleteRoutineCheckupWithTests(int appointmentId, string bloodPressureReading, decimal bodyTemp,
     decimal weight, decimal height, int pulse, string symptoms, string initialDiagnosis,
