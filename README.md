@@ -12,6 +12,10 @@ Username: testusername
 Password: testpwd
 
 
+----------------------------------------------------------------------
+// Trinidad's Stored Procedure:
+
+
 use cs3230f24e;
 
 DELIMITER $$
@@ -33,3 +37,32 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+
+----------------------------------------------------------------------
+// Nate's Stored Procedure:
+
+
+CREATE DEFINER=`cs3230f24e`@`%` PROCEDURE `GetRoutineCheckups`()
+BEGIN
+    SELECT 
+        v.visit_id, 
+        v.appt_id, 
+        v.blood_pressure_reading, 
+        v.body_temp, 
+        v.weight, 
+        v.height, 
+        v.pulse, 
+        v.symptoms, 
+        v.initial_diagnosis, 
+        v.final_diagnosis,
+        lt.test_code, 
+        lt.test_type_name
+    FROM 
+        visit v
+    LEFT JOIN 
+        lab_test lt ON v.visit_id = lt.visit_id;
+END
+
+
+----------------------------------------------------------------------
