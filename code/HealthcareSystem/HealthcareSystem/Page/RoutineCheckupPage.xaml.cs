@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Navigation;
 using HealthcareSystem.Model;
 using System.Linq;
 using Windows.UI.Xaml.Documents;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace HealthcareSystem
 {
@@ -125,19 +126,19 @@ namespace HealthcareSystem
             {
                 foreach (var labTest in checkup.LabTests)
                 {
-                    if (labTest.TestTypeName.Contains("Low Density Lipoproteins"))
+                    if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Low Density Lipoproteins"))
                     {
                         LDLResultTextBox.Text = labTest.Result;
                     }
-                    else if (labTest.TestTypeName.Contains("Hepatitis A"))
+                    else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Hepatitis A"))
                     {
                         HAResultTextBox.Text = labTest.Result;
                     }
-                    else if (labTest.TestTypeName.Contains("Hepatitis B"))
+                    else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Hepatitis B"))
                     {
                         HBResultTextBox.Text = labTest.Result;
                     }
-                    else if (labTest.TestTypeName.Contains("White Blood Cell"))
+                    else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("White Blood Cell"))
                     {
                         WBCResultTextBox.Text = labTest.Result;
                     }
