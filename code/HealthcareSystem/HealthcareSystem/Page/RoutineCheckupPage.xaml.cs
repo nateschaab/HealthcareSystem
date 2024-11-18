@@ -7,8 +7,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using HealthcareSystem.Model;
 using System.Linq;
-using Windows.UI.Xaml.Documents;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace HealthcareSystem
 {
