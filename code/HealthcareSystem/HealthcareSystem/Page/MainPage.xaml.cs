@@ -24,7 +24,7 @@ namespace HealthcareSystem
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            LoadUserInfo();
+            this.LoadUserInfo();
         }
 
         private void LoadUserInfo()
@@ -33,7 +33,7 @@ namespace HealthcareSystem
             string lastName = SessionManager.Instance.LastName;
             string username = SessionManager.Instance.Username;
 
-            UserInfo.Text = $"Logged in as: {firstName} {lastName} (Username: {username})";
+            this.UserInfo.Text = $"Logged in as: {firstName} {lastName} (Username: {username})";
             Debug.WriteLine($"User Info Loaded: {firstName} {lastName} (Username: {username})");
         }
 

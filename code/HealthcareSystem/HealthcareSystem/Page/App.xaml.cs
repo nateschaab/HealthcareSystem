@@ -29,7 +29,7 @@ namespace HealthcareSystem
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            Suspending += this.OnSuspending;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace HealthcareSystem
             {
                 rootFrame = new Frame();
 
-                rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.NavigationFailed += this.OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

@@ -6,6 +6,6 @@ namespace DBAccess.Model
         public string LastName { get; set; }
         public string Username { get; set; }
 
-        public string FullName => $"{FirstName} {LastName}";
+        public string FullName => $"{this.FirstName} {this.LastName}";
     }
 }

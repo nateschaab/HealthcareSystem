@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using DBAccess.DAL;
@@ -39,7 +40,12 @@ namespace HealthcareSystem
                 var dal = new AppointmentDAL();
                 var app = dal.GetPatientAppointments(this.patient);
 
-                Frame.Navigate(typeof(AppointmentPage), app);
+                var parameter = new Dictionary<string, object>
+                {
+                    { "Appointments", app },
+                    { "Patient", this.patient }
+                };
+                Frame.Navigate(typeof(AppointmentPage), parameter);
             }
             else
             {

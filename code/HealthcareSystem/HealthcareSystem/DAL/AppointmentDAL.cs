@@ -10,7 +10,7 @@ namespace DBAccess.DAL
     {
         public bool CreateAppointment(int doctorId, int patientId, DateTime appointmentDateTime, string reason)
         {
-            if (IsDoubleBooking(doctorId, patientId, appointmentDateTime))
+            if (this.IsDoubleBooking(doctorId, patientId, appointmentDateTime))
             {
                 Console.WriteLine("Double booking detected. Appointment creation aborted.");
                 return false;
@@ -21,8 +21,8 @@ namespace DBAccess.DAL
                 using var connection = new MySqlConnection(Connection.ConnectionString());
                 connection.Open();
 
-                int appointmentId = GenerateAppointmentId();
-                int visitId = GenerateVisitId();
+                int appointmentId = this.GenerateAppointmentId();
+                int visitId = this.GenerateVisitId();
 
                 using var transaction = connection.BeginTransaction();
 
@@ -216,7 +216,7 @@ namespace DBAccess.DAL
                 return false;
             }
 
-            if (isDateTimeChanged && IsDoubleBooking(doctorId, patientId, newAppointmentDateTime))
+            if (isDateTimeChanged && this.IsDoubleBooking(doctorId, patientId, newAppointmentDateTime))
             {
                 Console.WriteLine("Double booking detected. Appointment update aborted.");
                 return false;

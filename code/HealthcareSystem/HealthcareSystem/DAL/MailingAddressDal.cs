@@ -38,7 +38,7 @@ namespace DBAccess.DAL
 
             while (reader.Read())
             {
-                employeeList.Add(CreateMailingAddress(reader, streetAddressOrdinal, cityOrdinal, stateOrdinal, countryOrdinal, zipOrdinal));
+                employeeList.Add(this.CreateMailingAddress(reader, streetAddressOrdinal, cityOrdinal, stateOrdinal, countryOrdinal, zipOrdinal));
             }
 
             return employeeList;
@@ -72,7 +72,7 @@ namespace DBAccess.DAL
 
             while (reader.Read())
             {
-                employeeList.Add(CreateMailingAddress(reader, streetAddressOrdinal, cityOrdinal, stateOrdinal, countryOrdinal, zipOrdinal));
+                employeeList.Add(this.CreateMailingAddress(reader, streetAddressOrdinal, cityOrdinal, stateOrdinal, countryOrdinal, zipOrdinal));
 
             }
 

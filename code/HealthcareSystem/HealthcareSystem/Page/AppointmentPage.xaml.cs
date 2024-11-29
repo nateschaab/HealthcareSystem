@@ -54,13 +54,18 @@ namespace HealthcareSystem
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter is List<Appointment> app)
+            if (e.Parameter is Dictionary<string, object> parameters)
             {
-                this.Appointments = app;
-                this.PatientListView.ItemsSource = app;
+                var apps = parameters["Appointments"] as Appointment;
+                var patient = parameters["Patient"] as Patient;
 
+                this.PatientListView.ItemsSource = apps;
+                this.PopulatePatientField(patient);
+
+                this.PatientComboBox.IsHitTestVisible = false;
             }
         }
+
 
         private void PatientListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -95,6 +100,15 @@ namespace HealthcareSystem
             this.AppointmentTimePicker.Time = app.Date.TimeOfDay;
 
             this.ReasonTextBox.Text = app.Reason;
+        }
+
+        private void PopulatePatientField(Patient patient)
+        {
+            var patientName = patient.FirstName;
+
+            this.PatientComboBox.SelectedItem = this.PatientComboBox.Items?
+                .OfType<Patient>()
+                .FirstOrDefault(patient => patient.FirstName == patientName);
         }
 
         private void CreateAppointment_Click(object sender, RoutedEventArgs e)

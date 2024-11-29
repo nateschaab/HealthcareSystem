@@ -228,7 +228,7 @@ namespace DBAccess.DAL
                             fetchLabTestIdCommand.Parameters.AddWithValue("@test_type_name", testType);
 
                             object result = fetchLabTestIdCommand.ExecuteScalar();
-                            labTestId = result != null ? Convert.ToInt32(result) : GenerateRandomLabTestId();
+                            labTestId = result != null ? Convert.ToInt32(result) : this.GenerateRandomLabTestId();
                         }
 
                         labTestCommand.Parameters.AddWithValue("@lab_test_id", labTestId);

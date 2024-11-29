@@ -20,7 +20,7 @@ namespace HealthcareSystem
         public RoutineCheckupPage()
         {
             this.InitializeComponent();
-            LoadTestTypes();
+            this.LoadTestTypes();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -39,9 +39,9 @@ namespace HealthcareSystem
             }
             else
             {
-                ErrorTextBlock.Text = "No appointments found.";
-                ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
-                ErrorTextBlock.Visibility = Visibility.Visible;
+                this.ErrorTextBlock.Text = "No appointments found.";
+                this.ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                this.ErrorTextBlock.Visibility = Visibility.Visible;
             }
         }
 
@@ -115,10 +115,10 @@ namespace HealthcareSystem
                 this.DiastolicTextBox.IsHitTestVisible = !hasFinalDiagnosis;
             }
 
-            LDLResultTextBox.Text = string.Empty;
-            WBCResultTextBox.Text = string.Empty;
-            HBResultTextBox.Text = string.Empty;
-            HAResultTextBox.Text = string.Empty;
+            this.LDLResultTextBox.Text = string.Empty;
+            this.WBCResultTextBox.Text = string.Empty;
+            this.HBResultTextBox.Text = string.Empty;
+            this.HAResultTextBox.Text = string.Empty;
 
             if (checkup.LabTests != null)
             {
@@ -126,34 +126,34 @@ namespace HealthcareSystem
                 {
                     if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Low Density Lipoproteins"))
                     {
-                        LDLResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
+                        this.LDLResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
                     }
                     else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Hepatitis A"))
                     {
-                        HAResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
+                        this.HAResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
                     }
                     else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("Hepatitis B"))
                     {
-                        HBResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
+                        this.HBResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
                     }
                     else if (labTest.Result != null && labTest.TestTypeName != null && labTest.TestTypeName.Contains("White Blood Cell"))
                     {
-                        WBCResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
+                        this.WBCResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
                     }
                 }
             }
 
-            LDLResultTextBox.IsReadOnly = hasFinalDiagnosis;
-            LDLResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
+            this.LDLResultTextBox.IsReadOnly = hasFinalDiagnosis;
+            this.LDLResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            WBCResultTextBox.IsReadOnly = hasFinalDiagnosis;
-            WBCResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
+            this.WBCResultTextBox.IsReadOnly = hasFinalDiagnosis;
+            this.WBCResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            HBResultTextBox.IsReadOnly = hasFinalDiagnosis;
-            HBResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
+            this.HBResultTextBox.IsReadOnly = hasFinalDiagnosis;
+            this.HBResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
-            HAResultTextBox.IsReadOnly = hasFinalDiagnosis;
-            HAResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
+            this.HAResultTextBox.IsReadOnly = hasFinalDiagnosis;
+            this.HAResultTextBox.IsHitTestVisible = !hasFinalDiagnosis;
 
             this.BodyTempTextBox.Text = checkup.BodyTemp?.ToString() ?? string.Empty;
             this.BodyTempTextBox.IsReadOnly = hasFinalDiagnosis;
@@ -213,7 +213,7 @@ namespace HealthcareSystem
 
         private void LoadTestTypes()
         {
-            var testTypes = _testTypeDAL.GetAllTestTypes();
+            var testTypes = this._testTypeDAL.GetAllTestTypes();
 
             this.LowDensityLipoproteinsCheckBox.Content = testTypes.FirstOrDefault(t => t.Contains("Low Density Lipoproteins")) ?? "Low Density Lipoproteins";
             this.HepatitisACheckBox.Content = testTypes.FirstOrDefault(t => t.Contains("Hepatitis A")) ?? "Hepatitis A";
@@ -234,8 +234,8 @@ namespace HealthcareSystem
 
             if (hasFinalDiagnosis)
             {
-                ConfirmationDialog.Visibility = Visibility.Visible;
-                var result = await ConfirmationDialog.ShowAsync();
+                this.ConfirmationDialog.Visibility = Visibility.Visible;
+                var result = await this.ConfirmationDialog.ShowAsync();
 
                 if (result != ContentDialogResult.Primary)
                 {
@@ -245,79 +245,80 @@ namespace HealthcareSystem
 
             try
             {
-                if (!ValidateCheckupFields())
+                if (!this.ValidateCheckupFields())
                 {
                     return;
                 }
 
-                int appointmentId = (AppointmentComboBox.SelectedItem as Appointment).AppointmentId;
+                int appointmentId = (this.AppointmentComboBox.SelectedItem as Appointment).AppointmentId;
 
-                string bloodPressureReading = $"{int.Parse(SystolicTextBox.Text)}/{int.Parse(DiastolicTextBox.Text)}";
-                decimal bodyTemp = decimal.Parse(BodyTempTextBox.Text);
-                decimal weight = decimal.Parse(WeightTextBox.Text);
-                decimal height = decimal.Parse(HeightTextBox.Text);
-                int pulse = int.Parse(PulseTextBox.Text);
-                string symptoms = SymptomsTextBox.Text;
-                string initialDiagnosis = InitialDiagnosisTextBox.Text;
-                string finalDiagnosis = FinalDiagnosisTextBox.Text;
+                string bloodPressureReading = $"{int.Parse(this.SystolicTextBox.Text)}/{int.Parse(this.DiastolicTextBox.Text)}";
+                decimal bodyTemp = decimal.Parse(this.BodyTempTextBox.Text);
+                decimal weight = decimal.Parse(this.WeightTextBox.Text);
+                decimal height = decimal.Parse(this.HeightTextBox.Text);
+                int pulse = int.Parse(this.PulseTextBox.Text);
+                string symptoms = this.SymptomsTextBox.Text;
+                string initialDiagnosis = this.InitialDiagnosisTextBox.Text;
+                string finalDiagnosis = this.FinalDiagnosisTextBox.Text;
 
                 var selectedTestTypes = new List<string>();
-                if (LowDensityLipoproteinsCheckBox.IsChecked == true)
+                if (this.LowDensityLipoproteinsCheckBox.IsChecked == true)
                     selectedTestTypes.Add("Low Density Lipoproteins");
-                if (HepatitisACheckBox.IsChecked == true)
+                if (this.HepatitisACheckBox.IsChecked == true)
                     selectedTestTypes.Add("Hepatitis A");
-                if (HepatitisBCheckBox.IsChecked == true)
+                if (this.HepatitisBCheckBox.IsChecked == true)
                     selectedTestTypes.Add("Hepatitis B");
-                if (WhiteBloodCellCheckBox.IsChecked == true)
+                if (this.WhiteBloodCellCheckBox.IsChecked == true)
                     selectedTestTypes.Add("White Blood Cell");
 
                 var testResults = new Dictionary<string, string>();
 
-                if (LowDensityLipoproteinsCheckBox.IsChecked == true)
+                if (this.LowDensityLipoproteinsCheckBox.IsChecked == true)
                 {
-                    string ldlResult = ParseResult(LDLResultTextBox.Text);
+                    string ldlResult = this.ParseResult(this.LDLResultTextBox.Text);
                     testResults.Add("Low Density Lipoproteins", ldlResult);
                 }
 
-                if (HepatitisACheckBox.IsChecked == true)
+                if (this.HepatitisACheckBox.IsChecked == true)
                 {
-                    string haResult = ParseResult(HAResultTextBox.Text);
+                    string haResult = this.ParseResult(this.HAResultTextBox.Text);
                     testResults.Add("Hepatitis A", haResult);
                 }
 
-                if (HepatitisBCheckBox.IsChecked == true)
+                if (this.HepatitisBCheckBox.IsChecked == true)
                 {
-                    string hbResult = ParseResult(HBResultTextBox.Text);
+                    string hbResult = this.ParseResult(this.HBResultTextBox.Text);
                     testResults.Add("Hepatitis B", hbResult);
                 }
 
-                if (WhiteBloodCellCheckBox.IsChecked == true)
+                if (this.WhiteBloodCellCheckBox.IsChecked == true)
                 {
-                    string wbcResult = ParseResult(WBCResultTextBox.Text);
+                    string wbcResult = this.ParseResult(this.WBCResultTextBox.Text);
                     testResults.Add("White Blood Cell", wbcResult);
                 }
 
-                bool success = _visitDAL.CompleteRoutineCheckupWithTests(
+                bool success = this._visitDAL.CompleteRoutineCheckupWithTests(
                     appointmentId, bloodPressureReading, bodyTemp, weight, height,
                     pulse, symptoms, initialDiagnosis, finalDiagnosis, selectedTestTypes, testResults);
 
                 if (success)
                 {
-                    ErrorTextBlock.Text = "Routine checkup completed successfully!";
-                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Green);
+                    this.ErrorTextBlock.Text = "Routine checkup completed successfully!";
+                    this.ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Green);
                 }
                 else
                 {
-                    ErrorTextBlock.Text = "Failed to complete routine checkup.";
-                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                    this.ErrorTextBlock.Text = "Failed to complete routine checkup.";
+                    this.ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
                 }
-                ErrorTextBlock.Visibility = Visibility.Visible;
+
+                this.ErrorTextBlock.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
-                ErrorTextBlock.Text = $"Error: {ex.Message}";
-                ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
-                ErrorTextBlock.Visibility = Visibility.Visible;
+                this.ErrorTextBlock.Text = $"Error: {ex.Message}";
+                this.ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                this.ErrorTextBlock.Visibility = Visibility.Visible;
             }
         }
 
@@ -334,135 +335,133 @@ namespace HealthcareSystem
         private bool ValidateCheckupFields()
         {
             bool isValid = true;
-            ClearErrorMessages();
+            this.ClearErrorMessages();
 
-            if (AppointmentComboBox.SelectedItem == null)
+            // Validate Appointment
+            if (this.AppointmentComboBox.SelectedItem == null)
             {
-                AppointmentErrorTextBlock.Visibility = Visibility.Visible;
+                this.AppointmentErrorTextBlock.Text = "Please select an appointment from the dropdown.";
+                this.AppointmentErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
-            {
-                AppointmentErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
 
-            if (string.IsNullOrWhiteSpace(SystolicTextBox.Text))
+            // Validate Systolic Blood Pressure
+            if (string.IsNullOrWhiteSpace(this.SystolicTextBox.Text))
             {
-                SystolicErrorTextBlock.Visibility = Visibility.Visible;
+                this.SystolicErrorTextBlock.Text = "Systolic blood pressure is required.";
+                this.SystolicErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
+            else if (!int.TryParse(this.SystolicTextBox.Text, out var systolic) || systolic < 90 || systolic > 200)
             {
-                SystolicErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
-
-            if (string.IsNullOrWhiteSpace(DiastolicTextBox.Text))
-            {
-                DiastolicErrorTextBlock.Visibility = Visibility.Visible;
+                this.SystolicErrorTextBlock.Text = "Please enter a valid systolic pressure (90-200).";
+                this.SystolicErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
-            {
-                DiastolicErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
 
-            if (string.IsNullOrWhiteSpace(BodyTempTextBox.Text))
+            // Validate Diastolic Blood Pressure
+            if (string.IsNullOrWhiteSpace(this.DiastolicTextBox.Text))
             {
-                BodyTempErrorTextBlock.Visibility = Visibility.Visible;
+                this.DiastolicErrorTextBlock.Text = "Diastolic blood pressure is required.";
+                this.DiastolicErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
+            else if (!int.TryParse(this.DiastolicTextBox.Text, out var diastolic) || diastolic < 60 || diastolic > 120)
             {
-                BodyTempErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
-
-            if (string.IsNullOrWhiteSpace(WeightTextBox.Text))
-            {
-                WeightErrorTextBlock.Visibility = Visibility.Visible;
+                this.DiastolicErrorTextBlock.Text = "Please enter a valid diastolic pressure (60-120).";
+                this.DiastolicErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
-            {
-                WeightErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
 
-            if (string.IsNullOrWhiteSpace(HeightTextBox.Text))
+            // Validate Body Temperature
+            if (string.IsNullOrWhiteSpace(this.BodyTempTextBox.Text))
             {
-                HeightErrorTextBlock.Visibility = Visibility.Visible;
+                this.BodyTempErrorTextBlock.Text = "Body temperature is required.";
+                this.BodyTempErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
+            else if (!decimal.TryParse(this.BodyTempTextBox.Text, out var temp) || temp < 95 || temp > 107)
             {
-                HeightErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
-
-            if (string.IsNullOrWhiteSpace(PulseTextBox.Text))
-            {
-                PulseErrorTextBlock.Visibility = Visibility.Visible;
+                this.BodyTempErrorTextBlock.Text = "Please enter a valid body temperature (95°F - 107°F).";
+                this.BodyTempErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
-            {
-                PulseErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
 
-            if (string.IsNullOrWhiteSpace(SymptomsTextBox.Text))
+            // Validate Weight
+            if (string.IsNullOrWhiteSpace(this.WeightTextBox.Text))
             {
-                SymptomsErrorTextBlock.Visibility = Visibility.Visible;
+                this.WeightErrorTextBlock.Text = "Weight is required.";
+                this.WeightErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
+            else if (!decimal.TryParse(this.WeightTextBox.Text, out var weight) || weight <= 0 || weight > 500)
             {
-                SymptomsErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
-
-            if (!string.IsNullOrWhiteSpace(LDLResultTextBox.Text) && LowDensityLipoproteinsCheckBox.IsChecked != true)
-            {
-                LDLResultErrorTextBlock.Visibility = Visibility.Visible;
+                this.WeightErrorTextBlock.Text = "Please enter a valid weight (greater than 0 and less than 500).";
+                this.WeightErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
-            {
-                LDLResultErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
 
-            if (!string.IsNullOrWhiteSpace(WBCResultTextBox.Text) && WhiteBloodCellCheckBox.IsChecked != true)
+            // Validate Height
+            if (string.IsNullOrWhiteSpace(this.HeightTextBox.Text))
             {
-                WBCResultErrorTextBlock.Visibility = Visibility.Visible;
+                this.HeightErrorTextBlock.Text = "Height is required.";
+                this.HeightErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
+            else if (!decimal.TryParse(this.HeightTextBox.Text, out var height) || height <= 0 || height > 100)
             {
-                WBCResultErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
-
-            if (!string.IsNullOrWhiteSpace(HBResultTextBox.Text) && HepatitisBCheckBox.IsChecked != true)
-            {
-                HBResultErrorTextBlock.Visibility = Visibility.Visible;
+                this.HeightErrorTextBlock.Text = "Please enter a valid height (greater than 0 and less than 100).";
+                this.HeightErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
-            {
-                HBResultErrorTextBlock.Visibility = Visibility.Collapsed;
-            }
 
-            if (!string.IsNullOrWhiteSpace(HAResultTextBox.Text) && HepatitisACheckBox.IsChecked != true)
+            // Validate Pulse
+            if (string.IsNullOrWhiteSpace(this.PulseTextBox.Text))
             {
-                HAResultErrorTextBlock.Visibility = Visibility.Visible;
+                this.PulseErrorTextBlock.Text = "Pulse rate is required.";
+                this.PulseErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else
+            else if (!int.TryParse(this.PulseTextBox.Text, out var pulse) || pulse < 30 || pulse > 200)
             {
-                HAResultErrorTextBlock.Visibility = Visibility.Collapsed;
+                this.PulseErrorTextBlock.Text = "Please enter a valid pulse rate (30-200).";
+                this.PulseErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            // Validate Symptoms
+            if (string.IsNullOrWhiteSpace(this.SymptomsTextBox.Text))
+            {
+                this.SymptomsErrorTextBlock.Text = "Please describe the patient's symptoms.";
+                this.SymptomsErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            // Validate Test Results for LDL
+            if (!string.IsNullOrWhiteSpace(this.LDLResultTextBox.Text) && this.LowDensityLipoproteinsCheckBox.IsChecked != true)
+            {
+                this.LDLResultErrorTextBlock.Text = "You must check the 'Low Density Lipoproteins' checkbox if providing a result.";
+                this.LDLResultErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+
+            // Validate Test Results for WBC
+            if (!string.IsNullOrWhiteSpace(this.WBCResultTextBox.Text) && this.WhiteBloodCellCheckBox.IsChecked != true)
+            {
+                this.WBCResultErrorTextBlock.Text = "You must check the 'White Blood Cell' checkbox if providing a result.";
+                this.WBCResultErrorTextBlock.Visibility = Visibility.Visible;
+                isValid = false;
             }
 
             if (!isValid)
             {
-                ErrorTextBlock.Text = "Please fill out all required fields.";
-                ErrorTextBlock.Visibility = Visibility.Visible;
+                this.ErrorTextBlock.Text = "Please correct the errors highlighted above.";
+                this.ErrorTextBlock.Visibility = Visibility.Visible;
             }
+
             return isValid;
         }
+
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
