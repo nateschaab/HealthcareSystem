@@ -337,118 +337,108 @@ namespace HealthcareSystem
             bool isValid = true;
             this.ClearErrorMessages();
 
-            // Validate Appointment
             if (this.AppointmentComboBox.SelectedItem == null)
             {
-                this.AppointmentErrorTextBlock.Text = "Please select an appointment from the dropdown.";
+                this.AppointmentErrorTextBlock.Text = "Please select an appointment from the dropdown (e.g., 'John Doe - 12/01/2024').";
                 this.AppointmentErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
 
-            // Validate Systolic Blood Pressure
             if (string.IsNullOrWhiteSpace(this.SystolicTextBox.Text))
             {
-                this.SystolicErrorTextBlock.Text = "Systolic blood pressure is required.";
+                this.SystolicErrorTextBlock.Text = "Systolic blood pressure is required. Example: '120'.";
                 this.SystolicErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
             else if (!int.TryParse(this.SystolicTextBox.Text, out var systolic) || systolic < 90 || systolic > 200)
             {
-                this.SystolicErrorTextBlock.Text = "Please enter a valid systolic pressure (90-200).";
+                this.SystolicErrorTextBlock.Text = "Please enter a valid systolic pressure between 90 and 200. Example: '120'.";
                 this.SystolicErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
 
-            // Validate Diastolic Blood Pressure
             if (string.IsNullOrWhiteSpace(this.DiastolicTextBox.Text))
             {
-                this.DiastolicErrorTextBlock.Text = "Diastolic blood pressure is required.";
+                this.DiastolicErrorTextBlock.Text = "Diastolic blood pressure is required. Example: '80'.";
                 this.DiastolicErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
             else if (!int.TryParse(this.DiastolicTextBox.Text, out var diastolic) || diastolic < 60 || diastolic > 120)
             {
-                this.DiastolicErrorTextBlock.Text = "Please enter a valid diastolic pressure (60-120).";
+                this.DiastolicErrorTextBlock.Text = "Please enter a valid diastolic pressure between 60 and 120. Example: '80'.";
                 this.DiastolicErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
 
-            // Validate Body Temperature
             if (string.IsNullOrWhiteSpace(this.BodyTempTextBox.Text))
             {
-                this.BodyTempErrorTextBlock.Text = "Body temperature is required.";
+                this.BodyTempErrorTextBlock.Text = "Body temperature is required. Example: '98.6'.";
                 this.BodyTempErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
             else if (!decimal.TryParse(this.BodyTempTextBox.Text, out var temp) || temp < 95 || temp > 107)
             {
-                this.BodyTempErrorTextBlock.Text = "Please enter a valid body temperature (95°F - 107°F).";
+                this.BodyTempErrorTextBlock.Text = "Please enter a valid body temperature between 95°F and 107°F. Example: '98.6'.";
                 this.BodyTempErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
 
-            // Validate Weight
             if (string.IsNullOrWhiteSpace(this.WeightTextBox.Text))
             {
-                this.WeightErrorTextBlock.Text = "Weight is required.";
+                this.WeightErrorTextBlock.Text = "Weight is required. Example: '150'.";
                 this.WeightErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
             else if (!decimal.TryParse(this.WeightTextBox.Text, out var weight) || weight <= 0 || weight > 500)
             {
-                this.WeightErrorTextBlock.Text = "Please enter a valid weight (greater than 0 and less than 500).";
+                this.WeightErrorTextBlock.Text = "Please enter a valid weight (greater than 0 and less than 500). Example: '150'.";
                 this.WeightErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
 
-            // Validate Height
             if (string.IsNullOrWhiteSpace(this.HeightTextBox.Text))
             {
-                this.HeightErrorTextBlock.Text = "Height is required.";
+                this.HeightErrorTextBlock.Text = "Height is required. Example: '5.9'.";
                 this.HeightErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
-            else if (!decimal.TryParse(this.HeightTextBox.Text, out var height) || height <= 0 || height > 100)
+            else if (!decimal.TryParse(this.HeightTextBox.Text, out var height) || height <= 0 || height > 10)
             {
-                this.HeightErrorTextBlock.Text = "Please enter a valid height (greater than 0 and less than 100).";
+                this.HeightErrorTextBlock.Text = "Please enter a valid height (greater than 0 and less than 10). Example: '5.9'.";
                 this.HeightErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
 
-            // Validate Pulse
             if (string.IsNullOrWhiteSpace(this.PulseTextBox.Text))
             {
-                this.PulseErrorTextBlock.Text = "Pulse rate is required.";
+                this.PulseErrorTextBlock.Text = "Pulse rate is required. Example: '72'.";
                 this.PulseErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
             else if (!int.TryParse(this.PulseTextBox.Text, out var pulse) || pulse < 30 || pulse > 200)
             {
-                this.PulseErrorTextBlock.Text = "Please enter a valid pulse rate (30-200).";
+                this.PulseErrorTextBlock.Text = "Please enter a valid pulse rate between 30 and 200. Example: '72'.";
                 this.PulseErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
 
-            // Validate Symptoms
             if (string.IsNullOrWhiteSpace(this.SymptomsTextBox.Text))
             {
-                this.SymptomsErrorTextBlock.Text = "Please describe the patient's symptoms.";
+                this.SymptomsErrorTextBlock.Text = "Please describe the patient's symptoms. Example: 'Fever, fatigue, and cough.'";
                 this.SymptomsErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
 
-            // Validate Test Results for LDL
             if (!string.IsNullOrWhiteSpace(this.LDLResultTextBox.Text) && this.LowDensityLipoproteinsCheckBox.IsChecked != true)
             {
-                this.LDLResultErrorTextBlock.Text = "You must check the 'Low Density Lipoproteins' checkbox if providing a result.";
+                this.LDLResultErrorTextBlock.Text = "You must check the 'Low Density Lipoproteins' checkbox if providing a result. Example: '120 mg/dL : 12:00 PM'.";
                 this.LDLResultErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
 
-            // Validate Test Results for WBC
             if (!string.IsNullOrWhiteSpace(this.WBCResultTextBox.Text) && this.WhiteBloodCellCheckBox.IsChecked != true)
             {
-                this.WBCResultErrorTextBlock.Text = "You must check the 'White Blood Cell' checkbox if providing a result.";
+                this.WBCResultErrorTextBlock.Text = "You must check the 'White Blood Cell' checkbox if providing a result. Example: '4500 cells/uL : 10:30 AM'.";
                 this.WBCResultErrorTextBlock.Visibility = Visibility.Visible;
                 isValid = false;
             }
