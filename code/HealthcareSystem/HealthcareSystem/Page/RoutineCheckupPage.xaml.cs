@@ -7,10 +7,11 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using HealthcareSystem.Model;
 using System.Linq;
+using HealthcareSystem.Page;
 
 namespace HealthcareSystem
 {
-    public sealed partial class RoutineCheckupPage : Page
+    public sealed partial class RoutineCheckupPage : BasePage
     {
         private readonly VisitDAL _visitDAL = new VisitDAL();
         private readonly TestTypeDAL _testTypeDAL = new TestTypeDAL();
