@@ -18,16 +18,16 @@ namespace HealthcareSystem.Model
         public DateTime PatientDOB { get; set; }
         public DateTime Date { get; set; }
         public string Reason { get; set; }
-        public string DisplayName => $"{Date}, {DoctorName}, {PatientName}, {PatientDOB.ToShortDateString()}";
+        public string DisplayName => $"{this.Date}, {this.DoctorName}, {this.PatientName}, {this.PatientDOB.ToShortDateString()}";
 
         public Appointment(int appId, int visitId, int doctorId, int patientId, DateTime date, string reason)
         {
-            AppointmentId = appId;
-            VisitId = visitId;
-            DoctorId = doctorId;
-            PatientId = patientId;
-            Date = date;
-            Reason = reason;
+            this.AppointmentId = appId;
+            this.VisitId = visitId;
+            this.DoctorId = doctorId;
+            this.PatientId = patientId;
+            this.Date = date;
+            this.Reason = reason;
         }
     }
 }

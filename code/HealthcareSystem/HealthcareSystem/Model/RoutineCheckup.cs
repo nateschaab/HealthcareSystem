@@ -24,14 +24,14 @@ namespace HealthcareSystem.Model
         {
             get
             {
-                return int.Parse(BloodPressureReading.Split('/')[0]);
+                return int.Parse(this.BloodPressureReading.Split('/')[0]);
             }
         }
         public int Diastolic
         {
             get
             {
-                return int.Parse(BloodPressureReading.Split('/')[1]);
+                return int.Parse(this.BloodPressureReading.Split('/')[1]);
             }
         }
     }

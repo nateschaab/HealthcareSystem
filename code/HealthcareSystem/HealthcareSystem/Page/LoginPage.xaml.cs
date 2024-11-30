@@ -17,15 +17,15 @@ namespace HealthcareSystem
         public LoginPage()
         {
             this.InitializeComponent();
-            _loginDAL = new LoginDAL();
+            this._loginDAL = new LoginDAL();
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            string username = UsernameTextBox.Text;
-            string password = PasswordBox.Password;
+            string username = this.UsernameTextBox.Text;
+            string password = this.PasswordBox.Password;
 
-            var (isValid, firstName, lastName) = _loginDAL.ValidateLoginAndGetName(username, password);
+            var (isValid, firstName, lastName) = this._loginDAL.ValidateLoginAndGetName(username, password);
 
             if (isValid)
             {
@@ -39,7 +39,7 @@ namespace HealthcareSystem
             }
             else
             {
-                LoginError.Text = "Invalid username or password. Please try again.";
+                this.LoginError.Text = "Invalid username or password. Please try again.";
             }
         }
 

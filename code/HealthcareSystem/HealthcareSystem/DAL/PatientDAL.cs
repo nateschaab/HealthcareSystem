@@ -137,7 +137,7 @@ namespace DBAccess.DAL
                 connection.Open();
                 using var transaction = connection.BeginTransaction();
 
-                Debug.WriteLine($"Connection Opened: {connection.State == System.Data.ConnectionState.Open}");
+                Debug.WriteLine($"Connection Opened: {connection.State == ConnectionState.Open}");
 
                 var insertAddressQuery = @"
                     INSERT INTO mailing_address (street_address, zip, city, state, country)
@@ -256,7 +256,7 @@ namespace DBAccess.DAL
             {
                 Debug.WriteLine("Attempting to open connection to the database...");
                 connection.Open();
-                Debug.WriteLine($"Connection opened: {connection.State == System.Data.ConnectionState.Open}");
+                Debug.WriteLine($"Connection opened: {connection.State == ConnectionState.Open}");
 
                 transaction = connection.BeginTransaction();
                 Debug.WriteLine("Transaction started.");
