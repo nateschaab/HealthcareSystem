@@ -149,6 +149,7 @@
     <Compile Include="DAL\SQLInjectionDemo.cs" />
     <Compile Include="DAL\TestTypeDAL.cs" />
     <Compile Include="DAL\VisitDAL.cs" />
+    <Compile Include="Page\BasePage.cs" />
     <Compile Include="Page\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>

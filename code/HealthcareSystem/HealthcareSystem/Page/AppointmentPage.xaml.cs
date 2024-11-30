@@ -8,10 +8,12 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using DBAccess.DAL;
 using HealthcareSystem.Model;
+using HealthcareSystem;
+using HealthcareSystem.Page;
 
 namespace HealthcareSystem
 {
-    public sealed partial class AppointmentPage : Page
+    public sealed partial class AppointmentPage : BasePage
     {
         #region Data members
 

@@ -7,10 +7,11 @@ using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using HealthcareSystem.Page;
 
 namespace HealthcareSystem
 {
-    public sealed partial class LoginPage : Page
+    public sealed partial class LoginPage : BasePage
     {
         private readonly LoginDAL _loginDAL;
 

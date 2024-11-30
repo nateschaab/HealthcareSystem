@@ -9,10 +9,11 @@ using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using HealthcareSystem.Page;
 
 namespace HealthcareSystem
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : BasePage
     {
         private string LoggedInUsername { get; set; }
 
@@ -54,23 +55,16 @@ namespace HealthcareSystem
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            // Clear user information in SessionManager
             SessionManager.Instance.Username = null;
             SessionManager.Instance.FirstName = null;
             SessionManager.Instance.LastName = null;
 
-            // Navigate back to the LoginPage
             Frame.Navigate(typeof(LoginPage));
         }
 
         private void CreateAppointment_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(AppointmentPage));
-        }
-
-        private void RoutineCheckupButton_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(RoutineCheckupPage));
         }
     }
 }
