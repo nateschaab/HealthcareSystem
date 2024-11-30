@@ -1,8 +1,8 @@
 ﻿<page:BasePage
+    xmlns:page="using:HealthcareSystem.Page"
     x:Class="HealthcareSystem.SearchPatientPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:page="using:HealthcareSystem.Page">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20">
 

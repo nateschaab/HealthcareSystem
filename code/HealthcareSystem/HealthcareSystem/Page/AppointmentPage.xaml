@@ -1,8 +1,9 @@
-<page:BasePage
+<local:BasePage
+    xmlns:local="using:HealthcareSystem.Page"
+    xmlns:page="using:HealthcareSystem.Page"
     x:Class="HealthcareSystem.AppointmentPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:page="using:HealthcareSystem.Page">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20">
         <Grid.RowDefinitions>
@@ -96,4 +97,4 @@
             </ListView>
         </Grid>
     </Grid>
-</page:BasePage>
+</local:BasePage>
