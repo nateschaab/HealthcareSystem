@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Windows.UI.Xaml.Controls;
-using HealthcareSystem;
 
 namespace HealthcareSystem.Page
 {
