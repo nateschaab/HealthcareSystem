@@ -36,24 +36,36 @@ namespace HealthcareSystem
         {
             try
             {
+                // Get the query from the text box
                 string query = SqlQueryTextBox.Text;
 
+                // Establish a connection to the database
                 using var connection = new MySqlConnection(Connection.ConnectionString());
                 connection.Open();
 
+                // Execute the query and fetch the data into a DataTable
                 using var command = new MySqlCommand(query, connection);
                 using var adapter = new MySqlDataAdapter(command);
                 var dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
+                // Clear any existing elements in the grid
                 ResultsGrid.Children.Clear();
                 ResultsGrid.RowDefinitions.Clear();
                 ResultsGrid.ColumnDefinitions.Clear();
 
+                // Add column definitions for the grid
                 for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
                 {
                     ResultsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                }
 
+                // Add a single row for the header
+                ResultsGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+                // Add headers to the first row
+                for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
+                {
                     var headerText = new TextBlock
                     {
                         Text = dataTable.Columns[colIndex].ColumnName,
@@ -61,11 +73,13 @@ namespace HealthcareSystem
                         Margin = new Thickness(5),
                         TextWrapping = TextWrapping.Wrap
                     };
+
                     Grid.SetRow(headerText, 0);
                     Grid.SetColumn(headerText, colIndex);
                     ResultsGrid.Children.Add(headerText);
                 }
 
+                // Add rows for the data
                 for (int rowIndex = 0; rowIndex < dataTable.Rows.Count; rowIndex++)
                 {
                     ResultsGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -78,7 +92,8 @@ namespace HealthcareSystem
                             Margin = new Thickness(5),
                             TextWrapping = TextWrapping.Wrap
                         };
-                        Grid.SetRow(cellText, rowIndex + 1);
+
+                        Grid.SetRow(cellText, rowIndex + 1); // Offset by 1 to account for the header row
                         Grid.SetColumn(cellText, colIndex);
                         ResultsGrid.Children.Add(cellText);
                     }
@@ -89,6 +104,7 @@ namespace HealthcareSystem
                 ShowErrorDialog($"Error: {ex.Message}");
             }
 
+            // Display an error dialog asynchronously
             async void ShowErrorDialog(string message)
             {
                 var errorDialog = new ContentDialog
@@ -100,8 +116,6 @@ namespace HealthcareSystem
 
                 await errorDialog.ShowAsync();
             }
-
         }
-
     }
 }
