@@ -8,24 +8,25 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <TextBlock Grid.Row="0" x:Name="UserInfo" FontSize="20" Margin="0" />
+
         <!-- Back Button -->
         <Button Grid.Row="1" Content="Back" Click="BackButton_Click" VerticalAlignment="Top" />
 
-        <TextBlock Grid.Row="0" x:Name="UserInfo" FontSize="20" Margin="0" />
-
         <!-- Header Text -->
-        <TextBlock Text="Search Patient" FontSize="24" Grid.Row="2" Margin="0,10,0,0" />
+        <TextBlock Text="Search Patient" FontSize="24" Grid.Row="2" Margin="0,20,0,0" />
 
         <!-- Divider Line -->
-        <Rectangle Grid.Row="2" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,50,0,0"/>
+        <Rectangle Grid.Row="3" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,10"/>
 
         <!-- Form and ListView container -->
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
+        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -39,7 +40,6 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 

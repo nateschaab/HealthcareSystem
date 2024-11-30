@@ -19,7 +19,7 @@
         <Button Content="Back" Click="BackButton_Click" HorizontalAlignment="Left" Grid.Row="1"/>
 
         <!-- Header Text -->
-        <TextBlock Text="Routine Checkup" FontSize="24" Margin="0,20,0,0" Grid.Row="2"/>
+        <TextBlock Text="Routine Checkup" FontSize="24" Margin="0,10,0,0" Grid.Row="2"/>
 
         <!-- Divider Line -->
         <Rectangle Grid.Row="3" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,0"/>

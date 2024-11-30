@@ -50,19 +50,32 @@ namespace HealthcareSystem
         {
             if (this.AppointmentComboBox.SelectedItem is Appointment app)
             {
-                var dal = new VisitDAL();
-                var checkups = dal.GetRoutineCheckups();
-                foreach (var checkup in checkups) {
-                    if (checkup.AppointmentId == app.AppointmentId)
+                try
+                {
+                    var dal = new VisitDAL();
+                    var checkup = dal.GetRoutineCheckupByAppointmentId(app.AppointmentId);
+
+                    if (checkup != null)
                     {
                         checkup.LabTests = dal.GetLabTestsForVisit(checkup.VisitId);
                         this.ClearErrorMessages();
                         this.ClearCheckboxes();
                         this.PopulateCheckupFields(checkup);
                     }
+                    else
+                    {
+                        this.ErrorTextBlock.Text = "No routine checkup found for the selected appointment.";
+                        this.ErrorTextBlock.Visibility = Visibility.Visible;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.ErrorTextBlock.Text = $"Error loading routine checkup: {ex.Message}";
+                    this.ErrorTextBlock.Visibility = Visibility.Visible;
                 }
             }
         }
+
 
         private void ClearCheckboxes()
         {

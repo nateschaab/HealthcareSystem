@@ -353,6 +353,68 @@ namespace DBAccess.DAL
             };
         }
 
+        public RoutineCheckup GetRoutineCheckupByAppointmentId(int appointmentId)
+        {
+            RoutineCheckup routineCheckup = null;
+
+            try
+            {
+                using var connection = new MySqlConnection(Connection.ConnectionString());
+                connection.Open();
+
+                string query = @"
+            SELECT 
+                visit_id, appt_id, blood_pressure_reading, body_temp, weight, height, pulse,
+                symptoms, initial_diagnosis, final_diagnosis
+            FROM visit
+            WHERE appt_id = @appt_id;";
+
+                using var command = new MySqlCommand(query, connection);
+                command.Parameters.AddWithValue("@appt_id", appointmentId);
+
+                using var reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    routineCheckup = new RoutineCheckup
+                    {
+                        VisitId = reader.GetInt32(reader.GetOrdinal("visit_id")),
+                        AppointmentId = reader.GetInt32(reader.GetOrdinal("appt_id")),
+                        BloodPressureReading = reader.IsDBNull(reader.GetOrdinal("blood_pressure_reading"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("blood_pressure_reading")),
+                        BodyTemp = reader.IsDBNull(reader.GetOrdinal("body_temp"))
+                            ? (decimal?)null
+                            : reader.GetDecimal(reader.GetOrdinal("body_temp")),
+                        Weight = reader.IsDBNull(reader.GetOrdinal("weight"))
+                            ? (decimal?)null
+                            : reader.GetDecimal(reader.GetOrdinal("weight")),
+                        Height = reader.IsDBNull(reader.GetOrdinal("height"))
+                            ? (decimal?)null
+                            : reader.GetDecimal(reader.GetOrdinal("height")),
+                        Pulse = reader.IsDBNull(reader.GetOrdinal("pulse"))
+                            ? (int?)null
+                            : reader.GetInt32(reader.GetOrdinal("pulse")),
+                        Symptoms = reader.IsDBNull(reader.GetOrdinal("symptoms"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("symptoms")),
+                        InitialDiagnosis = reader.IsDBNull(reader.GetOrdinal("initial_diagnosis"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("initial_diagnosis")),
+                        FinalDiagnosis = reader.IsDBNull(reader.GetOrdinal("final_diagnosis"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("final_diagnosis"))
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetRoutineCheckupByAppointmentId: {ex.Message}");
+            }
+
+            return routineCheckup;
+        }
+
 
     }
 }
