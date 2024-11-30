@@ -15,27 +15,9 @@ namespace HealthcareSystem
 {
     public sealed partial class MainPage : BasePage
     {
-        private string LoggedInUsername { get; set; }
-
         public MainPage()
         {
             this.InitializeComponent();
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            this.LoadUserInfo();
-        }
-
-        private void LoadUserInfo()
-        {
-            string firstName = SessionManager.Instance.FirstName;
-            string lastName = SessionManager.Instance.LastName;
-            string username = SessionManager.Instance.Username;
-
-            this.UserInfo.Text = $"Logged in as: {firstName} {lastName} (Username: {username})";
-            Debug.WriteLine($"User Info Loaded: {firstName} {lastName} (Username: {username})");
         }
 
         private void ManagePatients_Click(object sender, RoutedEventArgs e)

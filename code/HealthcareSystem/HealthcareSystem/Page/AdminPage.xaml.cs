@@ -1,26 +1,18 @@
-﻿using System;
+﻿using DBAccess.DAL;
+using DBAccess.Model;
+using HealthcareSystem.Model;
+using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Data;
+using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using HealthcareSystem.Page;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace HealthcareSystem
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class AdminPage : BasePage
     {
         public AdminPage()
@@ -30,12 +22,26 @@ namespace HealthcareSystem
 
         private void AddNurse_Click(object sender, RoutedEventArgs e)
         {
-
+            Frame.Navigate(typeof(AddNursePage));
         }
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
+        private void QueryInterface_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(MainPage));
+            Frame.Navigate(typeof(QueryInterfacePage));
+        }
+
+        private void GenerateReport_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(ReportPage));
+        }
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            SessionManager.Instance.Username = null;
+            SessionManager.Instance.FirstName = null;
+            SessionManager.Instance.LastName = null;
+
+            Frame.Navigate(typeof(LoginPage));
         }
     }
 }

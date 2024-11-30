@@ -46,12 +46,10 @@ namespace HealthcareSystem
                 var dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
-                // Clear previous results
                 ResultsGrid.Children.Clear();
                 ResultsGrid.RowDefinitions.Clear();
                 ResultsGrid.ColumnDefinitions.Clear();
 
-                // Create column headers
                 for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
                 {
                     ResultsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -68,7 +66,6 @@ namespace HealthcareSystem
                     ResultsGrid.Children.Add(headerText);
                 }
 
-                // Populate rows with data
                 for (int rowIndex = 0; rowIndex < dataTable.Rows.Count; rowIndex++)
                 {
                     ResultsGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -81,7 +78,7 @@ namespace HealthcareSystem
                             Margin = new Thickness(5),
                             TextWrapping = TextWrapping.Wrap
                         };
-                        Grid.SetRow(cellText, rowIndex + 1); // +1 because row 0 is for headers
+                        Grid.SetRow(cellText, rowIndex + 1);
                         Grid.SetColumn(cellText, colIndex);
                         ResultsGrid.Children.Add(cellText);
                     }
@@ -89,8 +86,21 @@ namespace HealthcareSystem
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}");
+                ShowErrorDialog($"Error: {ex.Message}");
             }
+
+            async void ShowErrorDialog(string message)
+            {
+                var errorDialog = new ContentDialog
+                {
+                    Title = "Error",
+                    Content = message,
+                    CloseButtonText = "OK"
+                };
+
+                await errorDialog.ShowAsync();
+            }
+
         }
 
     }

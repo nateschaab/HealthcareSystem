@@ -41,7 +41,7 @@ namespace HealthcareSystem
 
                 if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
                 {
-                    MessageBox.Show("Please select both start and end dates.");
+                    //MessageBox.Show("Please select both start and end dates.");
                     return;
                 }
 
@@ -95,7 +95,7 @@ namespace HealthcareSystem
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}");
+                //MessageBox.Show($"Error: {ex.Message}");
             }
         }
 

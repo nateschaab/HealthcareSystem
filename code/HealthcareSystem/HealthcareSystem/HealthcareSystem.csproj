@@ -128,6 +128,9 @@
   <ItemGroup>
     <Compile Include="Model\LabTest.cs" />
     <Compile Include="Model\RoutineCheckup.cs" />
+    <Compile Include="Page\AddNursePage.xaml.cs">
+      <DependentUpon>AddNursePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Page\AdminPage.xaml.cs">
       <DependentUpon>AdminPage.xaml</DependentUpon>
     </Compile>
@@ -199,6 +202,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Page\AddNursePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Page\AdminPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
