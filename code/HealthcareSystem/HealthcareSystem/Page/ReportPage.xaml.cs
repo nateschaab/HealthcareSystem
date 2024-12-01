@@ -1,30 +1,18 @@
 ﻿using DBAccess.DAL;
 using HealthcareSystem.Page;
 using MySql.Data.MySqlClient;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Text;
 
 namespace HealthcareSystem
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class ReportPage : BasePage
     {
         public ReportPage()
@@ -41,7 +29,7 @@ namespace HealthcareSystem
 
                 if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
                 {
-                    //MessageBox.Show("Please select both start and end dates.");
+                    ShowErrorDialog("Please select both start and end dates.");
                     return;
                 }
 
@@ -49,27 +37,31 @@ namespace HealthcareSystem
                 connection.Open();
 
                 string query = @"
-            SELECT 
-                v.visit_date,
-                p.patient_id,
-                CONCAT(p.first_name, ' ', p.last_name) AS patient_name,
-                d.name AS doctor_name,
-                n.name AS nurse_name,
-                t.test_name,
-                t.time_performed AS test_date,
-                t.result AS test_result,
-                t.abnormality,
-                v.diagnosis
-            FROM 
-                visit v
-                JOIN patients p ON v.patient_id = p.patient_id
-                LEFT JOIN doctors d ON v.doctor_id = d.doctor_id
-                LEFT JOIN nurses n ON v.nurse_id = n.nurse_id
-                LEFT JOIN lab_tests t ON v.visit_id = t.visit_id
-            WHERE 
-                v.visit_date BETWEEN @StartDate AND @EndDate
-            ORDER BY 
-                v.visit_date, p.last_name;";
+                SELECT 
+                    v.datetime AS VisitDate,
+                    p.patient_id AS PatientId,
+                    CONCAT(pr.fname, ' ', pr.lname) AS PatientName,
+                    CONCAT(dpr.fname, ' ', dpr.lname) AS DoctorName,
+                    CONCAT(npr.fname, ' ', npr.lname) AS NurseName,
+                    t.test_type_name AS TestNames,
+                    t.time_performed AS TestDates,
+                    t.result AS TestResults,
+                    t.abnormality AS Abnormality,
+                    v.final_diagnosis AS Diagnosis
+                FROM 
+                    visit v
+                    JOIN appointment a ON v.appt_id = a.appt_id
+                    JOIN patient p ON a.patient_id = p.patient_id
+                    JOIN person pr ON p.pid = pr.pid
+                    LEFT JOIN doctor d ON a.doctor_id = d.doctor_id
+                    LEFT JOIN person dpr ON d.pid = dpr.pid
+                    LEFT JOIN nurse n ON a.doctor_id = n.nurse_id
+                    LEFT JOIN person npr ON n.pid = npr.pid
+                    LEFT JOIN lab_test t ON v.visit_id = t.visit_id
+                WHERE 
+                    v.datetime BETWEEN @StartDate AND @EndDate
+                ORDER BY 
+                    v.datetime, pr.lname;";
 
                 using var command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@StartDate", startDate);
@@ -79,23 +71,107 @@ namespace HealthcareSystem
                 var dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
-                // Convert DataTable to List of dynamic objects
-                var results = new List<dynamic>();
+                // Clear existing rows (except header)
+                VisitReportGrid.RowDefinitions.Clear();
+                VisitReportGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                VisitReportGrid.Children.Clear();
+
+                // Add header back
+                AddHeaderRow();
+
+                // Add rows dynamically
+                int rowIndex = 1;
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    var obj = new ExpandoObject() as IDictionary<string, object>;
-                    foreach (DataColumn column in dataTable.Columns)
-                    {
-                        obj[column.ColumnName] = row[column];
-                    }
-                    results.Add(obj);
-                }
+                    VisitReportGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-                VisitReportListView.ItemsSource = results;
+                    for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
+                    {
+                        var cellText = new TextBlock
+                        {
+                            Text = row[colIndex]?.ToString(),
+                            Margin = new Thickness(5),
+                            TextWrapping = TextWrapping.Wrap,
+                            VerticalAlignment = VerticalAlignment.Center
+                        };
+
+                        Grid.SetRow(cellText, rowIndex);
+                        Grid.SetColumn(cellText, colIndex);
+                        VisitReportGrid.Children.Add(cellText);
+                    }
+
+                    rowIndex++;
+                }
+                ApplyThemeBasedStyles();
             }
             catch (Exception ex)
             {
-                //MessageBox.Show($"Error: {ex.Message}");
+                ShowErrorDialog($"Error: {ex.Message}");
+            }
+        }
+
+        private void AddHeaderRow()
+        {
+            var headers = new[] { "Visit Date", "Patient ID", "Patient Name", "Doctor Name", "Nurse Name", "Test Names", "Test Dates", "Test Results", "Abnormality", "Diagnosis" };
+
+            for (int colIndex = 0; colIndex < headers.Length; colIndex++)
+            {
+                var headerText = new TextBlock
+                {
+                    Text = headers[colIndex],
+                    FontWeight = FontWeights.Bold,
+                    Margin = new Thickness(5),
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+
+                Grid.SetRow(headerText, 0);
+                Grid.SetColumn(headerText, colIndex);
+                VisitReportGrid.Children.Add(headerText);
+            }
+        }
+
+
+        private async void ShowErrorDialog(string message)
+        {
+            var errorDialog = new ContentDialog
+            {
+                Title = "Error",
+                Content = message,
+                CloseButtonText = "OK"
+            };
+
+            await errorDialog.ShowAsync();
+        }
+
+        private bool IsDarkModeEnabled()
+        {
+            var uiSettings = new UISettings();
+            var backgroundColor = uiSettings.GetColorValue(UIColorType.Background);
+            return backgroundColor == Windows.UI.Colors.Black;
+        }
+
+        private void ApplyThemeBasedStyles()
+        {
+            bool isDarkMode = IsDarkModeEnabled();
+
+            // Define styles for light and dark mode
+            var lightRowColor = new SolidColorBrush(Windows.UI.Colors.WhiteSmoke);
+            var darkRowColor = new SolidColorBrush(Windows.UI.Colors.Black);
+            var alternateLightRowColor = new SolidColorBrush(Windows.UI.Colors.White);
+            var alternateDarkRowColor = new SolidColorBrush(Windows.UI.Colors.DimGray);
+
+            // Iterate through all rows in the VisitReportGrid, skipping the header row (Row 0)
+            for (int rowIndex = 1; rowIndex < VisitReportGrid.RowDefinitions.Count; rowIndex++)
+            {
+                foreach (var child in VisitReportGrid.Children)
+                {
+                    if (child is Border border && Grid.GetRow(border) == rowIndex)
+                    {
+                        border.Background = isDarkMode
+                            ? (rowIndex % 2 == 0 ? darkRowColor : alternateDarkRowColor)
+                            : (rowIndex % 2 == 0 ? lightRowColor : alternateLightRowColor);
+                    }
+                }
             }
         }
 
