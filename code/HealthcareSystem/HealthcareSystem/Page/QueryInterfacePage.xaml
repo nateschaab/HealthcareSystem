@@ -19,7 +19,10 @@
 
         <!-- Results Section -->
         <ScrollViewer Grid.Row="1" Margin="0,0,0,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid x:Name="ResultsGrid" />
+            <Grid x:Name="ResultsGrid" >
+                <Grid.RowDefinitions>
+                </Grid.RowDefinitions>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </local:BasePage>

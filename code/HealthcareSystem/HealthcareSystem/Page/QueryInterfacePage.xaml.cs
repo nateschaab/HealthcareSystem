@@ -53,7 +53,12 @@ namespace HealthcareSystem
                 for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
                 {
                     ResultsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                }
 
+                ResultsGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+                for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
+                {
                     var headerText = new TextBlock
                     {
                         Text = dataTable.Columns[colIndex].ColumnName,
@@ -61,6 +66,7 @@ namespace HealthcareSystem
                         Margin = new Thickness(5),
                         TextWrapping = TextWrapping.Wrap
                     };
+
                     Grid.SetRow(headerText, 0);
                     Grid.SetColumn(headerText, colIndex);
                     ResultsGrid.Children.Add(headerText);
@@ -78,6 +84,7 @@ namespace HealthcareSystem
                             Margin = new Thickness(5),
                             TextWrapping = TextWrapping.Wrap
                         };
+
                         Grid.SetRow(cellText, rowIndex + 1);
                         Grid.SetColumn(cellText, colIndex);
                         ResultsGrid.Children.Add(cellText);
@@ -100,8 +107,6 @@ namespace HealthcareSystem
 
                 await errorDialog.ShowAsync();
             }
-
         }
-
     }
 }
