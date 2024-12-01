@@ -36,10 +36,8 @@ namespace HealthcareSystem
         {
             try
             {
-                // Determine if dark mode is enabled
                 bool isDarkMode = SessionManager.Instance.IsDarkModeEnabled();
 
-                // Define colors for light and dark themes
                 var lightThemeBorderColor = Windows.UI.Colors.Gray;
                 var lightThemeRowColor1 = Windows.UI.Colors.White;
                 var lightThemeRowColor2 = Windows.UI.Colors.WhiteSmoke;
@@ -52,7 +50,6 @@ namespace HealthcareSystem
                 var rowColor1 = isDarkMode ? darkThemeRowColor1 : lightThemeRowColor1;
                 var rowColor2 = isDarkMode ? darkThemeRowColor2 : lightThemeRowColor2;
 
-                // Get the query from the text box
                 string query = SqlQueryTextBox.Text;
 
                 using var connection = new MySqlConnection(Connection.ConnectionString());
@@ -120,7 +117,7 @@ namespace HealthcareSystem
 
                         cellBorder.Child = cellText;
 
-                        Grid.SetRow(cellBorder, rowIndex + 1); // Offset by 1 to account for headers
+                        Grid.SetRow(cellBorder, rowIndex + 1);
                         Grid.SetColumn(cellBorder, colIndex);
                         ResultsGrid.Children.Add(cellBorder);
                     }
@@ -143,6 +140,9 @@ namespace HealthcareSystem
                 await errorDialog.ShowAsync();
             }
         }
-
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(MainPage));
+        }
     }
 }
