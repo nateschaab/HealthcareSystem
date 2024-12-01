@@ -21,6 +21,15 @@ namespace HealthcareSystem
             this._loginDAL = new LoginDAL();
         }
 
+        private void InputField_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                LoginButton_Click(null, null);
+            }
+        }
+
+
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = this.UsernameTextBox.Text;
