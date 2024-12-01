@@ -11,6 +11,13 @@ Password: 2
 Username: testusername
 Password: testpwd
 
+# Setup
+
+In Visual Studio IDE, Go to Tools => NuGet Package Manager => Package Manager Console
+
+In Console, Enter the following:
+
+Install-Package MySqlConnector -Version 0.34.0
 
 ----------------------------------------------------------------------
 // Trinidad's Stored Procedure:
