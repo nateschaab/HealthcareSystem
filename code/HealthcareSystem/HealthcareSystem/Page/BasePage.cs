@@ -26,11 +26,13 @@ namespace HealthcareSystem.Page
 
             this.Loaded += (sender, args) =>
             {
-                var rootGrid = (Grid)this.Content;
-                double containerWidth = rootGrid.ActualWidth;
-                double containerHeight = rootGrid.ActualHeight;
+                double pageWidth = this.ActualWidth;
+                double pageHeight = this.ActualHeight;
 
-                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size(containerWidth, containerHeight));
+                if (!ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size(pageWidth, pageHeight)))
+                {
+                    Debug.WriteLine("Failed to resize to page dimensions.");
+                }
             };
 
             if (this.FindName("UserInfo") is TextBlock userInfoTextBlock)
@@ -38,5 +40,6 @@ namespace HealthcareSystem.Page
                 this.LoadUserInfo(userInfoTextBlock);
             }
         }
+
     }
 }
