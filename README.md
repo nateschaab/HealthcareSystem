@@ -141,4 +141,5 @@ HAVING
     COUNT(lt.lab_test_id) >= 2
 ORDER BY 
     p.patient_id, testDate;
+    
 ----------------------------------------------------------------------
