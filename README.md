@@ -1,4 +1,5 @@
 # HealthcareSystem
+----------------------------------------------------------------------
 CS3230 Project: A Healthcare System
 
 
@@ -14,6 +15,7 @@ Password: testpwd
 ----------------------------------------------------------------------
 
 # Setup
+----------------------------------------------------------------------
 
 In Visual Studio IDE, Go to Tools => NuGet Package Manager => Package Manager Console
 
