@@ -15,7 +15,7 @@
     </Page.Resources>
 
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20">
+    <Grid Width="500" Height="350" MinWidth="500" MinHeight="350" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -31,7 +31,7 @@
         <Button  Grid.Row="2" Content="Manage Patients" Click="ManagePatients_Click" />
         <Button  Grid.Row="3" Content="Create Appointment" Click="CreateAppointment_Click" />
         <Button  Grid.Row="4" Content="Admin Functions" Click="AdminFunctions_Click" />
-        <Button  Grid.Row="5" Content="Log Out" Click="LogoutButton_Click" Margin="0,20,0,0"/>
+        <Button  Grid.Row="5" Content="Log Out" Click="LogoutButton_Click" TabIndex="1" Margin="0,20,0,0"/>
 
     </Grid>
 </page:BasePage>

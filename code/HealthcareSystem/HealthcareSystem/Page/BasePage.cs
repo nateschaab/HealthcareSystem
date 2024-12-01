@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 
 namespace HealthcareSystem.Page
@@ -23,11 +24,19 @@ namespace HealthcareSystem.Page
         {
             base.OnNavigatedTo(e);
 
+            this.Loaded += (sender, args) =>
+            {
+                var rootGrid = (Grid)this.Content;
+                double containerWidth = rootGrid.ActualWidth;
+                double containerHeight = rootGrid.ActualHeight;
+
+                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size(containerWidth, containerHeight));
+            };
+
             if (this.FindName("UserInfo") is TextBlock userInfoTextBlock)
             {
                 this.LoadUserInfo(userInfoTextBlock);
             }
         }
-
     }
 }
