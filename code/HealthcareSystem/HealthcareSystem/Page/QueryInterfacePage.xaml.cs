@@ -36,6 +36,23 @@ namespace HealthcareSystem
         {
             try
             {
+                // Determine if dark mode is enabled
+                bool isDarkMode = SessionManager.Instance.IsDarkModeEnabled();
+
+                // Define colors for light and dark themes
+                var lightThemeBorderColor = Windows.UI.Colors.Gray;
+                var lightThemeRowColor1 = Windows.UI.Colors.White;
+                var lightThemeRowColor2 = Windows.UI.Colors.WhiteSmoke;
+
+                var darkThemeBorderColor = Windows.UI.Colors.DarkGray;
+                var darkThemeRowColor1 = Windows.UI.Colors.Black;
+                var darkThemeRowColor2 = Windows.UI.Colors.DimGray;
+
+                var borderColor = isDarkMode ? darkThemeBorderColor : lightThemeBorderColor;
+                var rowColor1 = isDarkMode ? darkThemeRowColor1 : lightThemeRowColor1;
+                var rowColor2 = isDarkMode ? darkThemeRowColor2 : lightThemeRowColor2;
+
+                // Get the query from the text box
                 string query = SqlQueryTextBox.Text;
 
                 using var connection = new MySqlConnection(Connection.ConnectionString());
@@ -59,17 +76,26 @@ namespace HealthcareSystem
 
                 for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
                 {
+                    var headerBorder = new Border
+                    {
+                        BorderThickness = new Thickness(1),
+                        BorderBrush = new SolidColorBrush(borderColor),
+                        Background = new SolidColorBrush(isDarkMode ? Windows.UI.Colors.DarkSlateGray : Windows.UI.Colors.LightGray),
+                        Padding = new Thickness(5)
+                    };
+
                     var headerText = new TextBlock
                     {
                         Text = dataTable.Columns[colIndex].ColumnName,
                         FontWeight = FontWeights.Bold,
-                        Margin = new Thickness(5),
                         TextWrapping = TextWrapping.Wrap
                     };
 
-                    Grid.SetRow(headerText, 0);
-                    Grid.SetColumn(headerText, colIndex);
-                    ResultsGrid.Children.Add(headerText);
+                    headerBorder.Child = headerText;
+
+                    Grid.SetRow(headerBorder, 0);
+                    Grid.SetColumn(headerBorder, colIndex);
+                    ResultsGrid.Children.Add(headerBorder);
                 }
 
                 for (int rowIndex = 0; rowIndex < dataTable.Rows.Count; rowIndex++)
@@ -78,16 +104,25 @@ namespace HealthcareSystem
 
                     for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
                     {
+                        var cellBorder = new Border
+                        {
+                            BorderThickness = new Thickness(1),
+                            BorderBrush = new SolidColorBrush(borderColor),
+                            Background = new SolidColorBrush((rowIndex % 2 == 0) ? rowColor1 : rowColor2),
+                            Padding = new Thickness(5)
+                        };
+
                         var cellText = new TextBlock
                         {
                             Text = dataTable.Rows[rowIndex][colIndex]?.ToString(),
-                            Margin = new Thickness(5),
                             TextWrapping = TextWrapping.Wrap
                         };
 
-                        Grid.SetRow(cellText, rowIndex + 1);
-                        Grid.SetColumn(cellText, colIndex);
-                        ResultsGrid.Children.Add(cellText);
+                        cellBorder.Child = cellText;
+
+                        Grid.SetRow(cellBorder, rowIndex + 1); // Offset by 1 to account for headers
+                        Grid.SetColumn(cellBorder, colIndex);
+                        ResultsGrid.Children.Add(cellBorder);
                     }
                 }
             }
@@ -108,5 +143,6 @@ namespace HealthcareSystem
                 await errorDialog.ShowAsync();
             }
         }
+
     }
 }

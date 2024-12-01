@@ -1,4 +1,5 @@
 <page:BasePage
+    Width="850" Height="600" MinWidth="850" MinHeight="600"
     x:Class="HealthcareSystem.RoutineCheckupPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
