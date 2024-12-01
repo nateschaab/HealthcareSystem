@@ -71,15 +71,12 @@ namespace HealthcareSystem
                 var dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
-                // Clear existing rows (except header)
                 VisitReportGrid.RowDefinitions.Clear();
                 VisitReportGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
                 VisitReportGrid.Children.Clear();
 
-                // Add header back
                 AddHeaderRow();
 
-                // Add rows dynamically
                 int rowIndex = 1;
                 foreach (DataRow row in dataTable.Rows)
                 {
@@ -154,13 +151,11 @@ namespace HealthcareSystem
         {
             bool isDarkMode = IsDarkModeEnabled();
 
-            // Define styles for light and dark mode
             var lightRowColor = new SolidColorBrush(Windows.UI.Colors.WhiteSmoke);
             var darkRowColor = new SolidColorBrush(Windows.UI.Colors.Black);
             var alternateLightRowColor = new SolidColorBrush(Windows.UI.Colors.White);
             var alternateDarkRowColor = new SolidColorBrush(Windows.UI.Colors.DimGray);
 
-            // Iterate through all rows in the VisitReportGrid, skipping the header row (Row 0)
             for (int rowIndex = 1; rowIndex < VisitReportGrid.RowDefinitions.Count; rowIndex++)
             {
                 foreach (var child in VisitReportGrid.Children)
