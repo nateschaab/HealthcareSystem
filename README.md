@@ -24,6 +24,7 @@ Install-Package MySqlConnector -Version 0.34.0
 ----------------------------------------------------------------------
 
 # Stored Procedures
+----------------------------------------------------------------------
 // Trinidad's Stored Procedure:
 
 
