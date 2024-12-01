@@ -66,3 +66,65 @@ END
 
 
 ----------------------------------------------------------------------
+
+Test Queries:
+
+SELECT 
+    p.patient_id AS patientId,
+    CONCAT(pr.fname, ' ', pr.lname) AS patientName,
+    v.datetime AS visitDate,
+    v.blood_pressure_reading AS bloodPressure,
+    CONCAT(npr.fname, ' ', npr.lname) AS nurseName,
+    n.nurse_id AS nurseId,
+    CONCAT(dpr.fname, ' ', dpr.lname) AS doctorName,
+    d.doctor_id AS doctorId,
+    lt.test_type_name AS testName,
+    lt.result AS testResult,
+    v.initial_diagnosis AS initialDiagnosis,
+    v.final_diagnosis AS finalDiagnosis
+FROM 
+    patient p
+JOIN 
+    person pr ON p.pid = pr.pid
+JOIN 
+    appointment a ON p.patient_id = a.patient_id
+JOIN 
+    visit v ON a.visit_id = v.visit_id
+LEFT JOIN 
+    nurse n ON n.nurse_id = a.doctor_id
+LEFT JOIN 
+    person npr ON n.pid = npr.pid
+LEFT JOIN 
+    doctor d ON a.doctor_id = d.doctor_id
+LEFT JOIN 
+    person dpr ON d.pid = dpr.pid
+LEFT JOIN 
+    lab_test lt ON v.visit_id = lt.visit_id
+WHERE 
+    CONCAT(pr.fname, ' ', pr.lname) = 'Joe Smith'
+ORDER BY 
+    v.datetime;
+
+===========================================================================
+
+SELECT 
+    p.patient_id AS patientId,
+    CONCAT(pr.fname, ' ', pr.lname) AS patientName,
+    DATE(lt.time_performed) AS testDate,
+    COUNT(lt.lab_test_id) AS totalTests
+FROM 
+    patient p
+JOIN 
+    person pr ON p.pid = pr.pid
+JOIN 
+    appointment a ON p.patient_id = a.patient_id
+JOIN 
+    visit v ON a.visit_id = v.visit_id
+JOIN 
+    lab_test lt ON v.visit_id = lt.visit_id
+GROUP BY 
+    p.patient_id, CONCAT(pr.fname, ' ', pr.lname), DATE(lt.time_performed)
+HAVING 
+    COUNT(lt.lab_test_id) >= 2
+ORDER BY 
+    p.patient_id, testDate;
