@@ -57,7 +57,6 @@ namespace HealthcareSystem
             }
         }
 
-
         /// <summary>
         ///     Navigates to the <see cref="PatientManagementPage" /> for managing patient records.
         /// </summary>
