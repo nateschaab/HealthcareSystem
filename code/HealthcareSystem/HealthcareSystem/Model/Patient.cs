@@ -39,6 +39,8 @@ namespace HealthcareSystem.Model
         ///     Gets the display name of the patient in the format "PatientId : FirstName, LastName".
         /// </summary>
 
+        public bool IsActive { get; set; }
+
         public string DisplayName => $"{this.PatientId} : {FirstName}, {LastName}";
 
         #endregion

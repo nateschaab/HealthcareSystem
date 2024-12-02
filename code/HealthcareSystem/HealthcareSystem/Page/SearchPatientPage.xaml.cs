@@ -33,6 +33,7 @@ namespace HealthcareSystem
         public SearchPatientPage()
         {
             this.InitializeComponent();
+            this.PatientListView_SelectionChanged(null, null);
         }
 
         #endregion
@@ -88,8 +89,36 @@ namespace HealthcareSystem
             if (this.PatientListView.SelectedItem is Patient selectedPatient)
             {
                 this.patient = selectedPatient;
+
+                // Enable/Disable buttons based on IsActive status
+                if (this.patient.IsActive)
+                {
+                    ActivateButton.IsEnabled = false;  // Already active, disable "Activate"
+                    DeactivateButton.IsEnabled = true; // Can be deactivated
+                    EditPatientButton.IsEnabled = true;
+                    EditAppointmentButton.IsEnabled = true;
+                    EditCheckupButton.IsEnabled = true;
+                }
+                else
+                {
+                    ActivateButton.IsEnabled = true;   // Can be activated
+                    DeactivateButton.IsEnabled = false; // Already inactive, disable "Deactivate"
+                    EditPatientButton.IsEnabled = false;
+                    EditAppointmentButton.IsEnabled = false;
+                    EditCheckupButton.IsEnabled = false;
+                }
+            }
+            else
+            {
+                // If no patient is selected, disable all buttons except Search
+                ActivateButton.IsEnabled = false;
+                DeactivateButton.IsEnabled = false;
+                EditPatientButton.IsEnabled = false;
+                EditAppointmentButton.IsEnabled = false;
+                EditCheckupButton.IsEnabled = false;
             }
         }
+
 
         /// <summary>
         ///     Handles the Search Patients button click event.
@@ -145,5 +174,47 @@ namespace HealthcareSystem
         }
 
         #endregion
+
+        private void ActivatePatient_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.patient != null)
+            {
+                var dal = new PatientDal();
+                dal.ActivatePatient(this.patient.PatientId);
+
+                Debug.WriteLine($"Patient {this.patient.FirstName} {this.patient.LastName} activated.");
+                RefreshPatientList();
+            }
+            else
+            {
+                Debug.WriteLine("No patient selected.");
+            }
+        }
+
+        private void DeactivatePatient_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.patient != null)
+            {
+                var dal = new PatientDal();
+                dal.DeactivatePatient(this.patient.PatientId);
+
+                Debug.WriteLine($"Patient {this.patient.FirstName} {this.patient.LastName} deactivated.");
+                RefreshPatientList();
+            }
+            else
+            {
+                Debug.WriteLine("No patient selected.");
+            }
+        }
+
+        private void RefreshPatientList()
+        {
+            var dal = new PatientDal();
+            var patients = dal.SearchPatient(this.PatientFirstNameTextBox.Text, this.PatientLastNameTextBox.Text, this.DOBDatePicker.Date.DateTime);
+            this.PatientListView.ItemsSource = patients;
+
+            // Update button states based on the selected patient
+            PatientListView_SelectionChanged(null, null);
+        }
     }
 }
