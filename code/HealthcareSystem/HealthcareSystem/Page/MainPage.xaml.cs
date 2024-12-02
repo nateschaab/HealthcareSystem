@@ -18,11 +18,45 @@ namespace HealthcareSystem
         public MainPage()
         {
             this.InitializeComponent();
+            this.SetButtonStatesBasedOnRole();
         }
 
         #endregion
 
         #region Methods
+
+        private void SetButtonStatesBasedOnRole()
+        {
+            var userRole = SessionManager.Instance.Role;
+
+            // Admin role
+            if (userRole == "Admin")
+            {
+                this.SearchPatientsButton.IsEnabled = false;
+                this.ManagePatientsButton.IsEnabled = false;
+                this.CreateAppointmentButton.IsEnabled = false;
+                this.AdminFunctionsButton.IsEnabled = true;
+                this.AdminFunctionsButton.Visibility = Visibility.Visible;
+            }
+            // Nurse role
+            else if (userRole == "Nurse")
+            {
+                this.SearchPatientsButton.IsEnabled = true;
+                this.ManagePatientsButton.IsEnabled = true;
+                this.CreateAppointmentButton.IsEnabled = true;
+                this.AdminFunctionsButton.IsEnabled = false;
+                this.AdminFunctionsButton.Visibility = Visibility.Collapsed;
+            }
+            // Default case for unknown roles
+            else
+            {
+                this.SearchPatientsButton.IsEnabled = false;
+                this.ManagePatientsButton.IsEnabled = false;
+                this.CreateAppointmentButton.IsEnabled = false;
+                this.AdminFunctionsButton.IsEnabled = false;
+            }
+        }
+
 
         /// <summary>
         ///     Navigates to the <see cref="PatientManagementPage" /> for managing patient records.

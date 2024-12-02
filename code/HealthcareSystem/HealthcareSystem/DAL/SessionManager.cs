@@ -40,6 +40,7 @@ namespace HealthcareSystem.DAL
 
         public string LastName { get; set; }
 
+        public string Role { get; set; }
         #endregion
 
         #region Constructors

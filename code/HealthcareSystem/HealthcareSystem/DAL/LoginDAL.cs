@@ -25,7 +25,7 @@ namespace HealthcareSystem.DAL
         ///         <item><c>lastName</c>: The last name of the user, if the credentials are valid; otherwise, <c>null</c>.</item>
         ///     </list>
         /// </returns>
-        public (bool isValid, string firstName, string lastName) ValidateLoginAndGetName(string username,
+        public (bool isValid, string firstName, string lastName, string role) ValidateLoginAndGetName(string username,
             string password)
         {
             try
@@ -33,7 +33,7 @@ namespace HealthcareSystem.DAL
                 using var connection = new MySqlConnection(Connection.ConnectionString());
                 connection.Open();
 
-                var query = "SELECT fname, lname FROM account WHERE username = @username AND password = @password;";
+                var query = "SELECT fname, lname, role FROM account WHERE username = @username AND password = @password;";
 
                 using var command = new MySqlCommand(query, connection);
 
@@ -48,16 +48,17 @@ namespace HealthcareSystem.DAL
                 {
                     var firstName = reader["fname"].ToString();
                     var lastName = reader["lname"].ToString();
+                    var role = reader["role"].ToString();
 
-                    return (true, firstName, lastName);
+                    return (true, firstName, lastName, role);
                 }
 
-                return (false, null, null);
+                return (false, null, null, null);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in ValidateLoginAndGetName: {ex.Message}");
-                return (false, null, null);
+                return (false, null, null, null);
             }
         }
 
