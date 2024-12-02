@@ -7,23 +7,23 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20" Margin="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" x:Name="UserInfo" FontSize="20" Margin="0" />
 
         <!-- Back Button -->
-        <Button Content="Back" Click="BackButton_Click" HorizontalAlignment="Left" Grid.Row="1"/>
+        <Button Content="Back" Click="BackButton_Click" HorizontalAlignment="Left" Grid.Row="1" />
 
         <!-- Header Text -->
-        <TextBlock Text="Routine Checkup" FontSize="24" Margin="0,10,0,0" Grid.Row="2"/>
+        <TextBlock Text="Routine Checkup" FontSize="24" Margin="0,10,0,0" Grid.Row="2" />
 
         <!-- Divider Line -->
-        <Rectangle Grid.Row="3" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,0"/>
+        <Rectangle Grid.Row="3" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,0" />
 
         <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden" Margin="0,0,40,2" Grid.RowSpan="2">
             <Grid>
@@ -84,12 +84,13 @@
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <TextBlock Text="{Binding DisplayName}"/>
+                                <TextBlock Text="{Binding DisplayName}" />
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <TextBlock x:Name="AppointmentErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Apppointmenmt selection is required." Grid.Row="5" Margin="0,0,0,29" Grid.RowSpan="2"/>
+                <TextBlock x:Name="AppointmentErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Apppointmenmt selection is required." Grid.Row="5" Margin="0,0,0,29" Grid.RowSpan="2" />
 
                 <TextBlock Text="Systolic Blood Pressure (mmHg)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="6" Width="196"/>
                 <TextBox x:Name="SystolicTextBox" PlaceholderText="Systolic Blood Pressure" Grid.Row="7"/>
@@ -199,6 +200,7 @@
                     DefaultButton="Primary"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
+
                     Visibility="Collapsed" Grid.RowSpan="4" Height="0" Width="0">
                 </ContentDialog>
             </Grid>

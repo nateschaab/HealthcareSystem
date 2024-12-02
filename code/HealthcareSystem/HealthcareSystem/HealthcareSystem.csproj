@@ -107,6 +107,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>bin\x64\Debug\HealthcareSystem.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <LangVersion>8.0</LangVersion>
@@ -126,6 +127,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DAL\DoctorDAL.cs" />
     <Compile Include="Model\LabTest.cs" />
     <Compile Include="Model\RoutineCheckup.cs" />
     <Compile Include="Page\AddNursePage.xaml.cs">
@@ -142,13 +144,9 @@
     </Compile>
     <Compile Include="DAL\AppointmentDAL.cs" />
     <Compile Include="DAL\Connection.cs" />
-    <Compile Include="DAL\DataHelper.cs" />
-    <Compile Include="DAL\DoctorDAL.cs" />
     <Compile Include="DAL\LoginDAL.cs" />
-    <Compile Include="DAL\MailingAddressDal.cs" />
     <Compile Include="DAL\PatientDAL.cs" />
     <Compile Include="DAL\SessionManager.cs" />
-    <Compile Include="DAL\SQLInjectionDemo.cs" />
     <Compile Include="DAL\TestTypeDAL.cs" />
     <Compile Include="DAL\VisitDAL.cs" />
     <Compile Include="Page\BasePage.cs" />
@@ -158,10 +156,8 @@
     <Compile Include="Page\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\Account.cs" />
     <Compile Include="Model\Appointment.cs" />
     <Compile Include="Model\MailingAddress.cs" />
-    <Compile Include="Model\Nurse.cs" />
     <Compile Include="Model\Patient.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="Page\PatientManagementPage.xaml.cs">

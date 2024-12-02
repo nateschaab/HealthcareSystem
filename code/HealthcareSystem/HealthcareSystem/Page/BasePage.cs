@@ -1,16 +1,28 @@
 ﻿using System.Diagnostics;
+using Windows.Foundation;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
+using HealthcareSystem.DAL;
 
 namespace HealthcareSystem.Page
 {
+    /// <summary>
+    ///     Serves as a base class for pages in the HealthcareSystem application, providing common functionality.
+    /// </summary>
     public class BasePage : Windows.UI.Xaml.Controls.Page
     {
+        #region Methods
+
+        /// <summary>
+        ///     Loads the logged-in user's information into a specified <see cref="TextBlock" />.
+        /// </summary>
+        /// <param name="userInfoTextBlock">The <see cref="TextBlock" /> to display the user's information.</param>
         protected void LoadUserInfo(TextBlock userInfoTextBlock)
         {
-            string firstName = SessionManager.Instance.FirstName;
-            string lastName = SessionManager.Instance.LastName;
-            string username = SessionManager.Instance.Username;
+            var firstName = SessionManager.Instance.FirstName;
+            var lastName = SessionManager.Instance.LastName;
+            var username = SessionManager.Instance.Username;
 
             if (userInfoTextBlock != null)
             {
@@ -20,26 +32,31 @@ namespace HealthcareSystem.Page
             Debug.WriteLine($"User Info Loaded: {firstName} {lastName} (Username: {username})");
         }
 
-        protected override void OnNavigatedTo(Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        /// <summary>
+        ///     Invoked when the page is navigated to. Handles resizing the view and loading user information.
+        /// </summary>
+        /// <param name="e">Event data containing information about the navigation event.</param>
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            this.Loaded += (sender, args) =>
+            Loaded += (sender, args) =>
             {
-                double pageWidth = this.ActualWidth;
-                double pageHeight = this.ActualHeight;
+                var pageWidth = ActualWidth;
+                var pageHeight = ActualHeight;
 
-                if (!ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size(pageWidth, pageHeight)))
+                if (!ApplicationView.GetForCurrentView().TryResizeView(new Size(pageWidth, pageHeight)))
                 {
                     Debug.WriteLine("Failed to resize to page dimensions.");
                 }
             };
 
-            if (this.FindName("UserInfo") is TextBlock userInfoTextBlock)
+            if (FindName("UserInfo") is TextBlock userInfoTextBlock)
             {
                 this.LoadUserInfo(userInfoTextBlock);
             }
         }
 
+        #endregion
     }
 }

@@ -1,42 +1,51 @@
-﻿using DBAccess.DAL;
-using HealthcareSystem.Page;
-using MySql.Data.MySqlClient;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
-using System.Dynamic;
-using System;
+using Windows.UI;
+using Windows.UI.Text;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Text;
+using Windows.UI.Xaml.Media;
+using DBAccess.DAL;
+using HealthcareSystem.DAL;
+using HealthcareSystem.Page;
+using MySql.Data.MySqlClient;
 
 namespace HealthcareSystem
 {
     public sealed partial class ReportPage : BasePage
     {
+        #region Constructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ReportPage" /> class.
+        /// </summary>
         public ReportPage()
         {
             this.InitializeComponent();
         }
 
+        #endregion
+
+        #region Methods
+
         private void GenerateReport_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var startDate = StartDatePicker.SelectedDate?.ToString("yyyy-MM-dd");
-                var endDate = EndDatePicker.SelectedDate?.ToString("yyyy-MM-dd");
+                var startDate = this.StartDatePicker.SelectedDate?.ToString("yyyy-MM-dd");
+                var endDate = this.EndDatePicker.SelectedDate?.ToString("yyyy-MM-dd");
 
                 if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
                 {
-                    ShowErrorDialog("Please select both start and end dates.");
+                    this.ShowErrorDialog("Please select both start and end dates.");
                     return;
                 }
 
                 using var connection = new MySqlConnection(Connection.ConnectionString());
                 connection.Open();
 
-                string query = @"
+                var query = @"
                 SELECT 
                     v.datetime AS VisitDate,
                     p.patient_id AS PatientId,
@@ -71,18 +80,18 @@ namespace HealthcareSystem
                 var dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
-                VisitReportGrid.RowDefinitions.Clear();
-                VisitReportGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-                VisitReportGrid.Children.Clear();
+                this.VisitReportGrid.RowDefinitions.Clear();
+                this.VisitReportGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                this.VisitReportGrid.Children.Clear();
 
-                AddHeaderRow();
+                this.AddHeaderRow();
 
-                int rowIndex = 1;
+                var rowIndex = 1;
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    VisitReportGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                    this.VisitReportGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-                    for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
+                    for (var colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
                     {
                         var cellText = new TextBlock
                         {
@@ -94,24 +103,29 @@ namespace HealthcareSystem
 
                         Grid.SetRow(cellText, rowIndex);
                         Grid.SetColumn(cellText, colIndex);
-                        VisitReportGrid.Children.Add(cellText);
+                        this.VisitReportGrid.Children.Add(cellText);
                     }
 
                     rowIndex++;
                 }
-                ApplyThemeBasedStyles();
+
+                this.ApplyThemeBasedStyles();
             }
             catch (Exception ex)
             {
-                ShowErrorDialog($"Error: {ex.Message}");
+                this.ShowErrorDialog($"Error: {ex.Message}");
             }
         }
 
         private void AddHeaderRow()
         {
-            var headers = new[] { "Visit Date", "Patient ID", "Patient Name", "Doctor Name", "Nurse Name", "Test Names", "Test Dates", "Test Results", "Abnormality", "Diagnosis" };
+            var headers = new[]
+            {
+                "Visit Date", "Patient ID", "Patient Name", "Doctor Name", "Nurse Name", "Test Names", "Test Dates",
+                "Test Results", "Abnormality", "Diagnosis"
+            };
 
-            for (int colIndex = 0; colIndex < headers.Length; colIndex++)
+            for (var colIndex = 0; colIndex < headers.Length; colIndex++)
             {
                 var headerText = new TextBlock
                 {
@@ -123,10 +137,9 @@ namespace HealthcareSystem
 
                 Grid.SetRow(headerText, 0);
                 Grid.SetColumn(headerText, colIndex);
-                VisitReportGrid.Children.Add(headerText);
+                this.VisitReportGrid.Children.Add(headerText);
             }
         }
-
 
         private async void ShowErrorDialog(string message)
         {
@@ -144,31 +157,34 @@ namespace HealthcareSystem
         {
             var uiSettings = new UISettings();
             var backgroundColor = uiSettings.GetColorValue(UIColorType.Background);
-            return backgroundColor == Windows.UI.Colors.Black;
+            return backgroundColor == Colors.Black;
         }
 
         private void ApplyThemeBasedStyles()
         {
-            bool isDarkMode = IsDarkModeEnabled();
+            var isDarkMode = this.IsDarkModeEnabled();
 
-            var lightRowColor = new SolidColorBrush(Windows.UI.Colors.WhiteSmoke);
-            var darkRowColor = new SolidColorBrush(Windows.UI.Colors.Black);
-            var alternateLightRowColor = new SolidColorBrush(Windows.UI.Colors.White);
-            var alternateDarkRowColor = new SolidColorBrush(Windows.UI.Colors.DimGray);
+            var lightRowColor = new SolidColorBrush(Colors.WhiteSmoke);
+            var darkRowColor = new SolidColorBrush(Colors.Black);
+            var alternateLightRowColor = new SolidColorBrush(Colors.White);
+            var alternateDarkRowColor = new SolidColorBrush(Colors.DimGray);
 
-            for (int rowIndex = 1; rowIndex < VisitReportGrid.RowDefinitions.Count; rowIndex++)
+            for (var rowIndex = 1; rowIndex < this.VisitReportGrid.RowDefinitions.Count; rowIndex++)
             {
-                foreach (var child in VisitReportGrid.Children)
+                foreach (var child in this.VisitReportGrid.Children)
                 {
                     if (child is Border border && Grid.GetRow(border) == rowIndex)
                     {
                         border.Background = isDarkMode
-                            ? (rowIndex % 2 == 0 ? darkRowColor : alternateDarkRowColor)
-                            : (rowIndex % 2 == 0 ? lightRowColor : alternateLightRowColor);
+                            ? rowIndex % 2 == 0 ? darkRowColor : alternateDarkRowColor
+                            : rowIndex % 2 == 0
+                                ? lightRowColor
+                                : alternateLightRowColor;
                     }
                 }
             }
         }
 
+        #endregion
     }
 }
