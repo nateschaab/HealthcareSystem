@@ -13,6 +13,11 @@ using HealthcareSystem.Page;
 
 namespace HealthcareSystem
 {
+    /// <summary>
+    /// Represents a page for managing routine checkups, allowing users to view, edit, and complete routine checkup details.
+    /// Inherits from <see cref="BasePage"/>.
+    /// </summary>
+    
     public sealed partial class RoutineCheckupPage : BasePage
     {
         #region Data members
@@ -557,5 +562,10 @@ namespace HealthcareSystem
         }
 
         #endregion
+
+        private void WBCLowValTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
