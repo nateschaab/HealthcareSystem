@@ -3,7 +3,6 @@
     x:Class="HealthcareSystem.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HealthcareSystem"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:page="using:HealthcareSystem.Page"
@@ -20,7 +19,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -28,11 +27,11 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" x:Name="UserInfo" FontSize="20" />
-        <Button  Grid.Row="1" Content="Search Patients" Click="SearchPatients_Click" />
-        <Button  Grid.Row="2" Content="Manage Patients" Click="ManagePatients_Click" />
-        <Button  Grid.Row="3" Content="Create Appointment" Click="CreateAppointment_Click" />
-        <Button  Grid.Row="4" Content="Admin Functions" Click="AdminFunctions_Click" />
-        <Button  Grid.Row="5" Content="Log Out" Click="LogoutButton_Click" TabIndex="1" Margin="0,20,0,0"/>
+        <Button Grid.Row="1" Content="Search Patients" Click="SearchPatients_Click" />
+        <Button Grid.Row="2" Content="Manage Patients" Click="ManagePatients_Click" />
+        <Button Grid.Row="3" Content="Create Appointment" Click="CreateAppointment_Click" />
+        <Button Grid.Row="4" Content="Admin Functions" Click="AdminFunctions_Click" />
+        <Button Grid.Row="5" Content="Log Out" Click="LogoutButton_Click" TabIndex="1" Margin="0,20,0,0" />
 
     </Grid>
 </page:BasePage>

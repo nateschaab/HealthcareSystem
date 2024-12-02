@@ -8,7 +8,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -17,102 +17,110 @@
 
         <TextBlock Grid.Row="0" x:Name="UserInfo" FontSize="20" Margin="0" />
 
-        <Button Grid.Row="1" Content="Back" Click="BackButton_Click" VerticalAlignment="Top"/>
+        <Button Grid.Row="1" Content="Back" Click="BackButton_Click" VerticalAlignment="Top" />
 
         <!-- Header Text -->
         <TextBlock Text="Patient Management" FontSize="24" Grid.Row="2" Margin="0,20,0,0" />
 
-        <Rectangle Grid.Row="3" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,0"/>
+        <Rectangle Grid.Row="3" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,0" />
 
         <!-- Form and ListView container -->
         <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="250"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="250" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!-- SSN Field -->
-                <TextBlock Text="SSN" Grid.Row="0" Margin="0,10,0,0"/>
-                <TextBox x:Name="PatientSSNTextBox" PlaceholderText="Patient SSN" Grid.Row="1"/>
-                <TextBlock x:Name="SSNErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid SSN" Grid.Row="2"/>
+                <TextBlock Text="SSN" Grid.Row="0" Margin="0,10,0,0" />
+                <TextBox x:Name="PatientSSNTextBox" PlaceholderText="Patient SSN" Grid.Row="1" />
+                <TextBlock x:Name="SSNErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid SSN"
+                           Grid.Row="2" />
 
                 <!-- First Name Field -->
-                <TextBlock Text="First Name" Grid.Row="3" Margin="0,10,0,0"/>
-                <TextBox x:Name="PatientFirstNameTextBox" PlaceholderText="Patient First Name" Grid.Row="4"/>
-                <TextBlock x:Name="FirstNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="First Name Is Required" Grid.Row="5"/>
+                <TextBlock Text="First Name" Grid.Row="3" Margin="0,10,0,0" />
+                <TextBox x:Name="PatientFirstNameTextBox" PlaceholderText="Patient First Name" Grid.Row="4" />
+                <TextBlock x:Name="FirstNameErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="First Name Is Required" Grid.Row="5" />
 
                 <!-- Last Name Field -->
-                <TextBlock Text="Last Name" Grid.Row="6" Margin="0,10,0,0"/>
-                <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Patient Last Name" Grid.Row="7"/>
-                <TextBlock x:Name="LastNameErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Last Name Is Required" Grid.Row="8"/>
+                <TextBlock Text="Last Name" Grid.Row="6" Margin="0,10,0,0" />
+                <TextBox x:Name="PatientLastNameTextBox" PlaceholderText="Patient Last Name" Grid.Row="7" />
+                <TextBlock x:Name="LastNameErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Last Name Is Required" Grid.Row="8" />
 
                 <!-- DOB Field -->
-                <TextBlock Text="Birth Date" Grid.Row="9" Margin="0,10,0,0"/>
-                <DatePicker x:Name="DOBDatePicker" Grid.Row="10"/>
-                <TextBlock x:Name="DOBErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Date Is Required" Grid.Row="11"/>
+                <TextBlock Text="Birth Date" Grid.Row="9" Margin="0,10,0,0" />
+                <DatePicker x:Name="DOBDatePicker" Grid.Row="10" />
+                <TextBlock x:Name="DOBErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Date Is Required"
+                           Grid.Row="11" />
 
                 <!-- Gender Field -->
-                <TextBlock Text="Gender" Grid.Row="12" Margin="0,10,0,0"/>
+                <TextBlock Text="Gender" Grid.Row="12" Margin="0,10,0,0" />
                 <ComboBox x:Name="GenderComboBox" PlaceholderText="Select Gender" Grid.Row="13">
-                    <ComboBoxItem Content="M"/>
-                    <ComboBoxItem Content="F"/>
-                    <ComboBoxItem Content="O"/>
+                    <ComboBoxItem Content="M" />
+                    <ComboBoxItem Content="F" />
+                    <ComboBoxItem Content="O" />
                 </ComboBox>
-                <TextBlock x:Name="GenderErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Gender is required" Grid.Row="14"/>
+                <TextBlock x:Name="GenderErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Gender is required" Grid.Row="14" />
 
                 <!-- Street Address Field -->
-                <TextBlock Text="Street Address" Grid.Row="15" Margin="0,10,0,0"/>
-                <TextBox x:Name="StreetAddressTextBox" PlaceholderText="Street Address" Grid.Row="16"/>
-                <TextBlock x:Name="StreetAddressErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Street Address" Grid.Row="17"/>
+                <TextBlock Text="Street Address" Grid.Row="15" Margin="0,10,0,0" />
+                <TextBox x:Name="StreetAddressTextBox" PlaceholderText="Street Address" Grid.Row="16" />
+                <TextBlock x:Name="StreetAddressErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Invalid Street Address" Grid.Row="17" />
 
                 <!-- Zip Code Field -->
-                <TextBlock Text="Zip Code" Grid.Row="18" Margin="0,10,0,0"/>
-                <TextBox x:Name="ZipCodeTextBox" PlaceholderText="Zip Code" Grid.Row="19"/>
-                <TextBlock x:Name="ZipCodeErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Zip Code" Grid.Row="20"/>
+                <TextBlock Text="Zip Code" Grid.Row="18" Margin="0,10,0,0" />
+                <TextBox x:Name="ZipCodeTextBox" PlaceholderText="Zip Code" Grid.Row="19" />
+                <TextBlock x:Name="ZipCodeErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Invalid Zip Code" Grid.Row="20" />
 
                 <!-- City Field -->
-                <TextBlock Text="City" Grid.Row="21" Margin="0,10,0,0"/>
-                <TextBox x:Name="CityTextBox" PlaceholderText="City" Grid.Row="22"/>
-                <TextBlock x:Name="CityErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="City Is Required" Grid.Row="23"/>
+                <TextBlock Text="City" Grid.Row="21" Margin="0,10,0,0" />
+                <TextBox x:Name="CityTextBox" PlaceholderText="City" Grid.Row="22" />
+                <TextBlock x:Name="CityErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="City Is Required"
+                           Grid.Row="23" />
 
                 <!-- State ComboBox -->
-                <TextBlock Text="State" Grid.Row="24" Margin="0,10,0,0"/>
+                <TextBlock Text="State" Grid.Row="24" Margin="0,10,0,0" />
                 <ComboBox x:Name="StateComboBox" PlaceholderText="Select State" Grid.Row="25">
                     <ComboBoxItem Content="Alabama" />
                     <ComboBoxItem Content="Alaska" />
@@ -166,10 +174,11 @@
                     <ComboBoxItem Content="Wyoming" />
                 </ComboBox>
 
-                <TextBlock x:Name="StateErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="State is required" Grid.Row="26"/>
+                <TextBlock x:Name="StateErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="State is required" Grid.Row="26" />
 
                 <!-- Country ComboBox -->
-                <TextBlock Text="Country" Grid.Row="27" Margin="0,10,0,0"/>
+                <TextBlock Text="Country" Grid.Row="27" Margin="0,10,0,0" />
                 <ComboBox x:Name="CountryComboBox" PlaceholderText="Select Country" Grid.Row="28">
                     <ComboBoxItem Content="United States" />
                     <ComboBoxItem Content="Canada" />
@@ -193,19 +202,23 @@
                     <ComboBoxItem Content="Argentina" />
                 </ComboBox>
 
-                <TextBlock x:Name="CountryErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Country is required" Grid.Row="29"/>
+                <TextBlock x:Name="CountryErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Country is required" Grid.Row="29" />
 
                 <!-- Phone Number Field -->
-                <TextBlock Text="Phone Number" Grid.Row="30" Margin="0,10,0,0"/>
-                <TextBox x:Name="PhoneNumberTextBox" PlaceholderText="Phone Number" Grid.Row="31"/>
-                <TextBlock x:Name="PhoneErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Invalid Phone Number" Grid.Row="32"/>
+                <TextBlock Text="Phone Number" Grid.Row="30" Margin="0,10,0,0" />
+                <TextBox x:Name="PhoneNumberTextBox" PlaceholderText="Phone Number" Grid.Row="31" />
+                <TextBlock x:Name="PhoneErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Invalid Phone Number" Grid.Row="32" />
 
                 <!-- Buttons -->
-                <Button Content="Register Patient" Click="RegisterPatient_Click" Grid.Row="33" Margin="0,10,0,0"/>
-                <Button Content="Edit Patient" Click="EditPatient_Click" Grid.Row="33" Margin="160,10,0,0" VerticalAlignment="Top"/>
+                <Button Content="Register Patient" Click="RegisterPatient_Click" Grid.Row="33" Margin="0,10,0,0" />
+                <Button Content="Edit Patient" Click="EditPatient_Click" Grid.Row="33" Margin="160,10,0,0"
+                        VerticalAlignment="Top" />
 
                 <!-- ListView for displaying patients -->
-                <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Grid.Row="34" Margin="0,20,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Grid.Row="34"
+                          Margin="0,20,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>

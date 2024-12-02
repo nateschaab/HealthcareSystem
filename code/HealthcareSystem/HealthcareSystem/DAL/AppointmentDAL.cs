@@ -1,13 +1,25 @@
-using HealthcareSystem.Model;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using HealthcareSystem.Model;
+using MySql.Data.MySqlClient;
 
-namespace DBAccess.DAL
+namespace HealthcareSystem.DAL
 {
+    /// <summary>
+    ///     Data access layer for managing appointment-related database operations.
+    /// </summary>
     public class AppointmentDAL
     {
+        #region Methods
+
+        /// <summary>
+        ///     Creates a new appointment in the database.
+        /// </summary>
+        /// <param name="doctorId">The ID of the doctor for the appointment.</param>
+        /// <param name="patientId">The ID of the patient for the appointment.</param>
+        /// <param name="appointmentDateTime">The date and time of the appointment.</param>
+        /// <param name="reason">The reason for the appointment.</param>
+        /// <returns><c>true</c> if the appointment is successfully created; otherwise, <c>false</c>.</returns>
         public bool CreateAppointment(int doctorId, int patientId, DateTime appointmentDateTime, string reason)
         {
             if (this.IsDoubleBooking(doctorId, patientId, appointmentDateTime))
@@ -21,12 +33,12 @@ namespace DBAccess.DAL
                 using var connection = new MySqlConnection(Connection.ConnectionString());
                 connection.Open();
 
-                int appointmentId = this.GenerateAppointmentId();
-                int visitId = this.GenerateVisitId();
+                var appointmentId = this.GenerateAppointmentId();
+                var visitId = this.GenerateVisitId();
 
                 using var transaction = connection.BeginTransaction();
 
-                string appointmentQuery = @"
+                var appointmentQuery = @"
                     INSERT INTO appointment (appt_id, doctor_id, patient_id, datetime, appt_reason, visit_id)
                     VALUES (@appt_id, @doctor_id, @patient_id, @datetime, @appt_reason, @visit_id);";
 
@@ -38,9 +50,9 @@ namespace DBAccess.DAL
                 appointmentCommand.Parameters.AddWithValue("@appt_reason", reason);
                 appointmentCommand.Parameters.AddWithValue("@visit_id", visitId);
 
-                int appointmentRowsAffected = appointmentCommand.ExecuteNonQuery();
+                var appointmentRowsAffected = appointmentCommand.ExecuteNonQuery();
 
-                string visitQuery = @"
+                var visitQuery = @"
                     INSERT INTO visit (visit_id, appt_id, datetime)
                     VALUES (@visit_id, @appt_id, @datetime);";
 
@@ -49,18 +61,16 @@ namespace DBAccess.DAL
                 visitCommand.Parameters.AddWithValue("@appt_id", appointmentId);
                 visitCommand.Parameters.AddWithValue("@datetime", appointmentDateTime);
 
-                int visitRowsAffected = visitCommand.ExecuteNonQuery();
+                var visitRowsAffected = visitCommand.ExecuteNonQuery();
 
                 if (appointmentRowsAffected > 0 && visitRowsAffected > 0)
                 {
                     transaction.Commit();
                     return true;
                 }
-                else
-                {
-                    transaction.Rollback();
-                    return false;
-                }
+
+                transaction.Rollback();
+                return false;
             }
             catch (Exception ex)
             {
@@ -69,15 +79,22 @@ namespace DBAccess.DAL
             }
         }
 
+        /// <summary>
+        ///     Checks if there is a double booking for a doctor or patient at the specified time.
+        /// </summary>
+        /// <param name="doctorId">The ID of the doctor.</param>
+        /// <param name="patientId">The ID of the patient.</param>
+        /// <param name="appointmentDateTime">The proposed appointment date and time.</param>
+        /// <returns><c>true</c> if a double booking is detected; otherwise, <c>false</c>.</returns>
         private bool IsDoubleBooking(int doctorId, int patientId, DateTime appointmentDateTime)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
             connection.Open();
 
-            DateTime startTime = appointmentDateTime.AddMinutes(-20);
-            DateTime endTime = appointmentDateTime.AddMinutes(20);
+            var startTime = appointmentDateTime.AddMinutes(-20);
+            var endTime = appointmentDateTime.AddMinutes(20);
 
-            string query = @"
+            var query = @"
                 SELECT COUNT(*) FROM appointment 
                 WHERE (doctor_id = @doctor_id OR patient_id = @patient_id)
                 AND datetime BETWEEN @start_time AND @end_time;";
@@ -88,23 +105,36 @@ namespace DBAccess.DAL
             command.Parameters.AddWithValue("@start_time", startTime);
             command.Parameters.AddWithValue("@end_time", endTime);
 
-            int count = Convert.ToInt32(command.ExecuteScalar());
+            var count = Convert.ToInt32(command.ExecuteScalar());
 
             return count > 0;
         }
 
+        /// <summary>
+        ///     Generates a random appointment ID.
+        /// </summary>
+        /// <returns>A randomly generated appointment ID.</returns>
         private int GenerateAppointmentId()
         {
-            Random random = new Random();
+            var random = new Random();
             return random.Next(100000, 999999);
         }
 
+        /// <summary>
+        ///     Generates a random visit ID.
+        /// </summary>
+        /// <returns>A randomly generated visit ID.</returns>
         private int GenerateVisitId()
         {
-            Random random = new Random();
+            var random = new Random();
             return random.Next(100000, 999999);
         }
 
+        /// <summary>
+        ///     Retrieves a list of appointments for a given patient.
+        /// </summary>
+        /// <param name="patient">The patient whose appointments are to be retrieved.</param>
+        /// <returns>A list of <see cref="Appointment" /> objects associated with the patient.</returns>
         public List<Appointment> GetPatientAppointments(Patient patient)
         {
             var appointmentList = new List<Appointment>();
@@ -145,32 +175,30 @@ namespace DBAccess.DAL
                 query += " AND per.lname = @lastName";
             }
 
-            DateTime defaultDob = new DateTime(1600, 12, 31);
+            var defaultDob = new DateTime(1600, 12, 31);
             if (patient.DateOfBirth.Date != defaultDob)
             {
                 query += " AND per.dob = @dob";
             }
 
-            Debug.WriteLine("Executing query: " + query);
-            Debug.WriteLine($"Parameter firstName: {patient.FirstName}");
-            Debug.WriteLine($"Parameter lastName: {patient.LastName}");
-            Debug.WriteLine($"Parameter dob: {patient.DateOfBirth.Date}");
-
             using var command = new MySqlCommand(query, connection);
 
             if (!string.IsNullOrEmpty(patient.FirstName))
             {
-                command.Parameters.Add(new MySqlParameter("@firstName", MySqlDbType.VarChar) { Value = patient.FirstName });
+                command.Parameters.Add(new MySqlParameter("@firstName", MySqlDbType.VarChar)
+                    { Value = patient.FirstName });
             }
 
             if (!string.IsNullOrEmpty(patient.LastName))
             {
-                command.Parameters.Add(new MySqlParameter("@lastName", MySqlDbType.VarChar) { Value = patient.LastName });
+                command.Parameters.Add(
+                    new MySqlParameter("@lastName", MySqlDbType.VarChar) { Value = patient.LastName });
             }
 
             if (patient.DateOfBirth.Date != defaultDob)
             {
-                command.Parameters.Add(new MySqlParameter("@dob", MySqlDbType.Date) { Value = patient.DateOfBirth.Date });
+                command.Parameters.Add(
+                    new MySqlParameter("@dob", MySqlDbType.Date) { Value = patient.DateOfBirth.Date });
             }
 
             using var reader = command.ExecuteReader();
@@ -195,11 +223,12 @@ namespace DBAccess.DAL
                     reader.GetInt32(patientIdOrdinal),
                     reader.GetDateTime(datetimeOrdinal),
                     reader.IsDBNull(apptReasonOrdinal) ? null : reader.GetString(apptReasonOrdinal)
-                );
-
-                appointment.DoctorName = reader.GetString(doctorNameOrdinal);
-                appointment.PatientName = reader.GetString(patientNameOrdinal);
-                appointment.PatientDOB = reader.GetDateTime(patientDobOrdinal);
+                )
+                {
+                    DoctorName = reader.GetString(doctorNameOrdinal),
+                    PatientName = reader.GetString(patientNameOrdinal),
+                    PatientDOB = reader.GetDateTime(patientDobOrdinal)
+                };
 
                 appointmentList.Add(appointment);
             }
@@ -207,8 +236,21 @@ namespace DBAccess.DAL
             return appointmentList;
         }
 
-
-        public bool EditAppointment(int appointmentId, int doctorId, int patientId, DateTime newAppointmentDateTime, string newReason, bool isDateTimeChanged)
+        /// <summary>
+        ///     Edits an existing appointment in the database.
+        /// </summary>
+        /// <param name="appointmentId">The ID of the appointment to edit.</param>
+        /// <param name="doctorId">The new doctor ID for the appointment.</param>
+        /// <param name="patientId">The new patient ID for the appointment.</param>
+        /// <param name="newAppointmentDateTime">The new date and time for the appointment.</param>
+        /// <param name="newReason">The new reason for the appointment.</param>
+        /// <param name="isDateTimeChanged">
+        ///     <c>true</c> if the appointment date and time are being changed; otherwise, <c>false</c>
+        ///     .
+        /// </param>
+        /// <returns><c>true</c> if the appointment is successfully edited; otherwise, <c>false</c>.</returns>
+        public bool EditAppointment(int appointmentId, int doctorId, int patientId, DateTime newAppointmentDateTime,
+            string newReason, bool isDateTimeChanged)
         {
             if (newAppointmentDateTime < DateTime.Now)
             {
@@ -229,12 +271,12 @@ namespace DBAccess.DAL
 
                 using var transaction = connection.BeginTransaction();
 
-                string updateAppointmentQuery = @"
-                    UPDATE appointment
-                    SET doctor_id = @doctor_id,  
-                        datetime = @datetime, 
-                        appt_reason = @appt_reason
-                    WHERE appt_id = @appt_id;";
+                var updateAppointmentQuery = @"
+            UPDATE appointment
+            SET doctor_id = @doctor_id,  
+                datetime = @datetime, 
+                appt_reason = @appt_reason
+            WHERE appt_id = @appt_id;";
 
                 using var appointmentCommand = new MySqlCommand(updateAppointmentQuery, connection, transaction);
                 appointmentCommand.Parameters.AddWithValue("@doctor_id", doctorId);
@@ -242,29 +284,27 @@ namespace DBAccess.DAL
                 appointmentCommand.Parameters.AddWithValue("@appt_reason", newReason);
                 appointmentCommand.Parameters.AddWithValue("@appt_id", appointmentId);
 
-                int appointmentRowsAffected = appointmentCommand.ExecuteNonQuery();
+                var appointmentRowsAffected = appointmentCommand.ExecuteNonQuery();
 
-                string updateVisitQuery = @"
-                    UPDATE visit
-                    SET datetime = @datetime
-                    WHERE appt_id = @appt_id;";
+                var updateVisitQuery = @"
+            UPDATE visit
+            SET datetime = @datetime
+            WHERE appt_id = @appt_id;";
 
                 using var visitCommand = new MySqlCommand(updateVisitQuery, connection, transaction);
                 visitCommand.Parameters.AddWithValue("@datetime", newAppointmentDateTime);
                 visitCommand.Parameters.AddWithValue("@appt_id", appointmentId);
 
-                int visitRowsAffected = visitCommand.ExecuteNonQuery();
+                var visitRowsAffected = visitCommand.ExecuteNonQuery();
 
                 if (appointmentRowsAffected > 0)
                 {
                     transaction.Commit();
                     return true;
                 }
-                else
-                {
-                    transaction.Rollback();
-                    return false;
-                }
+
+                transaction.Rollback();
+                return false;
             }
             catch (Exception ex)
             {
@@ -273,5 +313,6 @@ namespace DBAccess.DAL
             }
         }
 
+        #endregion
     }
 }

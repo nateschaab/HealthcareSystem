@@ -1,12 +1,32 @@
-using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using DBAccess.DAL;
+using MySql.Data.MySqlClient;
 
-namespace DBAccess.DAL
+namespace HealthcareSystem.DAL
 {
+    /// <summary>
+    ///     Provides data access functionality for user login operations.
+    /// </summary>
     public class LoginDAL
     {
-        public (bool isValid, string firstName, string lastName) ValidateLoginAndGetName(string username, string password)
+        #region Methods
+
+        /// <summary>
+        ///     Validates the login credentials for a user and retrieves their first and last name if the credentials are valid.
+        /// </summary>
+        /// <param name="username">The username of the account to validate.</param>
+        /// <param name="password">The password of the account to validate.</param>
+        /// <returns>
+        ///     A tuple containing:
+        ///     <list type="bullet">
+        ///         <item><c>isValid</c>: A boolean indicating whether the login credentials are valid.</item>
+        ///         <item><c>firstName</c>: The first name of the user, if the credentials are valid; otherwise, <c>null</c>.</item>
+        ///         <item><c>lastName</c>: The last name of the user, if the credentials are valid; otherwise, <c>null</c>.</item>
+        ///     </list>
+        /// </returns>
+        public (bool isValid, string firstName, string lastName) ValidateLoginAndGetName(string username,
+            string password)
         {
             try
             {
@@ -26,8 +46,8 @@ namespace DBAccess.DAL
                 using var reader = command.ExecuteReader();
                 if (reader.Read())
                 {
-                    string firstName = reader["fname"].ToString();
-                    string lastName = reader["lname"].ToString();
+                    var firstName = reader["fname"].ToString();
+                    var lastName = reader["lname"].ToString();
 
                     return (true, firstName, lastName);
                 }
@@ -40,5 +60,7 @@ namespace DBAccess.DAL
                 return (false, null, null);
             }
         }
+
+        #endregion
     }
 }

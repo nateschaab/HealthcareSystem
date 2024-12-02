@@ -7,147 +7,175 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" x:Name="UserInfo" FontSize="20" Margin="0" />
 
         <!-- Back Button -->
-        <Button Content="Back" Click="BackButton_Click" HorizontalAlignment="Left" Grid.Row="1"/>
+        <Button Content="Back" Click="BackButton_Click" HorizontalAlignment="Left" Grid.Row="1" />
 
         <!-- Header Text -->
-        <TextBlock Text="Routine Checkup" FontSize="24" Margin="0,10,0,0" Grid.Row="2"/>
+        <TextBlock Text="Routine Checkup" FontSize="24" Margin="0,10,0,0" Grid.Row="2" />
 
         <!-- Divider Line -->
-        <Rectangle Grid.Row="3" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,0"/>
+        <Rectangle Grid.Row="3" Height="2" Fill="Black" HorizontalAlignment="Stretch" Margin="0,0,0,0" />
 
         <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden" Margin="0,0,40,2" Grid.RowSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!-- Form Labels and Fields -->
-                <TextBlock Text="Appointment" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="3"/>
-                <ComboBox x:Name="AppointmentComboBox" PlaceholderText="Select Appointment" SelectionChanged="ComboBox_SelectionChanged" Grid.Row="4" VerticalAlignment="Center">
+                <TextBlock Text="Appointment" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="3" />
+                <ComboBox x:Name="AppointmentComboBox" PlaceholderText="Select Appointment"
+                          SelectionChanged="ComboBox_SelectionChanged" Grid.Row="4" VerticalAlignment="Center">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <TextBlock Text="{Binding DisplayName}"/>
+                                <TextBlock Text="{Binding DisplayName}" />
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <TextBlock x:Name="AppointmentErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Apppointmenmt selection is required." Grid.Row="5" Margin="0,0,0,29" Grid.RowSpan="2"/>
+                <TextBlock x:Name="AppointmentErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Apppointmenmt selection is required." Grid.Row="5" Margin="0,0,0,29" Grid.RowSpan="2" />
 
-                <TextBlock Text="Systolic Blood Pressure (mmHg)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="6"/>
-                <TextBox x:Name="SystolicTextBox" PlaceholderText="Systolic Blood Pressure" Grid.Row="7"/>
-                <TextBlock x:Name="SystolicErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Systolic Blood Pressure is required." Grid.Row="8" Margin="0,0,0,29" Grid.RowSpan="2"/>
+                <TextBlock Text="Systolic Blood Pressure (mmHg)" HorizontalAlignment="Left" Margin="0,10,0,0"
+                           Grid.Row="6" />
+                <TextBox x:Name="SystolicTextBox" PlaceholderText="Systolic Blood Pressure" Grid.Row="7" />
+                <TextBlock x:Name="SystolicErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Systolic Blood Pressure is required." Grid.Row="8" Margin="0,0,0,29" Grid.RowSpan="2" />
 
-                <TextBlock Text="Diastolic Blood Pressure (mmHg)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="9"/>
-                <TextBox x:Name="DiastolicTextBox" PlaceholderText="Diastolic Blood Pressure" Grid.Row="10"/>
-                <TextBlock x:Name="DiastolicErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Diastolic Blood Pressure is required." Grid.Row="11" Margin="0,0,0,29" Grid.RowSpan="2"/>
+                <TextBlock Text="Diastolic Blood Pressure (mmHg)" HorizontalAlignment="Left" Margin="0,10,0,0"
+                           Grid.Row="9" />
+                <TextBox x:Name="DiastolicTextBox" PlaceholderText="Diastolic Blood Pressure" Grid.Row="10" />
+                <TextBlock x:Name="DiastolicErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Diastolic Blood Pressure is required." Grid.Row="11" Margin="0,0,0,29"
+                           Grid.RowSpan="2" />
 
-                <TextBlock Text="Body Temperature (°F)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="12"/>
-                <TextBox x:Name="BodyTempTextBox" PlaceholderText="Body Temperature" Grid.Row="13"/>
-                <TextBlock x:Name="BodyTempErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Body Temperature is required." Grid.Row="14" Margin="0,0,0,29" Grid.RowSpan="2"/>
+                <TextBlock Text="Body Temperature (°F)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="12" />
+                <TextBox x:Name="BodyTempTextBox" PlaceholderText="Body Temperature" Grid.Row="13" />
+                <TextBlock x:Name="BodyTempErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Body Temperature is required." Grid.Row="14" Margin="0,0,0,29" Grid.RowSpan="2" />
 
-                <TextBlock Text="Weight (lbs)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="15"/>
-                <TextBox x:Name="WeightTextBox" PlaceholderText="Weight" Grid.Row="16"/>
-                <TextBlock x:Name="WeightErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Weight is required." Grid.Row="17" Margin="0,0,0,29" Grid.RowSpan="2"/>
+                <TextBlock Text="Weight (lbs)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="15" />
+                <TextBox x:Name="WeightTextBox" PlaceholderText="Weight" Grid.Row="16" />
+                <TextBlock x:Name="WeightErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Weight is required." Grid.Row="17" Margin="0,0,0,29" Grid.RowSpan="2" />
 
-                <TextBlock Text="Height (inches)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="18"/>
-                <TextBox x:Name="HeightTextBox" PlaceholderText="Height" Grid.Row="19"/>
-                <TextBlock x:Name="HeightErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Height is required." Grid.Row="20" Margin="0,0,0,29" Grid.RowSpan="2"/>
+                <TextBlock Text="Height (inches)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="18" />
+                <TextBox x:Name="HeightTextBox" PlaceholderText="Height" Grid.Row="19" />
+                <TextBlock x:Name="HeightErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Height is required." Grid.Row="20" Margin="0,0,0,29" Grid.RowSpan="2" />
 
-                <TextBlock Text="Pulse (beats per minute)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="21"/>
-                <TextBox x:Name="PulseTextBox" PlaceholderText="Pulse" Grid.Row="22"/>
-                <TextBlock x:Name="PulseErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Pulse is required." Grid.Row="23" Margin="0,0,0,29" Grid.RowSpan="2"/>
+                <TextBlock Text="Pulse (beats per minute)" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="21" />
+                <TextBox x:Name="PulseTextBox" PlaceholderText="Pulse" Grid.Row="22" />
+                <TextBlock x:Name="PulseErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Pulse is required." Grid.Row="23" Margin="0,0,0,29" Grid.RowSpan="2" />
 
-                <TextBlock Text="Symptoms" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="24"/>
-                <TextBox x:Name="SymptomsTextBox" PlaceholderText="Symptoms" Grid.Row="25"/>
-                <TextBlock x:Name="SymptomsErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Symptoms are required." Grid.Row="26" Margin="0,0,0,29" Grid.RowSpan="2"/>
+                <TextBlock Text="Symptoms" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="24" />
+                <TextBox x:Name="SymptomsTextBox" PlaceholderText="Symptoms" Grid.Row="25" />
+                <TextBlock x:Name="SymptomsErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Symptoms are required." Grid.Row="26" Margin="0,0,0,29" Grid.RowSpan="2" />
 
-                <TextBlock Text="Initial Diagnosis" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="27"/>
-                <TextBox x:Name="InitialDiagnosisTextBox" PlaceholderText="Initial Diagnosis" Grid.Row="28"/>
-                <TextBlock x:Name="InitialDiagnosisErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Initial Diagnosis is required." Grid.Row="29" Margin="0,0,0,29" Grid.RowSpan="2"/>
+                <TextBlock Text="Initial Diagnosis" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="27" />
+                <TextBox x:Name="InitialDiagnosisTextBox" PlaceholderText="Initial Diagnosis" Grid.Row="28" />
+                <TextBlock x:Name="InitialDiagnosisErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Initial Diagnosis is required." Grid.Row="29" Margin="0,0,0,29" Grid.RowSpan="2" />
 
-                <TextBlock Text="Final Diagnosis" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="30"/>
-                <TextBox x:Name="FinalDiagnosisTextBox" PlaceholderText="Final Diagnosis" Grid.Row="31"/>
-                <TextBlock x:Name="FinalDiagnosisErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Final Diagnosis is required." Grid.Row="32" Margin="0,0,0,44" Grid.RowSpan="2"/>
+                <TextBlock Text="Final Diagnosis" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="30" />
+                <TextBox x:Name="FinalDiagnosisTextBox" PlaceholderText="Final Diagnosis" Grid.Row="31" />
+                <TextBlock x:Name="FinalDiagnosisErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Final Diagnosis is required." Grid.Row="32" Margin="0,0,0,44" Grid.RowSpan="2" />
 
-                <Button x:Name="CheckupButton" Content="Complete Checkup" Click="CompleteCheckupButton_Click" Margin="0,10,0,0" Grid.Row="40" VerticalAlignment="Top"/>
-                <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Visible" Grid.Row="39" Margin="0,0,0,0"/>
+                <Button x:Name="CheckupButton" Content="Complete Checkup" Click="CompleteCheckupButton_Click"
+                        Margin="0,10,0,0" Grid.Row="40" VerticalAlignment="Top" />
+                <TextBlock x:Name="ErrorTextBlock" Foreground="Red" Visibility="Visible" Grid.Row="39" Margin="0,0,0,0" />
 
-                <TextBlock Text="Select Lab Tests" FontSize="18" Margin="0,10,0,10" Grid.Row="33"/>
+                <TextBlock Text="Select Lab Tests" FontSize="18" Margin="0,10,0,10" Grid.Row="33" />
 
-                <CheckBox x:Name="LowDensityLipoproteinsCheckBox" Content="Low Density Lipoproteins" Grid.Row="34" RenderTransformOrigin="0.543,0.375"/>
-                <CheckBox x:Name="HepatitisACheckBox" Content="Hepatitis A" Margin="610,0,0,0" Grid.Row="34"/>
-                <CheckBox x:Name="HepatitisBCheckBox" Content="Hepatitis B" Margin="415,0,0,0" Grid.Row="34"/>
-                <CheckBox x:Name="WhiteBloodCellCheckBox" Content="White Blood Cell" Margin="209,0,0,0" Grid.Row="34"/>
+                <CheckBox x:Name="LowDensityLipoproteinsCheckBox" Content="Low Density Lipoproteins" Grid.Row="34"
+                          RenderTransformOrigin="0.543,0.375" />
+                <CheckBox x:Name="HepatitisACheckBox" Content="Hepatitis A" Margin="610,0,0,0" Grid.Row="34" />
+                <CheckBox x:Name="HepatitisBCheckBox" Content="Hepatitis B" Margin="415,0,0,0" Grid.Row="34" />
+                <CheckBox x:Name="WhiteBloodCellCheckBox" Content="White Blood Cell" Margin="209,0,0,0" Grid.Row="34" />
 
-                <TextBox x:Name="LDLResultTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="37" VerticalAlignment="Center" Width="165"/>
-                <TextBlock HorizontalAlignment="Left" Margin="45,0,0,0" Grid.Row="36" Text="LDL Result:" VerticalAlignment="Center"/>
-                <TextBlock x:Name="LDLResultErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2"/>
+                <TextBox x:Name="LDLResultTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="37"
+                         VerticalAlignment="Center" Width="165" />
+                <TextBlock HorizontalAlignment="Left" Margin="45,0,0,0" Grid.Row="36" Text="LDL Result:"
+                           VerticalAlignment="Center" />
+                <TextBlock x:Name="LDLResultErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2" />
 
-                <TextBox x:Name="WBCResultTextBox" HorizontalAlignment="Left" Height="31" Margin="193,0,0,0" Grid.Row="37" VerticalAlignment="Center" Width="165"/>
-                <TextBlock HorizontalAlignment="Left" Margin="241,0,0,0" Grid.Row="36" Text="WBC Result:" VerticalAlignment="Center"/>
-                <TextBlock x:Name="WBCResultErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2"/>
+                <TextBox x:Name="WBCResultTextBox" HorizontalAlignment="Left" Height="31" Margin="193,0,0,0"
+                         Grid.Row="37" VerticalAlignment="Center" Width="165" />
+                <TextBlock HorizontalAlignment="Left" Margin="241,0,0,0" Grid.Row="36" Text="WBC Result:"
+                           VerticalAlignment="Center" />
+                <TextBlock x:Name="WBCResultErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2" />
 
-                <TextBox x:Name="HBResultTextBox" HorizontalAlignment="Left" Height="31" Margin="387,0,0,0" Grid.Row="37" VerticalAlignment="Center" Width="165"/>
-                <TextBlock HorizontalAlignment="Left" Margin="435,0,0,0" Grid.Row="36" Text="HB Result:" VerticalAlignment="Center"/>
-                <TextBlock x:Name="HBResultErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2"/>
+                <TextBox x:Name="HBResultTextBox" HorizontalAlignment="Left" Height="31" Margin="387,0,0,0"
+                         Grid.Row="37" VerticalAlignment="Center" Width="165" />
+                <TextBlock HorizontalAlignment="Left" Margin="435,0,0,0" Grid.Row="36" Text="HB Result:"
+                           VerticalAlignment="Center" />
+                <TextBlock x:Name="HBResultErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2" />
 
-                <TextBox x:Name="HAResultTextBox" HorizontalAlignment="Left" Height="31" Margin="582,0,0,0" Grid.Row="37" VerticalAlignment="Center" Width="165"/>
-                <TextBlock HorizontalAlignment="Left" Margin="631,0,0,0" Grid.Row="36" Text="HA Result:" VerticalAlignment="Center"/>
-                <TextBlock x:Name="HAResultErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2"/>
+                <TextBox x:Name="HAResultTextBox" HorizontalAlignment="Left" Height="31" Margin="582,0,0,0"
+                         Grid.Row="37" VerticalAlignment="Center" Width="165" />
+                <TextBlock HorizontalAlignment="Left" Margin="631,0,0,0" Grid.Row="36" Text="HA Result:"
+                           VerticalAlignment="Center" />
+                <TextBlock x:Name="HAResultErrorTextBlock" Foreground="Red" Visibility="Collapsed"
+                           Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2" />
 
                 <ContentDialog
                     x:Name="ConfirmationDialog"
@@ -158,8 +186,7 @@
                     DefaultButton="Primary"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
-                    Visibility="Collapsed" Grid.RowSpan="4">
-                </ContentDialog>
+                    Visibility="Collapsed" Grid.RowSpan="4" />
             </Grid>
 
         </ScrollViewer>

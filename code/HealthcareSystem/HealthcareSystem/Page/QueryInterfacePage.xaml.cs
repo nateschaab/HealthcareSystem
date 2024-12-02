@@ -1,56 +1,57 @@
-﻿using DBAccess.DAL;
-using HealthcareSystem.Page;
-using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using DBAccess.DAL;
+using HealthcareSystem.DAL;
+using HealthcareSystem.Page;
+using MySql.Data.MySqlClient;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace HealthcareSystem
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    ///     An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class QueryInterfacePage : BasePage
     {
+        #region Constructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="QueryInterfacePage" /> class.
+        /// </summary>
         public QueryInterfacePage()
         {
             this.InitializeComponent();
         }
 
+        #endregion
+
+        #region Methods
+
         private void ExecuteQuery_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                bool isDarkMode = SessionManager.Instance.IsDarkModeEnabled();
+                var isDarkMode = SessionManager.Instance.IsDarkModeEnabled();
 
-                var lightThemeBorderColor = Windows.UI.Colors.Gray;
-                var lightThemeRowColor1 = Windows.UI.Colors.White;
-                var lightThemeRowColor2 = Windows.UI.Colors.WhiteSmoke;
+                var lightThemeBorderColor = Colors.Gray;
+                var lightThemeRowColor1 = Colors.White;
+                var lightThemeRowColor2 = Colors.WhiteSmoke;
 
-                var darkThemeBorderColor = Windows.UI.Colors.DarkGray;
-                var darkThemeRowColor1 = Windows.UI.Colors.Black;
-                var darkThemeRowColor2 = Windows.UI.Colors.DimGray;
+                var darkThemeBorderColor = Colors.DarkGray;
+                var darkThemeRowColor1 = Colors.Black;
+                var darkThemeRowColor2 = Colors.DimGray;
 
                 var borderColor = isDarkMode ? darkThemeBorderColor : lightThemeBorderColor;
                 var rowColor1 = isDarkMode ? darkThemeRowColor1 : lightThemeRowColor1;
                 var rowColor2 = isDarkMode ? darkThemeRowColor2 : lightThemeRowColor2;
 
-                string query = SqlQueryTextBox.Text;
+                var query = this.SqlQueryTextBox.Text;
 
                 using var connection = new MySqlConnection(Connection.ConnectionString());
                 connection.Open();
@@ -60,24 +61,24 @@ namespace HealthcareSystem
                 var dataTable = new DataTable();
                 adapter.Fill(dataTable);
 
-                ResultsGrid.Children.Clear();
-                ResultsGrid.RowDefinitions.Clear();
-                ResultsGrid.ColumnDefinitions.Clear();
+                this.ResultsGrid.Children.Clear();
+                this.ResultsGrid.RowDefinitions.Clear();
+                this.ResultsGrid.ColumnDefinitions.Clear();
 
-                for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
+                for (var colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
                 {
-                    ResultsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    this.ResultsGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 }
 
-                ResultsGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                this.ResultsGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-                for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
+                for (var colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
                 {
                     var headerBorder = new Border
                     {
                         BorderThickness = new Thickness(1),
                         BorderBrush = new SolidColorBrush(borderColor),
-                        Background = new SolidColorBrush(isDarkMode ? Windows.UI.Colors.DarkSlateGray : Windows.UI.Colors.LightGray),
+                        Background = new SolidColorBrush(isDarkMode ? Colors.DarkSlateGray : Colors.LightGray),
                         Padding = new Thickness(5)
                     };
 
@@ -92,20 +93,20 @@ namespace HealthcareSystem
 
                     Grid.SetRow(headerBorder, 0);
                     Grid.SetColumn(headerBorder, colIndex);
-                    ResultsGrid.Children.Add(headerBorder);
+                    this.ResultsGrid.Children.Add(headerBorder);
                 }
 
-                for (int rowIndex = 0; rowIndex < dataTable.Rows.Count; rowIndex++)
+                for (var rowIndex = 0; rowIndex < dataTable.Rows.Count; rowIndex++)
                 {
-                    ResultsGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                    this.ResultsGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-                    for (int colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
+                    for (var colIndex = 0; colIndex < dataTable.Columns.Count; colIndex++)
                     {
                         var cellBorder = new Border
                         {
                             BorderThickness = new Thickness(1),
                             BorderBrush = new SolidColorBrush(borderColor),
-                            Background = new SolidColorBrush((rowIndex % 2 == 0) ? rowColor1 : rowColor2),
+                            Background = new SolidColorBrush(rowIndex % 2 == 0 ? rowColor1 : rowColor2),
                             Padding = new Thickness(5)
                         };
 
@@ -119,7 +120,7 @@ namespace HealthcareSystem
 
                         Grid.SetRow(cellBorder, rowIndex + 1);
                         Grid.SetColumn(cellBorder, colIndex);
-                        ResultsGrid.Children.Add(cellBorder);
+                        this.ResultsGrid.Children.Add(cellBorder);
                     }
                 }
             }
@@ -140,9 +141,12 @@ namespace HealthcareSystem
                 await errorDialog.ShowAsync();
             }
         }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(MainPage));
         }
+
+        #endregion
     }
 }

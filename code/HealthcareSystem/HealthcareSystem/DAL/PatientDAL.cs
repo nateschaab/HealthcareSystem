@@ -1,25 +1,25 @@
-﻿using DBAccess.Model;
-using HealthcareSystem.Model;
-using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Security.Cryptography;
-using System.Transactions;
+using DBAccess.DAL;
+using DBAccess.Model;
+using HealthcareSystem.Model;
+using MySql.Data.MySqlClient;
 
-
-namespace DBAccess.DAL
+namespace HealthcareSystem.DAL
 {
+    /// <summary>
+    ///     Provides data access methods for managing patients in the database.
+    /// </summary>
     public class PatientDal
     {
+        #region Methods
+
         /// <summary>
-        /// Retrieve data using the connected model : data reader
-        /// 
+        ///     Retrieves all patients from the database using a data reader.
         /// </summary>
-        /// <returns> all the employees</returns>
+        /// <returns>A list of <see cref="Patient" /> objects representing all patients in the database.</returns>
         public List<Patient> GetPatientsFromReader()
         {
             var patientList = new List<Patient>();
@@ -89,6 +89,24 @@ namespace DBAccess.DAL
             return patientList;
         }
 
+        /// <summary>
+        ///     Creates a <see cref="Patient" /> object from a database record.
+        /// </summary>
+        /// <param name="reader">The <see cref="MySqlDataReader" /> containing the data.</param>
+        /// <param name="ssnOrdinal">The ordinal position of the SSN column.</param>
+        /// <param name="patientIdOrdinal">The ordinal position of the patient ID column.</param>
+        /// <param name="pidOrdinal">The ordinal position of the person ID column.</param>
+        /// <param name="phoneNumberOrdinal">The ordinal position of the phone number column.</param>
+        /// <param name="firstNameOrdinal">The ordinal position of the first name column.</param>
+        /// <param name="lastNameOrdinal">The ordinal position of the last name column.</param>
+        /// <param name="dobOrdinal">The ordinal position of the date of birth column.</param>
+        /// <param name="genderOrdinal">The ordinal position of the gender column.</param>
+        /// <param name="streetAddressOrdinal">The ordinal position of the street address column.</param>
+        /// <param name="zipOrdinal">The ordinal position of the ZIP code column.</param>
+        /// <param name="cityOrdinal">The ordinal position of the city column.</param>
+        /// <param name="stateOrdinal">The ordinal position of the state column.</param>
+        /// <param name="countryOrdinal">The ordinal position of the country column.</param>
+        /// <returns>A <see cref="Patient" /> object populated with the data from the record.</returns>
         private static Patient CreatePatient(
             MySqlDataReader reader,
             int ssnOrdinal,
@@ -105,29 +123,33 @@ namespace DBAccess.DAL
             int stateOrdinal,
             int countryOrdinal)
         {
-
             var mailingAddess = new MailingAddress(
                 reader.GetString(streetAddressOrdinal),
                 reader.GetString(zipOrdinal),
                 reader.GetString(cityOrdinal),
                 reader.GetString(stateOrdinal),
                 reader.GetString(countryOrdinal)
-                );
+            );
 
             return new Patient
             (
-                reader.GetInt32(patientIdOrdinal),           
-                reader.GetInt32(pidOrdinal),                     
+                reader.GetInt32(patientIdOrdinal),
+                reader.GetInt32(pidOrdinal),
                 reader.GetString(phoneNumberOrdinal),
                 reader.GetString(ssnOrdinal),
                 reader.GetString(genderOrdinal),
-                reader.GetString(firstNameOrdinal),          
+                reader.GetString(firstNameOrdinal),
                 reader.GetString(lastNameOrdinal),
                 reader.GetDateTime(dobOrdinal),
                 mailingAddess
             );
         }
 
+        /// <summary>
+        ///     Registers a new patient in the database.
+        /// </summary>
+        /// <param name="patient">The <see cref="Patient" /> object containing patient details.</param>
+        /// <returns><c>true</c> if the patient was registered successfully; otherwise, <c>false</c>.</returns>
         public bool RegisterPatient(Patient patient)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
@@ -146,13 +168,18 @@ namespace DBAccess.DAL
 
                 using (var insertAddressCommand = new MySqlCommand(insertAddressQuery, connection, transaction))
                 {
-                    insertAddressCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
-                    insertAddressCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
-                    insertAddressCommand.Parameters.Add(new MySqlParameter("@zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
-                    insertAddressCommand.Parameters.Add(new MySqlParameter("@city", MySqlDbType.VarChar) { Value = patient.MailAddress.City });
-                    insertAddressCommand.Parameters.Add(new MySqlParameter("@state", MySqlDbType.VarChar) { Value = patient.MailAddress.State });
-                    insertAddressCommand.Parameters.Add(new MySqlParameter("@country", MySqlDbType.VarChar) { Value = patient.MailAddress.Country });
-
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.StreetAddress });
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.StreetAddress });
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@zip", MySqlDbType.String)
+                        { Value = patient.MailAddress.Zip });
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@city", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.City });
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@state", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.State });
+                    insertAddressCommand.Parameters.Add(new MySqlParameter("@country", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.Country });
 
                     Debug.WriteLine("Inserting Mailing Address without PID with the following values:");
                     Debug.WriteLine($"Street Address: {patient.MailAddress.StreetAddress}");
@@ -173,14 +200,20 @@ namespace DBAccess.DAL
 
                 using (var insertPersonCommand = new MySqlCommand(insertPersonQuery, connection, transaction))
                 {
-                    insertPersonCommand.Parameters.Add(new MySqlParameter("@ssn", MySqlDbType.String) { Value = patient.SSN });
-                    insertPersonCommand.Parameters.Add(new MySqlParameter("@fname", MySqlDbType.VarChar) { Value = patient.FirstName });
-                    insertPersonCommand.Parameters.Add(new MySqlParameter("@lname", MySqlDbType.VarChar) { Value = patient.LastName });
-                    insertPersonCommand.Parameters.Add(new MySqlParameter("@gender", MySqlDbType.String) { Value = patient.Gender });
-                    insertPersonCommand.Parameters.Add(new MySqlParameter("@dob", MySqlDbType.Date) { Value = patient.DateOfBirth });
-                    insertPersonCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
-                    insertPersonCommand.Parameters.Add(new MySqlParameter("@zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
-
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@ssn", MySqlDbType.String)
+                        { Value = patient.SSN });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@fname", MySqlDbType.VarChar)
+                        { Value = patient.FirstName });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@lname", MySqlDbType.VarChar)
+                        { Value = patient.LastName });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@gender", MySqlDbType.String)
+                        { Value = patient.Gender });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@dob", MySqlDbType.Date)
+                        { Value = patient.DateOfBirth });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.StreetAddress });
+                    insertPersonCommand.Parameters.Add(new MySqlParameter("@zip", MySqlDbType.String)
+                        { Value = patient.MailAddress.Zip });
 
                     patient.PersonId = Convert.ToInt32(insertPersonCommand.ExecuteScalar());
                     Debug.WriteLine($"Generated Person ID (pid): {patient.PersonId}");
@@ -194,10 +227,12 @@ namespace DBAccess.DAL
 
                 using (var updateAddressCommand = new MySqlCommand(updateAddressQuery, connection, transaction))
                 {
-                    updateAddressCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32) { Value = patient.PersonId });
-                    updateAddressCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
-                    updateAddressCommand.Parameters.Add(new MySqlParameter("@zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
-
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32)
+                        { Value = patient.PersonId });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@street_address", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.StreetAddress });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@zip", MySqlDbType.String)
+                        { Value = patient.MailAddress.Zip });
 
                     Debug.WriteLine("Updating Mailing Address with the following values:");
                     Debug.WriteLine($"pid: {patient.PersonId}");
@@ -216,9 +251,10 @@ namespace DBAccess.DAL
                 int rowsAffected;
                 using (var insertPatientCommand = new MySqlCommand(insertPatientQuery, connection, transaction))
                 {
-                    insertPatientCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32) { Value = patient.PersonId });
-                    insertPatientCommand.Parameters.Add(new MySqlParameter("@phoneNumber", MySqlDbType.VarChar) { Value = patient.PhoneNumber });
-
+                    insertPatientCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32)
+                        { Value = patient.PersonId });
+                    insertPatientCommand.Parameters.Add(new MySqlParameter("@phoneNumber", MySqlDbType.VarChar)
+                        { Value = patient.PhoneNumber });
 
                     Debug.WriteLine("Inserting Patient Details with the following values:");
                     Debug.WriteLine($"pid: {patient.PersonId}");
@@ -233,11 +269,9 @@ namespace DBAccess.DAL
                     transaction.Commit();
                     return true;
                 }
-                else
-                {
-                    transaction.Rollback();
-                    return false;
-                }
+
+                transaction.Rollback();
+                return false;
             }
             catch (Exception ex)
             {
@@ -246,7 +280,10 @@ namespace DBAccess.DAL
             }
         }
 
-
+        /// <summary>
+        ///     Updates an existing patient's information in the database.
+        /// </summary>
+        /// <param name="patient">The <see cref="Patient" /> object containing the updated details.</param>
         public void UpdatePatientInDatabase(Patient patient)
         {
             using var connection = new MySqlConnection(Connection.ConnectionString());
@@ -280,16 +317,24 @@ namespace DBAccess.DAL
 
                 using (var updateAddressCommand = new MySqlCommand(updateAddressQuery, connection, transaction))
                 {
-                    updateAddressCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32) { Value = patient.PersonId });
-                    updateAddressCommand.Parameters.Add(new MySqlParameter("@new_street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
-                    updateAddressCommand.Parameters.Add(new MySqlParameter("@new_zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
-                    updateAddressCommand.Parameters.Add(new MySqlParameter("@city", MySqlDbType.VarChar) { Value = patient.MailAddress.City });
-                    updateAddressCommand.Parameters.Add(new MySqlParameter("@state", MySqlDbType.VarChar) { Value = patient.MailAddress.State });
-                    updateAddressCommand.Parameters.Add(new MySqlParameter("@country", MySqlDbType.VarChar) { Value = patient.MailAddress.Country });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32)
+                        { Value = patient.PersonId });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@new_street_address", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.StreetAddress });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@new_zip", MySqlDbType.String)
+                        { Value = patient.MailAddress.Zip });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@city", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.City });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@state", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.State });
+                    updateAddressCommand.Parameters.Add(new MySqlParameter("@country", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.Country });
 
                     Debug.WriteLine("Executing mailing address update with parameters:");
-                    Debug.WriteLine($"pid: {patient.PersonId}, Street Address: {patient.MailAddress.StreetAddress}, Zip: {patient.MailAddress.Zip}");
-                    Debug.WriteLine($"City: {patient.MailAddress.City}, State: {patient.MailAddress.State}, Country: {patient.MailAddress.Country}");
+                    Debug.WriteLine(
+                        $"pid: {patient.PersonId}, Street Address: {patient.MailAddress.StreetAddress}, Zip: {patient.MailAddress.Zip}");
+                    Debug.WriteLine(
+                        $"City: {patient.MailAddress.City}, State: {patient.MailAddress.State}, Country: {patient.MailAddress.Country}");
 
                     var addressRowsAffected = updateAddressCommand.ExecuteNonQuery();
                     Debug.WriteLine($"Mailing address update completed, rows affected: {addressRowsAffected}");
@@ -309,18 +354,28 @@ namespace DBAccess.DAL
 
                 using (var updatePersonCommand = new MySqlCommand(updatePersonQuery, connection, transaction))
                 {
-                    updatePersonCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32) { Value = patient.PersonId });
-                    updatePersonCommand.Parameters.Add(new MySqlParameter("@ssn", MySqlDbType.String) { Value = patient.SSN });
-                    updatePersonCommand.Parameters.Add(new MySqlParameter("@fname", MySqlDbType.VarChar) { Value = patient.FirstName });
-                    updatePersonCommand.Parameters.Add(new MySqlParameter("@lname", MySqlDbType.VarChar) { Value = patient.LastName });
-                    updatePersonCommand.Parameters.Add(new MySqlParameter("@gender", MySqlDbType.String) { Value = patient.Gender });
-                    updatePersonCommand.Parameters.Add(new MySqlParameter("@dob", MySqlDbType.Date) { Value = patient.DateOfBirth });
-                    updatePersonCommand.Parameters.Add(new MySqlParameter("@new_street_address", MySqlDbType.VarChar) { Value = patient.MailAddress.StreetAddress });
-                    updatePersonCommand.Parameters.Add(new MySqlParameter("@new_zip", MySqlDbType.String) { Value = patient.MailAddress.Zip });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@pid", MySqlDbType.Int32)
+                        { Value = patient.PersonId });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@ssn", MySqlDbType.String)
+                        { Value = patient.SSN });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@fname", MySqlDbType.VarChar)
+                        { Value = patient.FirstName });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@lname", MySqlDbType.VarChar)
+                        { Value = patient.LastName });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@gender", MySqlDbType.String)
+                        { Value = patient.Gender });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@dob", MySqlDbType.Date)
+                        { Value = patient.DateOfBirth });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@new_street_address", MySqlDbType.VarChar)
+                        { Value = patient.MailAddress.StreetAddress });
+                    updatePersonCommand.Parameters.Add(new MySqlParameter("@new_zip", MySqlDbType.String)
+                        { Value = patient.MailAddress.Zip });
 
                     Debug.WriteLine("Executing person details update with parameters:");
-                    Debug.WriteLine($"pid: {patient.PersonId}, SSN: {patient.SSN}, First Name: {patient.FirstName}, Last Name: {patient.LastName}");
-                    Debug.WriteLine($"Gender: {patient.Gender}, Date of Birth: {patient.DateOfBirth}, Street Address: {patient.MailAddress.StreetAddress}, Zip: {patient.MailAddress.Zip}");
+                    Debug.WriteLine(
+                        $"pid: {patient.PersonId}, SSN: {patient.SSN}, First Name: {patient.FirstName}, Last Name: {patient.LastName}");
+                    Debug.WriteLine(
+                        $"Gender: {patient.Gender}, Date of Birth: {patient.DateOfBirth}, Street Address: {patient.MailAddress.StreetAddress}, Zip: {patient.MailAddress.Zip}");
 
                     var personRowsAffected = updatePersonCommand.ExecuteNonQuery();
                     Debug.WriteLine($"Person details update completed, rows affected: {personRowsAffected}");
@@ -334,8 +389,10 @@ namespace DBAccess.DAL
 
                 using (var updatePatientCommand = new MySqlCommand(updatePatientQuery, connection, transaction))
                 {
-                    updatePatientCommand.Parameters.Add(new MySqlParameter("@patientId", MySqlDbType.Int32) { Value = patient.PatientId });
-                    updatePatientCommand.Parameters.Add(new MySqlParameter("@phoneNumber", MySqlDbType.VarChar) { Value = patient.PhoneNumber });
+                    updatePatientCommand.Parameters.Add(new MySqlParameter("@patientId", MySqlDbType.Int32)
+                        { Value = patient.PatientId });
+                    updatePatientCommand.Parameters.Add(new MySqlParameter("@phoneNumber", MySqlDbType.VarChar)
+                        { Value = patient.PhoneNumber });
 
                     Debug.WriteLine("Executing patient details update with parameters:");
                     Debug.WriteLine($"Patient ID: {patient.PatientId}, Phone Number: {patient.PhoneNumber}");
@@ -373,6 +430,13 @@ namespace DBAccess.DAL
             }
         }
 
+        /// <summary>
+        ///     Searches for patients in the database based on the given criteria.
+        /// </summary>
+        /// <param name="firstName">The first name of the patient (optional).</param>
+        /// <param name="lastName">The last name of the patient (optional).</param>
+        /// <param name="dob">The date of birth of the patient (optional).</param>
+        /// <returns>A list of <see cref="Patient" /> objects matching the search criteria.</returns>
         public List<Patient> SearchPatient(string firstName, string lastName, DateTime dob)
         {
             var patientList = new List<Patient>();
@@ -417,7 +481,7 @@ namespace DBAccess.DAL
                 Debug.WriteLine("Adding filter for lastName.");
             }
 
-            DateTime defaultDob = new DateTime(1600, 12, 31);
+            var defaultDob = new DateTime(1600, 12, 31);
             if (dob.Date != defaultDob)
             {
                 query += " AND per.dob = @dob";
@@ -493,6 +557,6 @@ namespace DBAccess.DAL
             return patientList;
         }
 
+        #endregion
     }
 }
-

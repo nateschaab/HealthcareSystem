@@ -1,13 +1,14 @@
-﻿using DBAccess.DAL;
-using DBAccess.Model;
-using HealthcareSystem.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using DBAccess.DAL;
+using DBAccess.Model;
+using HealthcareSystem.DAL;
+using HealthcareSystem.Model;
 using HealthcareSystem.Page;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -15,26 +16,47 @@ using HealthcareSystem.Page;
 namespace HealthcareSystem
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    ///     Represents a page for managing patient records, including adding, editing, and displaying patient details.
     /// </summary>
     public sealed partial class PatientManagementPage : BasePage
     {
+        #region Data members
+
         private Patient patient;
 
         private List<Patient> patients;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PatientManagementPage" /> class and loads patient records.
+        /// </summary>
         public PatientManagementPage()
         {
             this.InitializeComponent();
             this.LoadPatients();
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PatientManagementPage" /> class with a selected patient.
+        /// </summary>
+        /// <param name="selectedPatient">The patient whose details are preloaded into the form.</param>
         public PatientManagementPage(Patient selectedPatient)
         {
             this.InitializeComponent();
             this.patient = selectedPatient;
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Handles navigation to this page, preselecting a patient and populating their details if a parameter is passed.
+        /// </summary>
+        /// <param name="e">Navigation event arguments containing the selected patient parameter.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -50,6 +72,9 @@ namespace HealthcareSystem
             }
         }
 
+        /// <summary>
+        ///     Loads all patient records from the database and populates the patient list view.
+        /// </summary>
         private void LoadPatients()
         {
             Debug.WriteLine("Loading Patients From Database");
@@ -58,12 +83,21 @@ namespace HealthcareSystem
             this.PatientListView.ItemsSource = this.patients;
         }
 
+        /// <summary>
+        ///     Retrieves the list of patients from the database.
+        /// </summary>
+        /// <returns>A list of <see cref="Patient" /> objects retrieved from the database.</returns>
         private List<Patient> GetPatientsFromDatabase()
         {
             var dal = new PatientDal();
             return dal.GetPatientsFromReader();
         }
 
+        /// <summary>
+        ///     Handles selection changes in the patient list view and populates the form with the selected patient's details.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">Event arguments containing information about the selection change.</param>
         private void PatientListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.PatientListView.SelectedItem is Patient selectedPatient)
@@ -72,6 +106,10 @@ namespace HealthcareSystem
             }
         }
 
+        /// <summary>
+        ///     Populates the form fields with the details of the specified patient.
+        /// </summary>
+        /// <param name="selectedPatient">The patient whose details are displayed in the form.</param>
         private void PopulatePatientFields(Patient selectedPatient)
         {
             this.PatientSSNTextBox.Text = selectedPatient.SSN;
@@ -89,16 +127,23 @@ namespace HealthcareSystem
             if (selectedPatient.MailAddress != null)
             {
                 this.StateComboBox.SelectedItem = this.StateComboBox.Items?
-                    .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.MailAddress.State);
+                    .FirstOrDefault(item =>
+                        (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.MailAddress.State);
 
                 this.CountryComboBox.SelectedItem = this.CountryComboBox.Items?
-                    .FirstOrDefault(item => (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.MailAddress.Country);
+                    .FirstOrDefault(item =>
+                        (item as ComboBoxItem)?.Content?.ToString() == selectedPatient.MailAddress.Country);
             }
         }
 
+        /// <summary>
+        ///     Handles the "Register Patient" button click event to register a new patient in the database.
+        ///     Validates inputs and reloads the patient list upon successful registration.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void RegisterPatient_Click(object sender, RoutedEventArgs e)
         {
-
             if (this.ValidateInputs())
             {
                 var ssn = this.PatientSSNTextBox.Text;
@@ -140,7 +185,12 @@ namespace HealthcareSystem
             }
         }
 
-
+        /// <summary>
+        ///     Handles the "Edit Patient" button click event to update the details of an existing patient.
+        ///     Validates inputs and reloads the patient list upon successful update.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void EditPatient_Click(object sender, RoutedEventArgs e)
         {
             if (this.PatientListView.SelectedItem is Patient selectedPatient)
@@ -182,9 +232,14 @@ namespace HealthcareSystem
             Frame.Navigate(typeof(MainPage));
         }
 
+        /// <summary>
+        ///     Validates the form inputs for registering or editing a patient.
+        ///     Highlights errors if validation fails.
+        /// </summary>
+        /// <returns><c>true</c> if all inputs are valid; otherwise, <c>false</c>.</returns>
         private bool ValidateInputs()
         {
-            bool isValid = true;
+            var isValid = true;
 
             if (!Regex.IsMatch(this.PatientSSNTextBox.Text, @"^\d{9}$"))
             {
@@ -287,7 +342,8 @@ namespace HealthcareSystem
 
             if (this.CountryComboBox.SelectedItem == null)
             {
-                this.CountryErrorTextBlock.Text = "Country selection is required. Please choose a country from the list.";
+                this.CountryErrorTextBlock.Text =
+                    "Country selection is required. Please choose a country from the list.";
                 this.SetErrorVisibility(this.CountryErrorTextBlock, true);
                 isValid = false;
             }
@@ -310,11 +366,16 @@ namespace HealthcareSystem
             return isValid;
         }
 
-
+        /// <summary>
+        ///     Sets the visibility of an error message for a specific field.
+        /// </summary>
+        /// <param name="errorTextBlock">The <see cref="TextBlock" /> containing the error message.</param>
+        /// <param name="isVisible">Indicates whether the error message should be visible.</param>
         private void SetErrorVisibility(TextBlock errorTextBlock, bool isVisible)
         {
             errorTextBlock.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        #endregion
     }
 }
