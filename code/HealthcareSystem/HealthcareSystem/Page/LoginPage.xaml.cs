@@ -60,7 +60,7 @@ namespace HealthcareSystem
             var username = this.UsernameTextBox.Text;
             var password = this.PasswordBox.Password;
 
-            var (isValid, firstName, lastName) = this._loginDAL.ValidateLoginAndGetName(username, password);
+            var (isValid, firstName, lastName, role) = this._loginDAL.ValidateLoginAndGetName(username, password);
 
             if (isValid)
             {
@@ -69,6 +69,7 @@ namespace HealthcareSystem
                 SessionManager.Instance.Username = username;
                 SessionManager.Instance.FirstName = firstName;
                 SessionManager.Instance.LastName = lastName;
+                SessionManager.Instance.Role = role;
 
                 Frame.Navigate(typeof(MainPage));
             }

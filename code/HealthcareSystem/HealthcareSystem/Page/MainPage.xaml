@@ -27,11 +27,11 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" x:Name="UserInfo" FontSize="20" />
-        <Button Grid.Row="1" Content="Search Patients" Click="SearchPatients_Click" />
-        <Button Grid.Row="2" Content="Manage Patients" Click="ManagePatients_Click" />
-        <Button Grid.Row="3" Content="Create Appointment" Click="CreateAppointment_Click" />
-        <Button Grid.Row="4" Content="Admin Functions" Click="AdminFunctions_Click" />
-        <Button Grid.Row="5" Content="Log Out" Click="LogoutButton_Click" TabIndex="1" Margin="0,20,0,0" />
+        <Button x:Name="SearchPatientsButton" Grid.Row="1" Content="Search Patients" Click="SearchPatients_Click" />
+        <Button x:Name="ManagePatientsButton" Grid.Row="2" Content="Manage Patients" Click="ManagePatients_Click" />
+        <Button x:Name="CreateAppointmentButton" Grid.Row="3" Content="Create Appointment" Click="CreateAppointment_Click" />
+        <Button x:Name="AdminFunctionsButton" Grid.Row="4" Content="Admin Functions" Click="AdminFunctions_Click" />
+        <Button x:Name="LogoutButton" Grid.Row="5" Content="Log Out" Click="LogoutButton_Click" TabIndex="1" Margin="0,20,0,0" />
 
     </Grid>
 </page:BasePage>
