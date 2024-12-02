@@ -471,5 +471,10 @@ namespace HealthcareSystem
         {
             Frame.Navigate(typeof(MainPage));
         }
+
+        private void WBCLowValTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
