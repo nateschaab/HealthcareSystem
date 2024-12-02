@@ -57,10 +57,10 @@ namespace HealthcareSystem
         /// <param name="e">Event data containing information about the click event.</param>
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            var username = this.UsernameTextBox.Text;
+            var username = this.UsernameTextBox.Text.Trim();
             var password = this.PasswordBox.Password;
 
-            var (isValid, firstName, lastName, role) = this._loginDAL.ValidateLoginAndGetName(username, password);
+            var (isValid, firstName, lastName, role) =  this._loginDAL.ValidateLoginAndGetName(username, password);
 
             if (isValid)
             {
@@ -76,8 +76,10 @@ namespace HealthcareSystem
             else
             {
                 this.LoginError.Text = "Invalid username or password. Please try again.";
+                this.LoginError.Visibility = Visibility.Visible;
             }
         }
+
 
         #endregion
     }
