@@ -41,6 +41,38 @@ namespace HealthcareSystem.DAL
             return testTypes;
         }
 
+
+        /// <summary>Loads the thresholds.</summary>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public Dictionary<string, (decimal LowValue, decimal HighValue)> LoadThresholds()
+        {
+            var thresholds = new Dictionary<string, (decimal LowValue, decimal HighValue)>();
+
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            string query = "SELECT test_type_name, low_value, high_value FROM test_type;";
+            using var command = new MySqlCommand(query, connection);
+            using var reader = command.ExecuteReader();
+
+            int testTypeNameOrdinal = reader.GetOrdinal("test_type_name");
+            int lowValueOrdinal = reader.GetOrdinal("low_value");
+            int highValueOrdinal = reader.GetOrdinal("high_value");
+
+            while (reader.Read())
+            {
+                string testTypeName = reader.GetString(testTypeNameOrdinal);
+                decimal lowValue = reader.GetDecimal(lowValueOrdinal);
+                decimal highValue = reader.GetDecimal(highValueOrdinal);
+
+                thresholds[testTypeName] = (lowValue, highValue);
+            }
+
+            return thresholds;
+        }
+
         #endregion
     }
 }

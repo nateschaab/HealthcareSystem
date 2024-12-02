@@ -139,22 +139,12 @@
                 <TextBlock HorizontalAlignment="Left" Margin="49,0,0,0" Grid.Row="36" Text="LDL Result:" VerticalAlignment="Center" Height="19" Width="67"/>
                 <TextBlock x:Name="LDLResultErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2"/>
 
-                <TextBox x:Name="LDLLowValTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="39" VerticalAlignment="Center" Width="80"/>
-                <TextBlock HorizontalAlignment="Left" Margin="23,0,0,0" Grid.Row="38" Text="Low:" VerticalAlignment="Center" RenderTransformOrigin="-0.607,0.289" Height="19" Width="28"/>
-                <TextBox x:Name="LDLHighValTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="39" VerticalAlignment="Center" Width="80" Margin="85,0,0,0"/>
-                <TextBlock HorizontalAlignment="Left" Margin="109,0,0,0" Grid.Row="38" Text="High:" VerticalAlignment="Center" RenderTransformOrigin="-0.607,0.289" Height="19" Width="33"/>
-
                 <TextBox x:Name="LDLAbnormalityTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="41" VerticalAlignment="Center" Width="165"/>
                 <TextBlock HorizontalAlignment="Left" Margin="43,0,0,0" Grid.Row="40" Text="Abnormality:" VerticalAlignment="Center" Height="19" Width="79"/>
 
                 <TextBox x:Name="WBCResultTextBox" HorizontalAlignment="Left" Height="31" Margin="193,0,0,0" Grid.Row="37" VerticalAlignment="Center" Width="165"/>
                 <TextBlock HorizontalAlignment="Left" Margin="241,0,0,0" Grid.Row="36" Text="WBC Result:" VerticalAlignment="Center" Height="19" Width="74"/>
                 <TextBlock x:Name="WBCResultErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2"/>
-
-                <TextBox x:Name="WBCLowValTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="39" VerticalAlignment="Center" Width="80" TextChanged="WBCLowValTextBox_TextChanged" Margin="193,0,0,0"/>
-                <TextBlock HorizontalAlignment="Left" Margin="219,0,0,0" Grid.Row="38" Text="Low:" VerticalAlignment="Center" RenderTransformOrigin="-0.607,0.289" Height="19" Width="28"/>
-                <TextBox x:Name="WBCHighValTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="39" VerticalAlignment="Center" Width="80" Margin="278,0,0,0"/>
-                <TextBlock HorizontalAlignment="Left" Margin="302,0,0,0" Grid.Row="38" Text="High:" VerticalAlignment="Center" RenderTransformOrigin="-0.607,0.289" Height="19" Width="33"/>
 
                 <TextBox x:Name="WBCAbnormalityTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="41" VerticalAlignment="Center" Width="165" Margin="193,0,0,0"/>
                 <TextBlock HorizontalAlignment="Left" Margin="236,0,0,0" Grid.Row="40" Text="Abnormality:" VerticalAlignment="Center" Height="19" Width="79"/>
@@ -163,22 +153,12 @@
                 <TextBlock HorizontalAlignment="Left" Margin="435,0,0,0" Grid.Row="36" Text="HB Result:" VerticalAlignment="Center" Height="19" Width="62"/>
                 <TextBlock x:Name="HBResultErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2"/>
 
-                <TextBox x:Name="HBLowValTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="39" VerticalAlignment="Center" Width="80" TextChanged="WBCLowValTextBox_TextChanged" Margin="387,0,0,0"/>
-                <TextBlock HorizontalAlignment="Left" Margin="413,0,0,0" Grid.Row="38" Text="Low:" VerticalAlignment="Center" RenderTransformOrigin="-0.607,0.289" Height="19" Width="28"/>
-                <TextBox x:Name="HBHighValTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="39" VerticalAlignment="Center" Width="80" Margin="472,0,0,0"/>
-                <TextBlock HorizontalAlignment="Left" Margin="496,0,0,0" Grid.Row="38" Text="High:" VerticalAlignment="Center" RenderTransformOrigin="-0.607,0.289" Height="19" Width="33"/>
-
                 <TextBox x:Name="HBAbnormalityTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="41" VerticalAlignment="Center" Width="165" Margin="387,0,0,0"/>
                 <TextBlock HorizontalAlignment="Left" Margin="430,0,0,0" Grid.Row="40" Text="Abnormality:" VerticalAlignment="Center" Height="19" Width="79"/>
 
                 <TextBox x:Name="HAResultTextBox" HorizontalAlignment="Left" Height="31" Margin="582,0,0,0" Grid.Row="37" VerticalAlignment="Center" Width="165"/>
                 <TextBlock HorizontalAlignment="Left" Margin="631,0,0,0" Grid.Row="36" Text="HA Result:" VerticalAlignment="Center" Height="19" Width="63"/>
                 <TextBlock x:Name="HAResultErrorTextBlock" Foreground="Red" Visibility="Collapsed" Text="Lab test must be selected first." Grid.Row="38" Grid.RowSpan="2"/>
-
-                <TextBox x:Name="HALowValTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="39" VerticalAlignment="Center" Width="80" TextChanged="WBCLowValTextBox_TextChanged" Margin="582,0,0,0"/>
-                <TextBlock HorizontalAlignment="Left" Margin="608,0,0,0" Grid.Row="38" Text="Low:" VerticalAlignment="Center" RenderTransformOrigin="-0.607,0.289" Height="19" Width="28"/>
-                <TextBox x:Name="HAHighValTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="39" VerticalAlignment="Center" Width="80" Margin="667,0,0,0"/>
-                <TextBlock HorizontalAlignment="Left" Margin="691,0,0,0" Grid.Row="38" Text="High:" VerticalAlignment="Center" RenderTransformOrigin="-0.607,0.289" Height="19" Width="33"/>
 
                 <TextBox x:Name="HAAbnormalityTextBox" HorizontalAlignment="Left" Height="31" Grid.Row="41" VerticalAlignment="Center" Width="165" Margin="582,0,0,0"/>
                 <TextBlock HorizontalAlignment="Left" Margin="625,0,0,0" Grid.Row="40" Text="Abnormality:" VerticalAlignment="Center" Height="19" Width="79"/>

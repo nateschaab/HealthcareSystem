@@ -148,7 +148,7 @@ namespace HealthcareSystem
         /// <param name="checkup">The routine checkup to display in the UI fields.</param>
         private void PopulateCheckupFields(RoutineCheckup checkup)
         {
-            var hasFinalDiagnosis = !string.IsNullOrWhiteSpace(checkup.FinalDiagnosis);
+            bool hasFinalDiagnosis = !string.IsNullOrWhiteSpace(checkup.FinalDiagnosis);
 
             if (checkup.BloodPressureReading != null)
             {
@@ -176,29 +176,49 @@ namespace HealthcareSystem
             this.HBResultTextBox.Text = string.Empty;
             this.HAResultTextBox.Text = string.Empty;
 
+            this.LDLAbnormalityTextBox.Text = string.Empty;
+            this.WBCAbnormalityTextBox.Text = string.Empty;
+            this.HBAbnormalityTextBox.Text = string.Empty;
+            this.HAAbnormalityTextBox.Text = string.Empty;
+
+            this.LabTestDatePicker.Date = DateTimeOffset.Now;
+            this.LabTestTimePicker.Time = TimeSpan.Zero;
+
             if (checkup.LabTests != null)
             {
                 foreach (var labTest in checkup.LabTests)
                 {
-                    if (labTest.Result != null && labTest.TestTypeName != null &&
-                        labTest.TestTypeName.Contains("Low Density Lipoproteins"))
+                    if (labTest.TestTypeName != null)
                     {
-                        this.LDLResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
-                    }
-                    else if (labTest.Result != null && labTest.TestTypeName != null &&
-                             labTest.TestTypeName.Contains("Hepatitis A"))
-                    {
-                        this.HAResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
-                    }
-                    else if (labTest.Result != null && labTest.TestTypeName != null &&
-                             labTest.TestTypeName.Contains("Hepatitis B"))
-                    {
-                        this.HBResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
-                    }
-                    else if (labTest.Result != null && labTest.TestTypeName != null &&
-                             labTest.TestTypeName.Contains("White Blood Cell"))
-                    {
-                        this.WBCResultTextBox.Text = labTest.Result + " : " + labTest.TimePerformed;
+                        switch (labTest.TestTypeName)
+                        {
+                            case "Low Density Lipoproteins":
+                                this.LDLResultTextBox.Text = labTest.Result ?? string.Empty;
+                                this.LDLAbnormalityTextBox.Text = labTest.Abnormality ?? "No";
+                                break;
+
+                            case "White Blood Cell":
+                                this.WBCResultTextBox.Text = labTest.Result ?? string.Empty;
+                                this.WBCAbnormalityTextBox.Text = labTest.Abnormality ?? "No";
+                                break;
+
+                            case "Hepatitis A":
+                                this.HAResultTextBox.Text = labTest.Result ?? string.Empty;
+                                this.HAAbnormalityTextBox.Text = labTest.Abnormality ?? "No";
+                                break;
+
+                            case "Hepatitis B":
+                                this.HBResultTextBox.Text = labTest.Result ?? string.Empty;
+                                this.HBAbnormalityTextBox.Text = labTest.Abnormality ?? "No";
+                                break;
+                        }
+
+                        if (labTest.TimePerformed != DateTime.MinValue)
+                        {
+                            this.LabTestDatePicker.Date = labTest.TimePerformed.Date;
+                            this.LabTestTimePicker.Time = labTest.TimePerformed.TimeOfDay;
+                        }
+
                     }
                 }
             }
@@ -249,17 +269,14 @@ namespace HealthcareSystem
                 {
                     this.LowDensityLipoproteinsCheckBox.IsChecked = true;
                 }
-
                 if (test.TestTypeName != null && test.TestTypeName.Contains("Hepatitis A"))
                 {
                     this.HepatitisACheckBox.IsChecked = true;
                 }
-
                 if (test.TestTypeName != null && test.TestTypeName.Contains("Hepatitis B"))
                 {
                     this.HepatitisBCheckBox.IsChecked = true;
                 }
-
                 if (test.TestTypeName != null && test.TestTypeName.Contains("White Blood Cell"))
                 {
                     this.WhiteBloodCellCheckBox.IsChecked = true;
@@ -297,107 +314,96 @@ namespace HealthcareSystem
         /// <param name="e">Event arguments.</param>
         private async void CompleteCheckupButton_Click(object sender, RoutedEventArgs e)
         {
-            var hasFinalDiagnosis = !string.IsNullOrWhiteSpace(this.FinalDiagnosisTextBox.Text);
-
-            if (hasFinalDiagnosis)
-            {
-                this.ConfirmationDialog.Visibility = Visibility.Visible;
-                var result = await this.ConfirmationDialog.ShowAsync();
-
-                if (result != ContentDialogResult.Primary)
-                {
-                    return;
-                }
-            }
-
             try
             {
-                if (!this.ValidateCheckupFields())
+                if (!ValidateCheckupFields())
                 {
                     return;
                 }
 
-                var appointmentId = (this.AppointmentComboBox.SelectedItem as Appointment).AppointmentId;
-
-                var bloodPressureReading =
-                    $"{int.Parse(this.SystolicTextBox.Text)}/{int.Parse(this.DiastolicTextBox.Text)}";
-                var bodyTemp = decimal.Parse(this.BodyTempTextBox.Text);
-                var weight = decimal.Parse(this.WeightTextBox.Text);
-                var height = decimal.Parse(this.HeightTextBox.Text);
-                var pulse = int.Parse(this.PulseTextBox.Text);
-                var symptoms = this.SymptomsTextBox.Text;
-                var initialDiagnosis = this.InitialDiagnosisTextBox.Text;
-                var finalDiagnosis = this.FinalDiagnosisTextBox.Text;
+                int appointmentId = (AppointmentComboBox.SelectedItem as Appointment).AppointmentId;
+                string bloodPressureReading = $"{int.Parse(SystolicTextBox.Text)}/{int.Parse(DiastolicTextBox.Text)}";
+                decimal bodyTemp = decimal.Parse(BodyTempTextBox.Text);
+                decimal weight = decimal.Parse(WeightTextBox.Text);
+                decimal height = decimal.Parse(HeightTextBox.Text);
+                int pulse = int.Parse(PulseTextBox.Text);
+                string symptoms = SymptomsTextBox.Text;
+                string initialDiagnosis = InitialDiagnosisTextBox.Text;
+                string finalDiagnosis = FinalDiagnosisTextBox.Text;
 
                 var selectedTestTypes = new List<string>();
-                if (this.LowDensityLipoproteinsCheckBox.IsChecked == true)
+                var testResults = new Dictionary<string, decimal>();
+                var abnormalities = new Dictionary<string, string>();
+
+                if (LowDensityLipoproteinsCheckBox.IsChecked == true)
                 {
                     selectedTestTypes.Add("Low Density Lipoproteins");
+                    testResults["Low Density Lipoproteins"] = decimal.Parse(LDLResultTextBox.Text);
                 }
 
-                if (this.HepatitisACheckBox.IsChecked == true)
+                if (HepatitisACheckBox.IsChecked == true)
                 {
                     selectedTestTypes.Add("Hepatitis A");
+                    testResults["Hepatitis A"] = decimal.Parse(HAResultTextBox.Text);
                 }
 
-                if (this.HepatitisBCheckBox.IsChecked == true)
+                if (HepatitisBCheckBox.IsChecked == true)
                 {
                     selectedTestTypes.Add("Hepatitis B");
+                    testResults["Hepatitis B"] = decimal.Parse(HBResultTextBox.Text);
                 }
 
-                if (this.WhiteBloodCellCheckBox.IsChecked == true)
+                if (WhiteBloodCellCheckBox.IsChecked == true)
                 {
                     selectedTestTypes.Add("White Blood Cell");
+                    testResults["White Blood Cell"] = decimal.Parse(WBCResultTextBox.Text);
                 }
 
-                var testResults = new Dictionary<string, string>();
-
-                if (this.LowDensityLipoproteinsCheckBox.IsChecked == true)
+                var testAbnormalityData = _testTypeDAL.LoadThresholds();
+                foreach (var testType in selectedTestTypes)
                 {
-                    var ldlResult = this.ParseResult(this.LDLResultTextBox.Text);
-                    testResults.Add("Low Density Lipoproteins", ldlResult);
+                    if (testAbnormalityData.TryGetValue(testType, out var thresholds))
+                    {
+                        decimal lowValue = thresholds.Item1;
+                        decimal highValue = thresholds.Item2;
+                        decimal result = testResults[testType];
+
+                        string abnormality = (result <= lowValue || result >= highValue) ? "Yes" : "No";
+                        abnormalities[testType] = abnormality;
+
+                        if (testType == "Low Density Lipoproteins") LDLAbnormalityTextBox.Text = abnormality;
+                        if (testType == "Hepatitis A") HAAbnormalityTextBox.Text = abnormality;
+                        if (testType == "Hepatitis B") HBAbnormalityTextBox.Text = abnormality;
+                        if (testType == "White Blood Cell") WBCAbnormalityTextBox.Text = abnormality;
+                    }
                 }
 
-                if (this.HepatitisACheckBox.IsChecked == true)
-                {
-                    var haResult = this.ParseResult(this.HAResultTextBox.Text);
-                    testResults.Add("Hepatitis A", haResult);
-                }
+                DateTime datePerformed = LabTestDatePicker.Date.DateTime;
+                TimeSpan timePerformed = LabTestTimePicker.Time;
+                DateTime timePerformedCombined = datePerformed + timePerformed;
 
-                if (this.HepatitisBCheckBox.IsChecked == true)
-                {
-                    var hbResult = this.ParseResult(this.HBResultTextBox.Text);
-                    testResults.Add("Hepatitis B", hbResult);
-                }
-
-                if (this.WhiteBloodCellCheckBox.IsChecked == true)
-                {
-                    var wbcResult = this.ParseResult(this.WBCResultTextBox.Text);
-                    testResults.Add("White Blood Cell", wbcResult);
-                }
-
-                var success = this._visitDAL.CompleteRoutineCheckupWithTests(
-                    appointmentId, bloodPressureReading, bodyTemp, weight, height,
-                    pulse, symptoms, initialDiagnosis, finalDiagnosis, selectedTestTypes, testResults);
+                bool success = _visitDAL.CompleteRoutineCheckupWithTestsAndAbnormalities(
+                    appointmentId, bloodPressureReading, bodyTemp, weight, height, pulse, symptoms,
+                    initialDiagnosis, finalDiagnosis, selectedTestTypes, testResults, abnormalities, timePerformedCombined);
 
                 if (success)
                 {
-                    this.ErrorTextBlock.Text = "Routine checkup completed successfully!";
-                    this.ErrorTextBlock.Foreground = new SolidColorBrush(Colors.Green);
+                    ErrorTextBlock.Text = "Routine checkup completed successfully!";
+                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Green);
                 }
                 else
                 {
-                    this.ErrorTextBlock.Text = "Failed to complete routine checkup.";
-                    this.ErrorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+                    ErrorTextBlock.Text = "Failed to complete routine checkup.";
+                    ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
                 }
 
-                this.ErrorTextBlock.Visibility = Visibility.Visible;
+                ErrorTextBlock.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
-                this.ErrorTextBlock.Text = $"Error: {ex.Message}";
-                this.ErrorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
-                this.ErrorTextBlock.Visibility = Visibility.Visible;
+                ErrorTextBlock.Text = $"Error: {ex.Message}";
+                ErrorTextBlock.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+                ErrorTextBlock.Visibility = Visibility.Visible;
             }
         }
 
@@ -561,11 +567,10 @@ namespace HealthcareSystem
             Frame.Navigate(typeof(MainPage));
         }
 
-        #endregion
-
         private void WBCLowValTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
         }
+
+        #endregion
     }
 }

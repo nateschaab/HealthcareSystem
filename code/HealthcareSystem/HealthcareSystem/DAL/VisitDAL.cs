@@ -201,9 +201,9 @@ namespace DBAccess.DAL
         /// <param name="testTypes">A list of test types performed during the checkup.</param>
         /// <param name="testResults">A dictionary containing the test results for each test type.</param>
         /// <returns>True if the operation succeeds; otherwise, false.</returns>
-        public bool CompleteRoutineCheckupWithTests(int appointmentId, string bloodPressureReading, decimal bodyTemp,
-            decimal weight, decimal height, int pulse, string symptoms, string initialDiagnosis,
-            string finalDiagnosis, List<string> testTypes, Dictionary<string, string> testResults)
+        public bool CompleteRoutineCheckupWithTestsAndAbnormalities(int appointmentId, string bloodPressureReading, decimal bodyTemp,
+    decimal weight, decimal height, int pulse, string symptoms, string initialDiagnosis, string finalDiagnosis,
+    List<string> testTypes, Dictionary<string, decimal> testResults, Dictionary<string, string> abnormalities, DateTime timePerformed)
         {
             try
             {
@@ -213,25 +213,25 @@ namespace DBAccess.DAL
                 using var transaction = connection.BeginTransaction();
 
                 int visitId;
-                var getVisitIdQuery = "SELECT visit_id FROM visit WHERE appt_id = @appt_id;";
+                string getVisitIdQuery = "SELECT visit_id FROM visit WHERE appt_id = @appt_id;";
                 using (var getVisitIdCommand = new MySqlCommand(getVisitIdQuery, connection, transaction))
                 {
                     getVisitIdCommand.Parameters.AddWithValue("@appt_id", appointmentId);
                     visitId = Convert.ToInt32(getVisitIdCommand.ExecuteScalar());
                 }
 
-                var updateVisitQuery = @"
-            UPDATE visit 
-            SET 
-                blood_pressure_reading = @blood_pressure_reading,
-                body_temp = @body_temp,
-                weight = @weight,
-                height = @height,
-                pulse = @pulse,
-                symptoms = @symptoms,
-                initial_diagnosis = @initial_diagnosis,
-                final_diagnosis = @final_diagnosis
-            WHERE visit_id = @visit_id;";
+                string updateVisitQuery = @"
+        UPDATE visit 
+        SET 
+            blood_pressure_reading = @blood_pressure_reading,
+            body_temp = @body_temp,
+            weight = @weight,
+            height = @height,
+            pulse = @pulse,
+            symptoms = @symptoms,
+            initial_diagnosis = @initial_diagnosis,
+            final_diagnosis = @final_diagnosis
+        WHERE visit_id = @visit_id;";
 
                 using (var updateVisitCommand = new MySqlCommand(updateVisitQuery, connection, transaction))
                 {
@@ -249,39 +249,39 @@ namespace DBAccess.DAL
 
                 if (testTypes.Count > 0)
                 {
-                    var labTestQuery = @"
-                INSERT INTO lab_test (lab_test_id, visit_id, time_performed, test_type_name, result)
-                VALUES (@lab_test_id, @visit_id, NOW(), @test_type_name, @result)
-                ON DUPLICATE KEY UPDATE 
-                    result = @result, 
-                    time_performed = NOW();";
+                    string labTestQuery = @"
+            INSERT INTO lab_test (lab_test_id, visit_id, time_performed, test_type_name, result, abnormality)
+            VALUES (@lab_test_id, @visit_id, @time_performed, @test_type_name, @result, @abnormality)
+            ON DUPLICATE KEY UPDATE 
+                result = @result, 
+                abnormality = @abnormality, 
+                time_performed = @time_performed;";
 
                     foreach (var testType in testTypes)
                     {
                         using var labTestCommand = new MySqlCommand(labTestQuery, connection, transaction);
 
                         int labTestId;
-                        var fetchLabTestIdQuery = @"
-                    SELECT lab_test_id 
-                    FROM lab_test 
-                    WHERE visit_id = @visit_id AND test_type_name = @test_type_name;";
+                        string fetchLabTestIdQuery = @"
+                SELECT lab_test_id 
+                FROM lab_test 
+                WHERE visit_id = @visit_id AND test_type_name = @test_type_name;";
 
-                        using (var fetchLabTestIdCommand =
-                               new MySqlCommand(fetchLabTestIdQuery, connection, transaction))
+                        using (var fetchLabTestIdCommand = new MySqlCommand(fetchLabTestIdQuery, connection, transaction))
                         {
                             fetchLabTestIdCommand.Parameters.AddWithValue("@visit_id", visitId);
                             fetchLabTestIdCommand.Parameters.AddWithValue("@test_type_name", testType);
 
-                            var result = fetchLabTestIdCommand.ExecuteScalar();
-                            labTestId = result != null ? Convert.ToInt32(result) : this.GenerateRandomLabTestId();
+                            object result = fetchLabTestIdCommand.ExecuteScalar();
+                            labTestId = result != null ? Convert.ToInt32(result) : GenerateRandomLabTestId();
                         }
 
                         labTestCommand.Parameters.AddWithValue("@lab_test_id", labTestId);
                         labTestCommand.Parameters.AddWithValue("@visit_id", visitId);
+                        labTestCommand.Parameters.AddWithValue("@time_performed", timePerformed);
                         labTestCommand.Parameters.AddWithValue("@test_type_name", testType);
-
-                        var testResult = testResults.ContainsKey(testType) ? testResults[testType] : null;
-                        labTestCommand.Parameters.AddWithValue("@result", testResult ?? (object)DBNull.Value);
+                        labTestCommand.Parameters.AddWithValue("@result", testResults[testType]);
+                        labTestCommand.Parameters.AddWithValue("@abnormality", abnormalities[testType]);
 
                         labTestCommand.ExecuteNonQuery();
                     }
@@ -292,10 +292,11 @@ namespace DBAccess.DAL
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in CompleteRoutineCheckupWithTests: {ex.Message}");
+                Console.WriteLine($"Error in CompleteRoutineCheckupWithTestsAndAbnormalities: {ex.Message}");
                 return false;
             }
         }
+
 
         /// <summary>
         ///     Generates a random lab test ID for use in database operations.
