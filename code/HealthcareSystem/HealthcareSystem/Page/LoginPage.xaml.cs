@@ -55,25 +55,22 @@ namespace HealthcareSystem
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">Event data containing information about the click event.</param>
-        private async void LoginButton_Click(object sender, RoutedEventArgs e)
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             var username = this.UsernameTextBox.Text.Trim();
             var password = this.PasswordBox.Password;
 
-            // Validate user credentials
-            var (isValid, firstName, lastName, role) = await _loginDAL.ValidateLoginAndGetName(username, password);
+            var (isValid, firstName, lastName, role) =  this._loginDAL.ValidateLoginAndGetName(username, password);
 
             if (isValid)
             {
                 Debug.WriteLine("Login successful. Navigating to MainPage.");
 
-                // Set session details
                 SessionManager.Instance.Username = username;
                 SessionManager.Instance.FirstName = firstName;
                 SessionManager.Instance.LastName = lastName;
                 SessionManager.Instance.Role = role;
 
-                // Navigate to MainPage
                 Frame.Navigate(typeof(MainPage));
             }
             else

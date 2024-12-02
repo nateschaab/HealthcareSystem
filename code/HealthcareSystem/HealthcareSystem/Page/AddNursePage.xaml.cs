@@ -19,12 +19,10 @@ namespace HealthcareSystem
         /// </summary>
         private void AddNurse_Click(object sender, RoutedEventArgs e)
         {
-            // Get user input
             string fullName = this.NurseFullNameTextBox.Text.Trim();
             string username = this.NurseUsernameTextBox.Text.Trim();
             string password = this.NursePasswordBox.Password;
 
-            // Validate input
             if (string.IsNullOrEmpty(fullName) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 this.ShowErrorMessage("All fields are required.");
@@ -33,15 +31,10 @@ namespace HealthcareSystem
 
             try
             {
-                // Split full name into first name and last name
                 string[] nameParts = fullName.Split(' ');
                 string firstName = nameParts[0];
                 string lastName = nameParts.Length > 1 ? string.Join(" ", nameParts.Skip(1)) : string.Empty;
 
-                // Hash the password
-                string hashedPassword = PasswordHelper.HashPassword(password);
-
-                // Insert into database
                 using (var connection = new MySqlConnection(Connection.ConnectionString()))
                 {
                     connection.Open();
@@ -53,7 +46,7 @@ namespace HealthcareSystem
                     using (var command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@username", username);
-                        command.Parameters.AddWithValue("@password", hashedPassword);
+                        command.Parameters.AddWithValue("@password", password);
                         command.Parameters.AddWithValue("@fname", firstName);
                         command.Parameters.AddWithValue("@lname", lastName);
 
