@@ -6,13 +6,16 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using DBAccess.DAL;
 using HealthcareSystem.DAL;
 using HealthcareSystem.Page;
 using MySql.Data.MySqlClient;
 
 namespace HealthcareSystem
 {
+    /// <summary>
+    /// Represents a page for generating and displaying reports within the healthcare system.
+    /// Inherits from <see cref="BasePage"/>.
+    /// </summary>
     public sealed partial class ReportPage : BasePage
     {
         #region Constructors

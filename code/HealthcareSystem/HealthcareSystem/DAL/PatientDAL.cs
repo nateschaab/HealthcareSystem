@@ -41,7 +41,8 @@ namespace HealthcareSystem.DAL
                     ma.zip, 
                     ma.city, 
                     ma.state, 
-                    ma.country
+                    ma.country,
+                    p.is_active  -- Include is_active
                 FROM 
                     patient p
                 JOIN 
@@ -65,6 +66,8 @@ namespace HealthcareSystem.DAL
             var cityOrdinal = reader.GetOrdinal("city");
             var stateOrdinal = reader.GetOrdinal("state");
             var countryOrdinal = reader.GetOrdinal("country");
+            var isActiveOrdinal = reader.GetOrdinal("is_active");
+
 
             while (reader.Read())
             {
@@ -82,7 +85,8 @@ namespace HealthcareSystem.DAL
                     zipOrdinal,
                     cityOrdinal,
                     stateOrdinal,
-                    countryOrdinal
+                    countryOrdinal,
+                    isActiveOrdinal
                 ));
             }
 
@@ -106,6 +110,8 @@ namespace HealthcareSystem.DAL
         /// <param name="cityOrdinal">The ordinal position of the city column.</param>
         /// <param name="stateOrdinal">The ordinal position of the state column.</param>
         /// <param name="countryOrdinal">The ordinal position of the country column.</param>
+        /// <param name="isActiveOrdinal">The ordinal position of the country column.</param>
+
         /// <returns>A <see cref="Patient" /> object populated with the data from the record.</returns>
         private static Patient CreatePatient(
             MySqlDataReader reader,
@@ -121,7 +127,8 @@ namespace HealthcareSystem.DAL
             int zipOrdinal,
             int cityOrdinal,
             int stateOrdinal,
-            int countryOrdinal)
+            int countryOrdinal,
+            int isActiveOrdinal) // New Parameter
         {
             var mailingAddess = new MailingAddress(
                 reader.GetString(streetAddressOrdinal),
@@ -142,7 +149,10 @@ namespace HealthcareSystem.DAL
                 reader.GetString(lastNameOrdinal),
                 reader.GetDateTime(dobOrdinal),
                 mailingAddess
-            );
+            )
+            {
+                IsActive = reader.GetBoolean(isActiveOrdinal) // Set IsActive
+            };
         }
 
         /// <summary>
@@ -460,7 +470,8 @@ namespace HealthcareSystem.DAL
             ma.zip, 
             ma.city, 
             ma.state, 
-            ma.country
+            ma.country,
+            p.is_active
         FROM 
             patient p
         JOIN 
@@ -529,6 +540,8 @@ namespace HealthcareSystem.DAL
             var cityOrdinal = reader.GetOrdinal("city");
             var stateOrdinal = reader.GetOrdinal("state");
             var countryOrdinal = reader.GetOrdinal("country");
+            var isActiveOrdinal = reader.GetOrdinal("is_active");
+
 
             Debug.WriteLine("Starting to read data from the database...");
             while (reader.Read())
@@ -548,13 +561,39 @@ namespace HealthcareSystem.DAL
                     zipOrdinal,
                     cityOrdinal,
                     stateOrdinal,
-                    countryOrdinal
+                    countryOrdinal,
+                    isActiveOrdinal
                 ));
+
                 Debug.WriteLine("Record added to patient list.");
             }
 
             Debug.WriteLine("Data reading complete. Returning patient list.");
             return patientList;
+        }
+
+        public void ActivatePatient(int patientId)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = "UPDATE patient SET is_active = TRUE WHERE patient_id = @patientId;";
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.Add(new MySqlParameter("@patientId", MySqlDbType.Int32) { Value = patientId });
+
+            command.ExecuteNonQuery();
+        }
+
+        public void DeactivatePatient(int patientId)
+        {
+            using var connection = new MySqlConnection(Connection.ConnectionString());
+            connection.Open();
+
+            var query = "UPDATE patient SET is_active = FALSE WHERE patient_id = @patientId;";
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.Add(new MySqlParameter("@patientId", MySqlDbType.Int32) { Value = patientId });
+
+            command.ExecuteNonQuery();
         }
 
         #endregion

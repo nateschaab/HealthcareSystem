@@ -1,5 +1,5 @@
 ﻿<page:BasePage
-    Width="800" Height="600" MinWidth="800" MinHeight="600"
+    Width="850" Height="600" MinWidth="850" MinHeight="600"
     xmlns:page="using:HealthcareSystem.Page"
     x:Class="HealthcareSystem.SearchPatientPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -67,11 +67,14 @@
 
                 <!-- Buttons -->
                 <StackPanel Orientation="Horizontal" Grid.Row="10" Margin="0,20,0,0">
-                    <Button Content="Search Patient" Click="SearchPatientsButton_Click" Width="120" />
-                    <Button Content="Edit Patient" Click="EditPatients_Click" Margin="20,0,0,0" />
-                    <Button Content="Edit Appointment" Click="EditAppointment_Click" Margin="20,0,0,0" />
-                    <Button Content="Edit Checkup" Click="EditCheckup_Click" Margin="20,0,0,0" />
+                    <Button x:Name="SearchButton" Content="Search Patient" Click="SearchPatientsButton_Click" Width="120" />
+                    <Button x:Name="EditPatientButton" Content="Edit Patient" Click="EditPatients_Click" Margin="20,0,0,0" />
+                    <Button x:Name="EditAppointmentButton" Content="Edit Appointment" Click="EditAppointment_Click" Margin="20,0,0,0" />
+                    <Button x:Name="EditCheckupButton" Content="Edit Checkup" Click="EditCheckup_Click" Margin="20,0,0,0" />
+                    <Button x:Name="ActivateButton" Content="Activate Patient" Click="ActivatePatient_Click" Margin="20,0,0,0" />
+                    <Button x:Name="DeactivateButton" Content="Deactivate Patient" Click="DeactivatePatient_Click" Margin="20,0,0,0" />
                 </StackPanel>
+
 
                 <!-- ListView for displaying the patients -->
                 <ListView x:Name="PatientListView" SelectionChanged="PatientListView_SelectionChanged" Grid.Row="11"

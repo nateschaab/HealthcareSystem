@@ -204,7 +204,6 @@
                     Visibility="Collapsed" Grid.RowSpan="4" Height="0" Width="0">
                 </ContentDialog>
             </Grid>
-
         </ScrollViewer>
     </Grid>
 </page:BasePage>
